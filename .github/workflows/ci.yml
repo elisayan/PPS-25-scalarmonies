@@ -20,5 +20,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup di SBT e compilazione/test
+      - name: Setup di SBT
+        uses: sbt/setup-sbt@v1
+
+      - name: Esecuzione compilazione e test
         run: sbt clean test
