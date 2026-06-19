@@ -28,10 +28,14 @@ Il team adotta un workflow basato su tre tipologie di branch:
 - main: contiene le release
 - develop: rappresenta la linea principale di sviluppo, in cui vengono integrate le feature completate
 - feature/*: un branch dedicato per ogni funzionalità
+- docs/*: un branch dedicato per ogni sezione della documentazione
 
 Ogni pull request deve essere revisionata e approvata da un membro del team diverso da chi ha effettuato il push, per garantire un controllo incrociato sulla qualità del codice.
 
+## CI/CD Pipeline
+Per automatizzare la verifica del codice è stato utilizzato GitHub Actions.
+- Continuous Integration: il workflow Scala CI viene eseguito automaticamente a ogni push e pull request sul branch main... (TODO)
+- Continuous Development: (TODO)
 <!-- TODO
-## CI
 ## Strumenti utilizzati
 -->
