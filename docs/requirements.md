@@ -16,6 +16,86 @@ In ambito accademico, il successo di questo progetto sarà determinato dal soddi
 
 ## 2. Modello di Dominio
 
+All'interno delle dinamiche logiche e strutturali di *Harmonies*, i componenti chiave del gioco assumono i seguenti ruoli formali:
+
+* **Pouch (Sacchetto):** Funge da riserva generale per i token. Il suo ruolo è garantire la casualità e l'imparzialità durante il rifornimento del mercato centrale a ogni turno.
+
+* **Central Board (Tabellone Centrale):** È lo spazio comune condiviso da tutti i giocatori. Ospita il mercato dei token disponibili per il prelievo e organizza l'offerta pubblica delle carte.
+
+* **Personal Board (Plancia Personale):** Rappresenta l'ecosistema individuo di ciascun giocatore. È la griglia esagonale tridimensionale in cui vengono posizionati i token per creare i paesaggi e soddisfare i pattern geometrici richiesti.
+
+* **Reminder Card (Promemoria):** Funge da riferimento rapido e scheda riassuntiva delle regole di punteggio. Mostra visivamente come i diversi tipi di terreno (alberi, montagne, campi, ecc.) si connettono e si evolvono in altezza per generare punti alla fine della partita.
+
+* **Tokens:** Sono gli elementi costruttivi fondamentali del gioco. Rappresentano i vari tipi di habitat naturali (come foreste, montagne, acqua, campi o edifici) che i giocatori combinano e impilano sulla propria plancia per dare forma al territorio.
+
+* **Animal Cubes (Cubi Animale):** Agiscono come marcatori di popolamento. Vengono inizialmente posizionati sulle carte animale e si spostano sulla plancia personale del giocatore non appena l'habitat corrispondente soddisfa i requisiti di configurazione geometrica richiesti.
+
+* **Nature's Spirit Cubes (Cubi Spirito della Natura):** Sono cubetti speciali associati esclusivamente alle divinità o agli spiriti guardiani del gioco. Seguono regole di piazzamento e di punteggio uniche e più complesse rispetto ai normali cubetti animale.
+
+* **Animal Cards (Carte Animale):** Rappresentano gli obiettivi. Ogni carta mostra un pattern geometrico specifico (visto dall'alto e in altezza) che la fauna richiede per potersi insediare nel paesaggio creato dal giocatore, fornendo punti vittoria in base a quanti cubetti vengono trasferiti.
+
+* **Nature’s Spirit Cards (Carte Spirito della Natura):** Rappresentano elementi mitici o obiettivi speciali di alto livello. Introducono modi alternativi e asimmetrici per fare punti o per connettere i terreni, influenzando in modo significativo la strategia di pianificazione a lungo termine sulla plancia personale.
+
+
+
+Al fine di analizzare il sistema sia sotto l'aspetto statico che dinamico, la struttura del gioco è stata formalizzata attraverso due diagrammi UML complementari.
+
+L'obiettivo è definire in modo rigoroso le relazioni intercorrenti tra le principali entità del dominio e mappare l'insieme delle azioni che un giocatore può compiere durante il proprio turno.
+
+```mermaid
+classDiagram
+    Card <|-- AnimalCard 
+    Card <|-- SpiritNatureCard 
+    
+    Cube <|-- AnimalCube 
+    Cube <|-- SpiritNatureCube
+
+    Player "1" -- "0..1" Card : draws
+    Player "1" -- "*" Token : places
+    Player "1" -- "1" Board : has
+    Board "1" -- "1..*" Cell : made of
+    
+    Card "1" -- "1" Habitat : has
+    Habitat "*" -- "2..3" Token : composed of
+    
+    Cell "0..*" -- "0..*" Token : hosts
+    Cell "0..*" -- "1" Cube : hosts
+
+    class Player {
+        
+    }
+    class Board {
+        
+    }
+    class Card {
+        
+    }
+    class AnimalCard {
+        
+    }
+    class SpiritNatureCard {
+        
+    }
+    class Habitat {
+        
+    }
+    class Token {
+        
+    }
+    class Cell {
+        
+    }
+    class Cube {
+        
+    }
+    class AnimalCube {
+        
+    }
+    class SpiritNatureCube {
+        
+    }
+```
+![Sequence Diagram](resources/sequence%20diagram.png)
 ## 3. Requisiti Funzionali
 
 ### 3.1 Requisiti Utente (FR-U)
