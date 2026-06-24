@@ -23,7 +23,7 @@ Per la gestione e il tracciamento delle attività il team utilizzerà GitHub Pro
 ## Definition of Done
 Un task si considera completo quando soddisfa tutti i seguenti punti:
 - Codice integrato nel main branch tramite pull request
-- Code coverage minima del 70% per il model, 60% per le altre componenti
+- Code coverage minima del 70% per il model, 60% per le altre componenti (TO CHECK)
 - Documentazione Scaladoc presente dove necessaria
 - Per la view: ogni componente deve essere collegato al model e al controller e che non siano presenti componenti non funzionanti
 
