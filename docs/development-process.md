@@ -15,7 +15,7 @@ Al termine di ogni sprint verrà effettuato un meeting conclusivo per valutare i
 
 ## Task Management
 Per la gestione e il tracciamento delle attività il team utilizzerà GitHub Projects, organizzato in una board con le seguenti colonne:
-- **Product Backlog Items**: contiene le user story e le funzionalità di alto livello individuate durante la pianificazione, non ancora scomposte in task operativi.
+- **Product Backlog Items**: contiene le funzionalità individuate durante la pianificazione, non ancora scomposte in task operativi.
 - **Tasks**: contiene i task derivati dai backlog item, suddivisi e assegnati ai membri del team durante lo sprint planning.
 - **In Progress**: raccoglie i task attualmente in lavorazione da parte di uno o più membri del team.
 - **Done**: raccoglie i task completati e verificati, pronti per essere considerati parte dell'incremento di sprint.
