@@ -8,14 +8,14 @@ Configurare il repository Github e l'infrastruttura di automazione (CI/CD), form
 
 ## Sprint Backlog
 
-| Id | Title | Assignee | Story Points | Status | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **T1.1** | Setup repository, `.gitignore`, e configurazione build SBT | Elisa e Filippo | 3 | To Do | Inclusa configurazione per ignorare la cartella `.idea` |
-| **T1.2** | Setup Continuous Integration con GitHub Actions | Elisa | 5 | To Do | Trigger automatico su PR e push verso `main` |
-| **T1.3** | Stesura product backlog | Filippo | 3 | To Do | Stesura del product backlog iniziale con stima dei vari item |
-| **T1.3** | Stesura `development-process.md` | Elisa | 3 | To Do | |
-| **T1.4** | Stesura `requirements.md` (Business, FR, NFR) | Filippo e Daniel | 5 | To Do | |
-| **T1.5** | Realizzazione diagrammi UML (Domain e Activity) | Daniel | 5 | To Do | |
+| Priorità | Titolo                                                     | Assegnazione     | Stima Iniziale | Note                                                         | Giorno 1 | Giorno 2 | Giorno 3 | Giorno 4 | Giorno 5 | Giorno 6 | Giorno 7 | 
+|:---------|:-----------------------------------------------------------|:-----------------|:---------------|:-------------------------------------------------------------|:---------|:---------|:---------|:---------|:---------|:---------|:---------|
+| **1**    | Setup repository, `.gitignore`, e configurazione build SBT | Elisa e Filippo  | 3              | Inclusa configurazione per ignorare la cartella `.idea`      | 0        | 0        | 0        | 0        | 0        | 0        | 0        |
+| **2**    | Setup Continuous Integration con GitHub Actions            | Elisa            | 3              | Trigger automatico su PR e push verso `main`                 | 1        | 1        | 1        | 1        | 1        | 1        | 0        |
+| **3**    | Stesura product backlog                                    | Filippo          | 3              | Stesura del product backlog iniziale con stima dei vari item | 2        | 2        | 1        | 0        | 0        | 0        | 0        |
+| **3**    | Stesura `development-process.md`                           | Elisa            | 5              |                                                              | 5        | 5        | 3        | 3        | 1        | 1        | 0        |
+| **4**    | Stesura `requirements.md` (Business, FR, NFR)              | Filippo e Daniel | 8              |                                                              | 8        | 5        | 5        | 3        | 0        | 0        | 0        |
+| **5**    | Realizzazione diagrammi UML (Domain e Activity)            | Daniel           | 5              |                                                              | 5        | 5        | 5        | 5        | 3        | 3        | 0        |  
 
 ---
 
