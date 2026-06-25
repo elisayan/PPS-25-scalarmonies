@@ -7,7 +7,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test-and-quality:
+    name: Test, Coverage and Code Quality
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +24,11 @@ jobs:
       - name: Setup di SBT
         uses: sbt/setup-sbt@v1
 
-      - name: Esecuzione compilazione e test
-        run: sbt clean test
+      - name: 1. Verifica Formattazione (Scalafmt)
+        run: sbt scalafmtCheckAll
+
+      - name: 2. Analisi Statica (Scalafix)
+        run: sbt "scalafix --check"
+
+      - name: 3. Esecuzione Test e Generazione Report Copertura (Scoverage)
+        run: sbt clean coverage test coverageReport
