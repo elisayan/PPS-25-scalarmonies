@@ -1,5 +1,3 @@
 package it.unibo.view
 
-class View {
-
-}
+class View {}

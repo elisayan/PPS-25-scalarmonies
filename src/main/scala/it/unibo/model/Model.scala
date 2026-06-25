@@ -1,5 +1,3 @@
 package it.unibo.model
 
-class Model {
-
-}
+class Model {}
