@@ -10,7 +10,3 @@ enum TerrainToken(val color: TokenColor):
   case Field extends TerrainToken(TokenColor.Yellow)
   case Water extends TerrainToken(TokenColor.Blue)
   case Building extends TerrainToken(TokenColor.Red)
-
-class Token {
-
-}
