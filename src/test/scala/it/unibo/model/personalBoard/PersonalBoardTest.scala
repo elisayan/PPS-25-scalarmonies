@@ -1,7 +1,11 @@
 package it.unibo.model.personalBoard
 
+import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
-class PersonalBoardTest extends AnyFunSuiteLike {
+class PersonalBoardTest extends AnyFlatSpec with Matchers {
+  
+  "A Personal Board" should "have a fixed size"
 
 }
