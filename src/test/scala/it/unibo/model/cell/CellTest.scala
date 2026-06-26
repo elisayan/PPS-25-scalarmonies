@@ -25,7 +25,6 @@ class CellTest extends AnyFlatSpec with Matchers:
     result.getTokens shouldBe a[List[_]]
 
     cell.hasTokens should be(false)
-  
 
   it should "return the placed token(s)" in:
     val cell = Cell(List())
@@ -34,7 +33,6 @@ class CellTest extends AnyFlatSpec with Matchers:
 
     result.getTokens should not be empty
     result.getTokens.head shouldBe Token("Red")
-  
 
   it should "preserve the right order of the tokens placed inside of it" in:
     val cell2 = Cell(List(Token("Red")))
@@ -52,4 +50,3 @@ class CellTest extends AnyFlatSpec with Matchers:
       Token("Green")
     )
     res2.topToken shouldBe Some(Token("Green"))
-  

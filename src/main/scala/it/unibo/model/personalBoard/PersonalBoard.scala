@@ -1,5 +1,3 @@
 package it.unibo.model.personalBoard
 
-class PersonalBoard {
-
-}
+class PersonalBoard {}
