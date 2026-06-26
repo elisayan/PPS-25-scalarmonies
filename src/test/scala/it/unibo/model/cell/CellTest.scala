@@ -9,14 +9,13 @@ class CellTest extends AnyFlatSpec with Matchers:
 
   case class Token(color: String)
 
-  "A Cell" should "be empty when initialized" in {
+  "A Cell" should "be empty when initialized" in:
     val cell = Cell(List())
     cell.getTokens should have size 0
     cell.hasTokens should be(false)
     cell.topToken shouldBe None
-  }
 
-  it should "return a new Cell when a Token is placed" in {
+  it should "return a new Cell when a Token is placed" in:
     val cell = Cell(List())
     val token = Token("Red")
     val result: Cell = cell.placeToken(token)
@@ -26,18 +25,18 @@ class CellTest extends AnyFlatSpec with Matchers:
     result.getTokens shouldBe a[List[_]]
 
     cell.hasTokens should be(false)
-  }
+  
 
-  it should "return the placed token(s)" in {
+  it should "return the placed token(s)" in:
     val cell = Cell(List())
     val token = Token("Red")
     val result: Cell = cell.placeToken(token)
 
     result.getTokens should not be empty
     result.getTokens.head shouldBe Token("Red")
-  }
+  
 
-  it should "preserve the right order of the tokens placed inside of it" in {
+  it should "preserve the right order of the tokens placed inside of it" in:
     val cell2 = Cell(List(Token("Red")))
     val token2 = Token("Grey")
     val token3 = Token("Green")
@@ -53,4 +52,4 @@ class CellTest extends AnyFlatSpec with Matchers:
       Token("Green")
     )
     res2.topToken shouldBe Some(Token("Green"))
-  }
+  
