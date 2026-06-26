@@ -1,25 +1,30 @@
 package it.unibo.model.token
 
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class TokenTest extends AnyFlatSpec:
+class TokenTest extends AnyFlatSpec with Matchers:
 
-  "A Terrain Token" should "have a specific type and color" in {
-    val mountainToken = TerrainToken.Mountain
-    assert(mountainToken.color == TokenColor.Grey)
+  "Mountain" should "have grey color" in {
+    TerrainToken.Mountain.color shouldBe TokenColor.Grey
+  }
 
-    val treeTrunkToken = TerrainToken.TreeTrunk
-    assert(treeTrunkToken.color == TokenColor.Brown)
+  "TreeTrunk" should "have brown color" in {
+    TerrainToken.TreeTrunk.color shouldBe TokenColor.Brown
+  }
 
-    val treeFoliageToken = TerrainToken.TreeFoliage
-    assert(treeFoliageToken.color == TokenColor.Green)
+  "TreeFoliage" should "have green color" in {
+    TerrainToken.TreeFoliage.color shouldBe TokenColor.Green
+  }
 
-    val fieldToken = TerrainToken.Field
-    assert(fieldToken.color == TokenColor.Yellow)
+  "Field" should "have yellow color" in {
+    TerrainToken.Field.color shouldBe TokenColor.Yellow
+  }
 
-    val waterToken = TerrainToken.Water
-    assert(waterToken.color == TokenColor.Blue)
+  "Water" should "have blue color" in {
+    TerrainToken.Water.color shouldBe TokenColor.Blue
+  }
 
-    val buildingToken = TerrainToken.Building
-    assert(buildingToken.color == TokenColor.Red)
+  "Building" should "have red color" in {
+    TerrainToken.Building.color shouldBe TokenColor.Red
   }
