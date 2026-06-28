@@ -7,16 +7,18 @@ object TokenValidator:
 
   private val MaxStackHeight = 3
 
-  private def topToken(cell: Cell): Option[TerrainToken] =
-    cell.topToken.collect { case t: TerrainToken => t }
-
   def canPlace(token: TerrainToken, cell: Cell): Boolean =
-    val tokens = cell.getTokens.length
-    if tokens >= MaxStackHeight then false
+    val height = cell.getTokens.length
+    if height >= MaxStackHeight then false
     else
       token match
-        case TerrainToken.Water | TerrainToken.Field => !cell.hasTokens
-        case Mountain                                => ???
-        case Forest                                  => ???
-        case Building                                => ???
-        case Ground                                  => ???
+        case Water | Field => !cell.hasTokens
+        case Mountain => !cell.hasTokens || cell.topToken.contains(Mountain)
+        case Forest   => !cell.hasTokens || cell.topToken.contains(Ground)
+        case Ground =>
+          !cell.hasTokens || (height == 1 && cell.topToken.contains(Ground))
+        case Building =>
+          !cell.hasTokens || cell.topToken.exists {
+            case Mountain | Ground | Building => true
+            case _                            => false
+          }
