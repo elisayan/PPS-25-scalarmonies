@@ -1,6 +1,7 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
+import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -140,4 +141,39 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
         TokenValidator.canPlace(token, cell) shouldBe false
       }
     }
+  }
+
+  // Valid positions on a PersonalBoard
+  it should "return only coordinates where placement is legal" in {
+    val origin = Coordinate(0, 0)
+    val neighbour = origin.northEastNeighbour // (2, 1)
+    val farNeighbour = origin.northNeighbour // (0, 2)
+
+    val board = PersonalBoard(
+      heightBound = 2,
+      widthBound = 2,
+      cells = Map(
+        origin -> Cell(),
+        neighbour -> Cell(List(Mountain)),
+        farNeighbour -> Cell(List(Water))
+      )
+    )
+    val result = TokenValidator.validPositions(Mountain, board)
+    result should contain theSameElementsAs List(origin, neighbour)
+    result should not contain farNeighbour
+  }
+
+  it should "return an empty list when no cell allows the given token" in {
+    val origin = Coordinate(0, 0)
+    val neighbour = origin.northEastNeighbour
+
+    val board = PersonalBoard(
+      heightBound = 2,
+      widthBound = 2,
+      cells = Map(
+        origin -> Cell(List(Water)),
+        neighbour -> Cell(List(Field))
+      )
+    )
+    TokenValidator.validPositions(Building, board) shouldBe empty
   }

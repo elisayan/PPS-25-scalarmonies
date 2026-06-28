@@ -1,6 +1,7 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
+import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken.*
 
 object TokenValidator:
@@ -22,3 +23,11 @@ object TokenValidator:
             case Mountain | Ground | Building => true
             case _                            => false
           }
+
+  def validPositions(
+      token: TerrainToken,
+      board: PersonalBoard
+  ): List[Coordinate] =
+    board.cells.collect {
+      case (coordinate, cell) if canPlace(token, cell) => coordinate
+    }.toList
