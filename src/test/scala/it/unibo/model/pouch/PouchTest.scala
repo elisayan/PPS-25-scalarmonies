@@ -1,7 +1,7 @@
 package it.unibo.model.pouch
 
-import it.unibo.model.Token
 import it.unibo.model.pouch.Pouches.Pouch
+import it.unibo.model.token.TerrainToken
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -9,7 +9,9 @@ class PouchTest extends AnyFunSuite with Matchers{
   private val DrawnAmount = 3
   private val TestSeed = 42L
   test("Un sacchetto deve restituire i token estratti e un nuovo stato"):
-    val tokens: List[Token] = List(Token.Red, Token.Green, Token.Yellow, Token.Blue, Token.Gray)
+    val tokens: List[TerrainToken] = 
+      List(TerrainToken.Building, TerrainToken.Water, TerrainToken.Field,
+        TerrainToken.Mountain, TerrainToken.Forest)
     val initialPouch: Pouch = Pouch(tokens, TestSeed)
     val initialSize: Int = initialPouch.size
     val (drawn, newPouch) = initialPouch.draw(DrawnAmount)
@@ -18,7 +20,7 @@ class PouchTest extends AnyFunSuite with Matchers{
     initialPouch.size shouldBe initialSize
 
   test("Se si estraggono più token di quanti presenti, restituisce quelli rimasti e un sacchetto vuoto"):
-    val startPouch = Pouch(List(Token.Green), TestSeed)
+    val startPouch = Pouch(List(TerrainToken.Forest), TestSeed)
     val (drawn, newPouch) = startPouch.draw(DrawnAmount)
     drawn.size shouldBe 1
     newPouch.isEmpty shouldBe true
