@@ -4,6 +4,7 @@ import it.unibo.model.Token
 import scala.util.Random
 
 object Pouches:
+  private val TokensPerColor = 20
   opaque type Pouch = List[Token]
 
   object Pouch:
@@ -12,9 +13,9 @@ object Pouches:
     def initialPouch(seed: Long): Pouch =
       val fakeDistribution =
         List.concat(
-          List.fill(20)(Token.Red),
-          List.fill(20)(Token.Blue),
-          List.fill(20)(Token.Gray)
+          List.fill(TokensPerColor)(Token.Red),
+          List.fill(TokensPerColor)(Token.Blue),
+          List.fill(TokensPerColor)(Token.Gray)
         )
       Pouch(fakeDistribution, seed)
 
