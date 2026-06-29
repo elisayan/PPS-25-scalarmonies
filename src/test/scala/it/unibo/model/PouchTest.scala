@@ -13,4 +13,11 @@ class PouchTest extends AnyFunSuite with Matchers{
     drawn.size shouldBe 2
     newPouch.size shouldBe (initialSize - 2)
     initialPouch.size shouldBe initialSize
+
+  test("Se si estraggono più token di quanti presenti, restituisce quelli rimasti e un sacchetto vuoto"):
+    val startPouch = Pouch(List(Token.Green), seed = 1L)
+    val (drawn, newPouch) = startPouch.draw(3)
+
+    drawn.size shouldBe 1
+    newPouch.isEmpty shouldBe true
 }
