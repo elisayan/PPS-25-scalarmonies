@@ -1,8 +1,9 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
-import it.unibo.model.token.TerrainToken.*
+import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalBoard.PersonalBoard
+import it.unibo.model.token.TerrainToken._
 
 object TokenValidator:
 
