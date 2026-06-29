@@ -10,7 +10,7 @@ class PouchTest extends AnyFunSuite with Matchers{
   private val TestSeed = 42L
   test("Un sacchetto deve restituire i token estratti e un nuovo stato"):
     val tokens: List[Token] = List(Token.Red, Token.Green, Token.Yellow, Token.Blue, Token.Gray)
-    val initialPouch: Pouch = Pouch(tokens, seed = TestSeed)
+    val initialPouch: Pouch = Pouch(tokens, TestSeed)
     val initialSize: Int = initialPouch.size
     val (drawn, newPouch) = initialPouch.draw(DrawnAmount)
     drawn.size shouldBe DrawnAmount
@@ -18,7 +18,7 @@ class PouchTest extends AnyFunSuite with Matchers{
     initialPouch.size shouldBe initialSize
 
   test("Se si estraggono più token di quanti presenti, restituisce quelli rimasti e un sacchetto vuoto"):
-    val startPouch = Pouch(List(Token.Green), seed = TestSeed)
+    val startPouch = Pouch(List(Token.Green), TestSeed)
     val (drawn, newPouch) = startPouch.draw(DrawnAmount)
     drawn.size shouldBe 1
     newPouch.isEmpty shouldBe true
@@ -28,7 +28,7 @@ class PouchTest extends AnyFunSuite with Matchers{
     newEmptyPouch.isEmpty shouldBe true
 
   test("initialPouch deve istanziare un sacchetto completo e con il numero corretto di token totali"):
-    val startingPouch = Pouch.initialPouch(seed = TestSeed)
+    val startingPouch = Pouch.initialPouch(TestSeed)
     val pouchSize = 60
     startingPouch.size shouldBe pouchSize
     startingPouch.isEmpty shouldBe false

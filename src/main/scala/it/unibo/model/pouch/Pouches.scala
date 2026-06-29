@@ -8,9 +8,9 @@ object Pouches:
   opaque type Pouch = List[Token]
 
   object Pouch:
-    def apply(tokens: List[Token], seed: Long): Pouch =
+    def apply(tokens: List[Token], seed: Long = Random.nextLong()): Pouch =
       Random(seed).shuffle(tokens)
-    def initialPouch(seed: Long): Pouch =
+    def initialPouch(seed: Long = Random.nextLong()): Pouch =
       val fakeDistribution =
         List.concat(
           List.fill(TokensPerColor)(Token.Red),
