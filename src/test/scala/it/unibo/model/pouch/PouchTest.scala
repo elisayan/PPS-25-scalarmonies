@@ -5,11 +5,17 @@ import it.unibo.model.token.TerrainToken
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
+/**
+ * Test suite for the [[Pouches]] module.
+ * Verifies pure functional principles: strict state immutability,
+ * deterministic draws via seeds, correct initial token distribution,
+ * and safe edge-case handling.
+ */
 class PouchTest extends AnyFunSuite with Matchers{
   private val DrawnAmount = 3
   private val TestSeed = 42L
   test("Un sacchetto deve restituire i token estratti e un nuovo stato"):
-    val tokens: List[TerrainToken] = 
+    val tokens: List[TerrainToken] =
       List(TerrainToken.Building, TerrainToken.Water, TerrainToken.Field,
         TerrainToken.Mountain, TerrainToken.Forest)
     val initialPouch: Pouch = Pouch(tokens, TestSeed)
@@ -31,7 +37,7 @@ class PouchTest extends AnyFunSuite with Matchers{
 
   test("initialPouch deve istanziare un sacchetto completo e con il numero corretto di token totali"):
     val startingPouch = Pouch.initialPouch(TestSeed)
-    val pouchSize = 60
+    val pouchSize = 120
     startingPouch.size shouldBe pouchSize
     startingPouch.isEmpty shouldBe false
 
