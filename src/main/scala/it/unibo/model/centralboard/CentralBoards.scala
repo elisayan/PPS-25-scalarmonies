@@ -1,19 +1,32 @@
 package it.unibo.model.centralboard
 
+import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
 
 object CentralBoards:
   private val SlotsCount = 5
   private val TokensPerSlot = 3
+  private val SlotIds = List(1, 2, 3, 4, 5)
 
-  opaque type CentralBoard = List[List[TerrainToken]]
+  opaque type CentralBoard = Map[Int, List[TerrainToken]]
 
   object CentralBoard:
     def empty: CentralBoard =
-      (List.fill(SlotsCount)(List.empty[TerrainToken]))
+      SlotIds.map(id => id -> List.empty[TerrainToken]).toMap
 
     extension (b: CentralBoard)
-      def isSlotEmpty(slotIndex: Int): Boolean =
-        b.lift(slotIndex) match
+      def isSlotEmpty(slot: Int): Boolean =
+        b.get(slot) match
           case Some(tokens) => tokens.isEmpty
-          case None => true
+          case None         => true
+
+      def fill(pouch: Pouch): (CentralBoard, Pouch) =
+        SlotIds.foldLeft((b, pouch)) {
+          case ((currentBoard, currentPouch), slotId) =>
+          if currentBoard.isSlotEmpty(slotId) then
+            val (drawnTokens, nextPouch) = currentPouch.draw(TokensPerSlot)
+            val nextBoard = currentBoard.updated(slotId, drawnTokens)
+            (nextBoard, nextPouch)
+          else
+            (currentBoard, currentPouch)
+        }
