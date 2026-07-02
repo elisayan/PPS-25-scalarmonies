@@ -4,7 +4,6 @@ import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
 
 object CentralBoards:
-  private val SlotsCount = 5
   private val TokensPerSlot = 3
   private val SlotIds = List(1, 2, 3, 4, 5)
 
@@ -30,3 +29,13 @@ object CentralBoards:
           else
             (currentBoard, currentPouch)
         }
+
+      def take(slot: Int): Option[(List[TerrainToken], CentralBoard)] =
+        if !SlotIds.contains(slot) then
+          None
+        else
+          val tokens = b(slot)
+          if tokens.isEmpty then
+            None
+          else
+            Some((tokens, b.updated(slot, List.empty)))

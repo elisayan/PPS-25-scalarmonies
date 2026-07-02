@@ -10,6 +10,7 @@ class CentralBoardTest extends AnyFunSuite with Matchers:
   private val ExpectedSlots = 5
   private val TokensPerSlot = 3
   private val SlotIds = List(1, 2, 3, 4, 5)
+  private val TargetSlot = 1
 
   test("Una plancia centrale appena creata deve essere vuota in tutti i suoi slot"):
     val emptyBoard = CentralBoard.empty
@@ -25,3 +26,21 @@ class CentralBoardTest extends AnyFunSuite with Matchers:
       filledBoard.isSlotEmpty(slotId) shouldBe false
     val expectedTokensDrawn = ExpectedSlots * TokensPerSlot
     newPouch.size shouldBe (pouchInitialSize - expectedTokensDrawn)
+
+  test("Prelevare da uno slot valido deve restituire i token, svuotare lo slot e lasciare intatti gli altri"):
+    val (filledBoard, _) = CentralBoard.empty.fill(Pouch.initialPouch(DefaultSeed))
+    val result = filledBoard.take(TargetSlot)
+    result match
+      case Some((drawnTokens, updatedBoard)) =>
+        drawnTokens.size shouldBe TokensPerSlot
+        updatedBoard.isSlotEmpty(TargetSlot) shouldBe true
+        updatedBoard.isSlotEmpty(2) shouldBe false
+      case None =>
+        fail("Il prelievo doveva avere successo, ma ha restituito None")
+
+  test("Prelevare da uno slot vuoto o inesistente deve fallire (restituendo None)"):
+    val emptyBoard = CentralBoard.empty
+    val resultEmpty = emptyBoard.take(TargetSlot)
+    resultEmpty shouldBe None
+    val resultInvalid = emptyBoard.take(99)
+    resultInvalid shouldBe None
