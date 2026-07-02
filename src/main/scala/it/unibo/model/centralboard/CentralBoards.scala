@@ -22,20 +22,16 @@ object CentralBoards:
       def fill(pouch: Pouch): (CentralBoard, Pouch) =
         SlotIds.foldLeft((b, pouch)) {
           case ((currentBoard, currentPouch), slotId) =>
-          if currentBoard.isSlotEmpty(slotId) then
-            val (drawnTokens, nextPouch) = currentPouch.draw(TokensPerSlot)
-            val nextBoard = currentBoard.updated(slotId, drawnTokens)
-            (nextBoard, nextPouch)
-          else
-            (currentBoard, currentPouch)
+            if currentBoard.isSlotEmpty(slotId) then
+              val (drawnTokens, nextPouch) = currentPouch.draw(TokensPerSlot)
+              val nextBoard = currentBoard.updated(slotId, drawnTokens)
+              (nextBoard, nextPouch)
+            else (currentBoard, currentPouch)
         }
 
       def take(slot: Int): Option[(List[TerrainToken], CentralBoard)] =
-        if !SlotIds.contains(slot) then
-          None
+        if !SlotIds.contains(slot) then None
         else
           val tokens = b(slot)
-          if tokens.isEmpty then
-            None
-          else
-            Some((tokens, b.updated(slot, List.empty)))
+          if tokens.isEmpty then None
+          else Some((tokens, b.updated(slot, List.empty)))
