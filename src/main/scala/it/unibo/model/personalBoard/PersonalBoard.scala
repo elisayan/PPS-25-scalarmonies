@@ -13,8 +13,8 @@ trait PersonalBoard:
   def getSouthernNeighbour(coordinate: Coordinate): Option[Cell]
   def getSouthEasternNeighbour(coordinate: Coordinate): Option[Cell]
   def getSouthWesternNeighbour(coordinate: Coordinate): Option[Cell]
-  def getNortEasternNeighbour(coordinate: Coordinate): Option[Cell]
-  def getNortWesternNeighbour(coordinate: Coordinate): Option[Cell]
+  def getNorthEasternNeighbour(coordinate: Coordinate): Option[Cell]
+  def getNorthWesternNeighbour(coordinate: Coordinate): Option[Cell]
   def placeToken(token: Token): PersonalBoard
 
 object PersonalBoard:
@@ -55,10 +55,10 @@ object PersonalBoard:
         coordinate: Coordinate
     ): Option[Cell] = ???
 
-    override def getNortEasternNeighbour(coordinate: Coordinate): Option[Cell] =
+    override def getNorthEasternNeighbour(coordinate: Coordinate): Option[Cell] =
       ???
 
-    override def getNortWesternNeighbour(coordinate: Coordinate): Option[Cell] =
+    override def getNorthWesternNeighbour(coordinate: Coordinate): Option[Cell] =
       ???
 
     override def placeToken(token: Token): PersonalBoard = ???
