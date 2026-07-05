@@ -7,58 +7,59 @@ case class Token(color: String)
 trait PersonalBoard:
   def heightBound: Int
   def widthBound: Int
+  def totalCells: Int
   def cells: Map[Coordinate, Cell]
 
-  def getNorthernNeighbour(coordinate: Coordinate): Option[Cell]
-  def getSouthernNeighbour(coordinate: Coordinate): Option[Cell]
-  def getSouthEasternNeighbour(coordinate: Coordinate): Option[Cell]
-  def getSouthWesternNeighbour(coordinate: Coordinate): Option[Cell]
-  def getNorthEasternNeighbour(coordinate: Coordinate): Option[Cell]
-  def getNorthWesternNeighbour(coordinate: Coordinate): Option[Cell]
+  def getNorthernNeighbour(c: Coordinate): Option[Cell]
+  def getSouthernNeighbour(c: Coordinate): Option[Cell]
+  def getSouthEasternNeighbour(c: Coordinate): Option[Cell]
+  def getSouthWesternNeighbour(c: Coordinate): Option[Cell]
+  def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
+  def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
   def placeToken(token: Token): PersonalBoard
 
 object PersonalBoard:
 
-  def apply(
-      heightBound: Int,
-      widthBound: Int,
-      cells: Map[Coordinate, Cell]
-  ): PersonalBoard = PersonalBoardImpl(heightBound, widthBound, cells)
+  enum BoardSide:
+    case SideA, SideB
 
-  def unapply(board: PersonalBoard): Option[(Int, Int, Map[Coordinate, Cell])] =
-    if board == null then None
-    else Some((board.heightBound, board.widthBound, board.cells))
+  private def generateHexGrid(widthBound: Int, heightBound: Int): Map[Coordinate, Cell] =
+    val validCoordinates = for
+      x <- -widthBound to widthBound if x % 2 == 0
+      y <- -heightBound to heightBound
+      if (x / 2).abs % 2 == y.abs % 2
+    yield Coordinate(x, y)
+    validCoordinates.map(c => c -> Cell(List())).toMap
+
+  def apply(side: BoardSide): PersonalBoard = side match
+    case BoardSide.SideA => PersonalBoardImpl(4,4,23,generateHexGrid(4,4))
+
+    case BoardSide.SideB => PersonalBoardImpl(6,3,25, generateHexGrid(6,3))
+
+  def unapply(board: PersonalBoard): Option[(Int, Int, Int, Map[Coordinate, Cell])] =
+    if board == null then None else Some((board.heightBound, board.widthBound, board.totalCells, board.cells))
 
   private case class PersonalBoardImpl(
       override val heightBound: Int,
       override val widthBound: Int,
+      override val totalCells: Int,
       override val cells: Map[Coordinate, Cell]
   ) extends PersonalBoard:
 
-    private def isValid(c: Coordinate): Boolean =
-      c.x.abs <= widthBound && c.y.abs <= heightBound
+    private def isValid(c: Coordinate): Boolean = c.x.abs <= widthBound && c.y.abs <= heightBound
 
-    private def checkBounds(c: Coordinate): Option[Cell] =
-      if isValid(c) then cells.get(c) else None
+    private def checkBounds(c: Coordinate): Option[Cell] = if isValid(c) then cells.get(c) else None
 
-    override def getNorthernNeighbour(coordinate: Coordinate): Option[Cell] =
-      ???
+    override def getNorthernNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northNeighbour)
 
-    override def getSouthernNeighbour(coordinate: Coordinate): Option[Cell] =
-      ???
+    override def getSouthernNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southNeighbour)
 
-    override def getSouthEasternNeighbour(
-        coordinate: Coordinate
-    ): Option[Cell] = ???
+    override def getSouthEasternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southEastNeighbour)
 
-    override def getSouthWesternNeighbour(
-        coordinate: Coordinate
-    ): Option[Cell] = ???
+    override def getSouthWesternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southWestNeighbour)
 
-    override def getNorthEasternNeighbour(coordinate: Coordinate): Option[Cell] =
-      ???
+    override def getNorthEasternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northEastNeighbour)
 
-    override def getNorthWesternNeighbour(coordinate: Coordinate): Option[Cell] =
-      ???
+    override def getNorthWesternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northWestNeighbour)
 
     override def placeToken(token: Token): PersonalBoard = ???
