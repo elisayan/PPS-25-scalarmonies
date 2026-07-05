@@ -33,7 +33,6 @@ object PersonalBoard:
 
   def apply(side: BoardSide): PersonalBoard = side match
     case BoardSide.SideA => PersonalBoardImpl(4,4,23,generateHexGrid(4,4))
-
     case BoardSide.SideB => PersonalBoardImpl(6,3,25, generateHexGrid(6,3))
 
   def unapply(board: PersonalBoard): Option[(Int, Int, Int, Map[Coordinate, Cell])] =
@@ -46,27 +45,34 @@ object PersonalBoard:
       override val cells: Map[Coordinate, Cell]
   ) extends PersonalBoard:
 
-    private def isValid(c: Coordinate): Boolean = c.x.abs <= widthBound && c.y.abs <= heightBound
+    private def isValid(c: Coordinate): Boolean = cells.contains(c)
 
-    private def checkBounds(c: Coordinate): Option[Cell] = if isValid(c) then cells.get(c) else None
+    override def getNorthernNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getNorthernNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northNeighbour)
+    override def getSouthernNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getSouthernNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southNeighbour)
+    override def getSouthEasternNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getSouthEasternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southEastNeighbour)
+    override def getSouthWesternNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getSouthWesternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.southWestNeighbour)
+    override def getNorthEasternNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getNorthEasternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northEastNeighbour)
+    override def getNorthWesternNeighbour(c: Coordinate): Option[Cell] =
+      if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
 
-    override def getNorthWesternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northWestNeighbour)
 
     override def placeToken(token: Token, c: Coordinate): PersonalBoard =
-      cells.get(c) match
-        case Some(currentCell) =>
-          val updatedCell = currentCell.placeToken(token)
-          val updatedCells = cells + (c -> updatedCell)
-          this.copy(cells = updatedCells)
-
-        case None => this
+      if isValid(c) then
+        cells.get(c) match
+          case Some(currentCell) =>
+            val updatedCell = currentCell.placeToken(token)
+            val updatedCells = cells + (c -> updatedCell)
+            this.copy(cells = updatedCells)
+          case None => this
+      else
+        throw new IllegalStateException("coordinate not valid")
