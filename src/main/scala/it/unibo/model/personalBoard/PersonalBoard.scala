@@ -16,7 +16,7 @@ trait PersonalBoard:
   def getSouthWesternNeighbour(c: Coordinate): Option[Cell]
   def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
   def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
-  def placeToken(token: Token): PersonalBoard
+  def placeToken(token: Token, c: Coordinate): PersonalBoard
 
 object PersonalBoard:
 
@@ -62,4 +62,11 @@ object PersonalBoard:
 
     override def getNorthWesternNeighbour(c: Coordinate): Option[Cell] = checkBounds(c.northWestNeighbour)
 
-    override def placeToken(token: Token): PersonalBoard = ???
+    override def placeToken(token: Token, c: Coordinate): PersonalBoard =
+      cells.get(c) match
+        case Some(currentCell) =>
+          val updatedCell = currentCell.placeToken(token)
+          val updatedCells = cells + (c -> updatedCell)
+          this.copy(cells = updatedCells)
+
+        case None => this
