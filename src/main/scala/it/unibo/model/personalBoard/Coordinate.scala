@@ -10,10 +10,10 @@ trait Coordinate:
 
   def northNeighbour: Coordinate = Coordinate(x, y + 2)
   def southNeighbour: Coordinate = Coordinate(x, y - 2)
-  def northEastNeighbour: Coordinate = Coordinate(x + 2, y + 1)
-  def northWestNeighbour: Coordinate = Coordinate(x - 2, y + 1)
-  def southEastNeighbour: Coordinate = Coordinate(x + 2, y - 1)
-  def southWestNeighbour: Coordinate = Coordinate(x - 2, y - 1)
+  def northEasternNeighbour: Coordinate = Coordinate(x + 2, y + 1)
+  def northWesternNeighbour: Coordinate = Coordinate(x - 2, y + 1)
+  def southEasternNeighbour: Coordinate = Coordinate(x + 2, y - 1)
+  def southWesternNeighbour: Coordinate = Coordinate(x - 2, y - 1)
 
 object Coordinate:
 
