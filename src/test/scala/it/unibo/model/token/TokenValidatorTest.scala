@@ -153,8 +153,8 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val b = board.placeToken(Mountain, neighbour)
     val b2 = b.placeToken(Water, farNeighbour)
     val result = TokenValidator.validPositions(Mountain, b2)
-    //result should contain theSameElementsAs List(origin, neighbour)
-    //result should not contain farNeighbour
+    // result should contain theSameElementsAs List(origin, neighbour)
+    // result should not contain farNeighbour
   }
 
   it should "return an empty list when no cell allows the given token" in {
