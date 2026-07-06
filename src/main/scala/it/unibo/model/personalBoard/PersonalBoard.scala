@@ -60,19 +60,23 @@ object PersonalBoard:
       if isValid(c.southNeighbour) then cells.get(c.southNeighbour) else None
 
     override def getSouthEasternNeighbour(c: Coordinate): Option[Cell] =
-      if isValid(c.southEasternNeighbour) then cells.get(c.southEasternNeighbour)
+      if isValid(c.southEasternNeighbour) then
+        cells.get(c.southEasternNeighbour)
       else None
 
     override def getSouthWesternNeighbour(c: Coordinate): Option[Cell] =
-      if isValid(c.southWesternNeighbour) then cells.get(c.southWesternNeighbour)
+      if isValid(c.southWesternNeighbour) then
+        cells.get(c.southWesternNeighbour)
       else None
 
     override def getNorthEasternNeighbour(c: Coordinate): Option[Cell] =
-      if isValid(c.northEasternNeighbour) then cells.get(c.northEasternNeighbour)
+      if isValid(c.northEasternNeighbour) then
+        cells.get(c.northEasternNeighbour)
       else None
 
     override def getNorthWesternNeighbour(c: Coordinate): Option[Cell] =
-      if isValid(c.northWesternNeighbour) then cells.get(c.northWesternNeighbour)
+      if isValid(c.northWesternNeighbour) then
+        cells.get(c.northWesternNeighbour)
       else None
 
     override def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard =
