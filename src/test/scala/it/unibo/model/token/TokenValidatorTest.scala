@@ -1,9 +1,10 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
+import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalBoard.PersonalBoard
 import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
-import it.unibo.model.token.TerrainToken.*
+import it.unibo.model.token.TerrainToken._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -152,7 +153,7 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val board = PersonalBoard(SideA)
     val b = board.placeToken(Mountain, neighbour)
     val b2 = b.placeToken(Water, farNeighbour)
-    val result = TokenValidator.validPositions(Mountain, b2)
+    TokenValidator.validPositions(Mountain, b2)
     // result should contain theSameElementsAs List(origin, neighbour)
     // result should not contain farNeighbour
   }
