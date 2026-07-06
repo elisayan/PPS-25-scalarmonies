@@ -12,3 +12,5 @@ case class Cell(private val tokens: List[TerrainToken] = List()):
     Cell(tokens :+ token)
 
   def topToken: Option[TerrainToken] = tokens.lastOption
+
+  def height: Int = tokens.size
