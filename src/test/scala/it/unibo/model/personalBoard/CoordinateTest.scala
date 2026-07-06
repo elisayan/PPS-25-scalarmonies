@@ -60,26 +60,26 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
     c1.southNeighbour match
       case Coordinate(_, y) => y should equal(-2)
 
-    c1.northEastNeighbour match
+    c1.northEasternNeighbour match
       case Coordinate(x, _) => x should equal(2)
 
-    c1.northEastNeighbour match
+    c1.northEasternNeighbour match
       case Coordinate(_, y) => y should equal(1)
 
-    c1.northWestNeighbour match
+    c1.northWesternNeighbour match
       case Coordinate(x, _) => x should equal(-2)
 
-    c1.northWestNeighbour match
+    c1.northWesternNeighbour match
       case Coordinate(_, y) => y should equal(1)
 
-    c1.southEastNeighbour match
+    c1.southEasternNeighbour match
       case Coordinate(x, _) => x should equal(2)
 
-    c1.southEastNeighbour match
+    c1.southEasternNeighbour match
       case Coordinate(_, y) => y should equal(-1)
 
-    c1.southWestNeighbour match
+    c1.southWesternNeighbour match
       case Coordinate(x, _) => x should equal(-2)
 
-    c1.southWestNeighbour match
+    c1.southWesternNeighbour match
       case Coordinate(_, y) => y should equal(-1)
