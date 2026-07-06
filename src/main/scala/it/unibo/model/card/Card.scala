@@ -6,10 +6,10 @@ import it.unibo.model.token.TerrainToken
 sealed trait Card
 
 case class CellRequirement(
-                            offset: Coordinate,
-                            terrain: TerrainToken,
-                            height: Int
-                          )
+    offset: Coordinate,
+    terrain: TerrainToken,
+    height: Int
+)
 
 case class Habitat(requirements: List[CellRequirement])
 
@@ -27,11 +27,11 @@ object AnimalCard:
     AnimalCardImpl(name, habitat, points, points.length)
 
   private case class AnimalCardImpl(
-                                     override val name: String,
-                                     override val habitat: Habitat,
-                                     override val points: List[Int],
-                                     cubesRemaining: Int
-                                   ) extends AnimalCard:
+      override val name: String,
+      override val habitat: Habitat,
+      override val points: List[Int],
+      cubesRemaining: Int
+  ) extends AnimalCard:
 
     override val maxCubes: Int = points.length
 
