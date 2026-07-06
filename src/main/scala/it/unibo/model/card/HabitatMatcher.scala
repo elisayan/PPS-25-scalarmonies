@@ -2,7 +2,7 @@ package it.unibo.model.card
 
 import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 
-object HabitatMatcher {
+object HabitatMatcher :
   def isMatch(board: PersonalBoard, origin: Coordinate, habitat: Habitat): Boolean =
     habitat.requirements.forall { req =>
       val targetCord = origin + req.offset
@@ -10,4 +10,8 @@ object HabitatMatcher {
         cell.topToken.contains(req.terrain) && cell.height == req.height
       }
     }
-}
+
+  def findMatches(board: PersonalBoard, habitat: Habitat): Set[Coordinate] =
+    board.cells.keys
+      .filter(coord => isMatch(board, coord, habitat))
+      .toSet

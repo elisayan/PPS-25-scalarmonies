@@ -24,3 +24,16 @@ class HabitatMatcherTest extends AnyFunSuite:
     HabitatMatcher.isMatch(testBoard, Coordinate(0, 0), testHabitat) shouldBe true
     HabitatMatcher.isMatch(testBoard, Coordinate(0, 1), testHabitat) shouldBe false
     HabitatMatcher.isMatch(testBoard, Coordinate(5, 5), testHabitat) shouldBe false
+
+  test("findMatches deve ritornare l'insieme esatto di tutte le origini valide sulla plancia"):
+    val matches = HabitatMatcher.findMatches(testBoard, testHabitat)
+    matches should have size 1
+    matches should contain(Coordinate(0, 0))
+
+  test("findMatches deve ritornare un Set vuoto se l'habitat non è presente da nessuna parte"):
+    val impossibleHabitat = Habitat(List(
+      CellRequirement(Coordinate(0, 0), TerrainToken.Field, 1),
+      CellRequirement(Coordinate(0, 1), TerrainToken.Field, 1)
+    ))
+    val matches = HabitatMatcher.findMatches(testBoard, impossibleHabitat)
+    matches shouldBe empty
