@@ -1,8 +1,7 @@
 package it.unibo.model.personalBoard
 
 import it.unibo.model.cell.Cell
-
-case class Token(color: String)
+import it.unibo.model.token.TerrainToken
 
 trait PersonalBoard:
   def heightBound: Int
@@ -16,7 +15,7 @@ trait PersonalBoard:
   def getSouthWesternNeighbour(c: Coordinate): Option[Cell]
   def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
   def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
-  def placeToken(token: Token, c: Coordinate): PersonalBoard
+  def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard
 
 object PersonalBoard:
 
@@ -76,7 +75,7 @@ object PersonalBoard:
       if isValid(c.northWesternNeighbour) then cells.get(c.northNeighbour)
       else None
 
-    override def placeToken(token: Token, c: Coordinate): PersonalBoard =
+    override def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard =
       if isValid(c) then
         cells.get(c) match
           case Some(currentCell) =>

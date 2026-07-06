@@ -2,7 +2,6 @@ package it.unibo.model.personalBoard
 
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
-import it.unibo.model.personalBoard.Token
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
