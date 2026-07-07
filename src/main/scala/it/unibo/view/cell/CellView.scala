@@ -5,6 +5,7 @@ import it.unibo.model.personalBoard.Coordinate
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Polygon
+import scalafx.scene.text.{Font, Text}
 
 case class CellView(
     coordinate: Coordinate,
@@ -22,5 +23,9 @@ case class CellView(
   hexagon.stroke = Color.Black
   hexagon.strokeWidth = 1.0
   this.relocate(pos._1, pos._2)
+  private val label = new Text;
+  label.text = s"${coordinate.x}, ${coordinate.y}"
+  label.fill = Color.Black
+  label.font = Font.font("Arial", 12)
 
-  children.add(hexagon)
+  children.addAll(hexagon, label)
