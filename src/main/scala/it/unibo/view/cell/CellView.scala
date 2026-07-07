@@ -17,7 +17,7 @@ case class CellView(
   private val hexagon: Polygon = Polygon()
 
   hexagon.getPoints.addAll(
-    17.0, 0.0, 35.0, 10.0, 35.0, 30.0, 17.0, 40.0, 0.0, 30.0, 0.0, 10.0
+    17.5, 0.0, 35.0, 10.0, 35.0, 30.3, 17.5, 40.4, 0.0, 30.3, 0.0, 10.0
   )
   hexagon.rotate = 90.0
   hexagon.fill = Color.LightGrey
