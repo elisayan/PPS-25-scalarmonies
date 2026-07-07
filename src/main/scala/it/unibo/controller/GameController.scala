@@ -2,7 +2,6 @@ package it.unibo.controller
 
 import it.unibo.model.GameModel
 import it.unibo.model.personalBoard.Coordinate
-import it.unibo.view.GameView
 
 trait GameController:
   def currentModel: GameModel
@@ -12,22 +11,24 @@ trait GameController:
 
 object GameController:
 
-  def apply(model: GameModel): GameController =
-    GameControllerImpl(model)
+  def apply(model: GameModel, refresh: () => Unit): GameController =
+    GameControllerImpl(model, refresh)
 
-  private class GameControllerImpl(private var model: GameModel) extends GameController:
+  private class GameControllerImpl(
+      private var model: GameModel,
+      refresh: () => Unit
+  ) extends GameController:
 
     override def currentModel: GameModel = model
 
     override def onTakeTokens(slot: Int): Unit =
-      //try
-        model = model.takeTokens(slot)
-      //  view.render(model)
-      //catch
-        //case e: IllegalStateException => view.showError(e.getMessage)
+      model = model.takeTokens(slot)
+      refresh()
 
     override def onPlaceToken(coordinate: Coordinate): Unit =
       model = model.placeToken(coordinate)
+      refresh()
 
     override def onEndTurn(): Unit =
       model = model.endTurn()
+      refresh()
