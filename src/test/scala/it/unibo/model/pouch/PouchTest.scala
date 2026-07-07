@@ -5,10 +5,6 @@ import it.unibo.model.token.TerrainToken
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-/** Test suite for the [[Pouches]] module. Verifies pure functional principles:
-  * strict state immutability, deterministic draws via seeds, correct initial
-  * token distribution, and safe edge-case handling.
-  */
 class PouchTest extends AnyFunSuite with Matchers:
   private val DrawnAmount = 3
   private val TestSeed = 42L
