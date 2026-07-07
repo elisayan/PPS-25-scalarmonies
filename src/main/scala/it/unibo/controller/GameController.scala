@@ -1,3 +1,3 @@
 package it.unibo.controller
 
-class Controller {}
+class GameController {}
