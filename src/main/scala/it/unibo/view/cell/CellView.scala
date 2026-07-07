@@ -6,7 +6,11 @@ import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Polygon
 
-case class CellView(coordinate: Coordinate, cell: Cell) extends StackPane:
+case class CellView(
+    coordinate: Coordinate,
+    cell: Cell,
+    pos: (Double, Double) = (0.0, 0.0)
+) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
 
@@ -17,5 +21,6 @@ case class CellView(coordinate: Coordinate, cell: Cell) extends StackPane:
   hexagon.fill = Color.LightGrey
   hexagon.stroke = Color.Black
   hexagon.strokeWidth = 1.0
+  this.relocate(pos._1, pos._2)
 
   children.add(hexagon)

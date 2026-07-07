@@ -9,7 +9,7 @@ import scalafx.scene.layout.StackPane
 object CellViewDemo extends JFXApp3:
 
   override def start(): Unit =
-    val root: StackPane = CellView(Coordinate(0, 0), Cell())
+    val root: StackPane = CellView(Coordinate(0, 0), Cell(), (20.0, 50.0))
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
       scene = new Scene(root, 400, 400)
