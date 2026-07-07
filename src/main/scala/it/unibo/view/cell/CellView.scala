@@ -11,16 +11,11 @@ case class CellView(coordinate: Coordinate, cell: Cell) extends StackPane:
   private val hexagon: Polygon = Polygon()
 
   hexagon.getPoints.addAll(
-    17.0, 0.0,
-    35.0, 10.0,
-    35.0, 30.0,
-    17.0, 40.0,
-    0.0, 30.0,
-    0.0, 10.0
+    17.0, 0.0, 35.0, 10.0, 35.0, 30.0, 17.0, 40.0, 0.0, 30.0, 0.0, 10.0
   )
   hexagon.rotate = 90.0
   hexagon.fill = Color.LightGrey
   hexagon.stroke = Color.Black
-  hexagon.strokeWidth = 2.0
+  hexagon.strokeWidth = 1.0
 
   children.add(hexagon)

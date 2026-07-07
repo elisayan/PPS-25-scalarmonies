@@ -12,5 +12,4 @@ object CellViewDemo extends JFXApp3:
     val root: StackPane = CellView(Coordinate(0, 0), Cell())
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
-      scene = new Scene(root,400,400)
-
+      scene = new Scene(root, 400, 400)
