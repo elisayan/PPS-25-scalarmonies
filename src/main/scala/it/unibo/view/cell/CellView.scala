@@ -5,7 +5,8 @@ import it.unibo.model.personalBoard.Coordinate
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Polygon
-import scalafx.scene.text.{Font, Text}
+import scalafx.scene.text.Font
+import scalafx.scene.text.Text
 
 case class CellView(
     coordinate: Coordinate,

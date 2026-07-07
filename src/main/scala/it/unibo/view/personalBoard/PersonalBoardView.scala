@@ -1,9 +1,11 @@
 package it.unibo.view.personalBoard
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalBoard.PersonalBoard
 import it.unibo.view.cell.CellView
-import scalafx.scene.layout.{Pane, StackPane}
+import scalafx.scene.layout.Pane
+import scalafx.scene.layout.StackPane
 
 case class PersonalBoardView(board: PersonalBoard) extends Pane:
 
