@@ -1,10 +1,9 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.Coordinate
-import it.unibo.model.personalBoard.PersonalBoard
 import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
-import it.unibo.model.token.TerrainToken._
+import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.token.TerrainToken.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -153,16 +152,19 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val board = PersonalBoard(SideA)
     val b = board.placeToken(Mountain, neighbour)
     val b2 = b.placeToken(Water, farNeighbour)
-    TokenValidator.validPositions(Mountain, b2)
-    // result should contain theSameElementsAs List(origin, neighbour)
-    // result should not contain farNeighbour
+    val result = TokenValidator.validPositions(Mountain, b2)
+    result should contain(origin)
+    result should contain(neighbour)
+    result should not contain farNeighbour
   }
 
-  it should "return an empty list when no cell allows the given token" in {
+  it should "not include cells with Water or Field on top as valid positions for Building" in {
     val origin = Coordinate(0, 0)
     val neighbour = origin.northEasternNeighbour
     val board2 = PersonalBoard(SideA)
     val b = board2.placeToken(Water, origin)
     val b2 = b.placeToken(Field, neighbour)
-    TokenValidator.validPositions(Building, b2) should not be empty
+    val result = TokenValidator.validPositions(Building, b2)
+    result should not contain origin
+    result should not contain neighbour
   }
