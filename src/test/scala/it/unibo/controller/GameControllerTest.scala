@@ -2,7 +2,7 @@ package it.unibo.controller
 
 import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.personalBoard.PersonalBoard
-import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
+import it.unibo.model.personalBoard.BoardSide.SideA
 import it.unibo.model.token.TokenValidator
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

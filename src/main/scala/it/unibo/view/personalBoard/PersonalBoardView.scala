@@ -1,6 +1,7 @@
 package it.unibo.view.personalBoard
 
 import it.unibo.model.cell.Cell
+import it.unibo.model.personalBoard.BoardSide.{SideA, SideB}
 import it.unibo.model.personalBoard.Coordinate
 import it.unibo.model.personalBoard.PersonalBoard
 import it.unibo.view.cell.CellView
@@ -26,16 +27,19 @@ case class PersonalBoardView(board: PersonalBoard) extends Pane:
   private val deltaX = 32.0
   private val deltaY = 36.0
   private val shiftY = 18.0
+  private val side = board.getSide match
+    case SideA => 5
+    case SideB => 7
 
   private val pixelPositions: List[(Double, Double)] =
     val colHead = LazyList
       .iterate((100.0, 200.0, 0)) { case (startX, startY, colIdx) =>
         val nextCol = colIdx + 1
-        if nextCol == 1 || nextCol == 3 then
+        if nextCol == 1 || nextCol == 3 || nextCol == 5 then
           (startX + deltaX, startY + shiftY, nextCol)
         else (startX + deltaX, startY - shiftY, nextCol)
       }
-      .take(5)
+      .take(side)
       .toList
     orderedModelGroups.zip(colHead).flatMap {
       case (listColumns, (startX, startY, _)) =>

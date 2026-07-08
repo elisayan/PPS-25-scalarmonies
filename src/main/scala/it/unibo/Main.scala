@@ -2,10 +2,9 @@ package it.unibo
 
 import it.unibo.controller.GameController
 import it.unibo.model.*
+import it.unibo.model.personalBoard.BoardSide.SideA
 import it.unibo.model.personalBoard.PersonalBoard
-import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
 import it.unibo.view.GameView
-
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 
