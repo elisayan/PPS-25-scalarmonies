@@ -83,3 +83,13 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
 
     c1.southWestNeighbour match
       case Coordinate(_, y) => y should equal(-1)
+
+  it should "rotate 60 degrees clockwise correctly" in:
+    val start = Coordinate(0, 2)
+    val r1 = start.rotate60
+    r1 match
+      case Coordinate(x, y) =>
+        x should equal(2)
+        y should equal(1)
+    val r6 = start.rotate60.rotate60.rotate60.rotate60.rotate60.rotate60
+    r6 should be(start)

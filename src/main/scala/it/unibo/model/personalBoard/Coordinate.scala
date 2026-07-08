@@ -15,6 +15,8 @@ trait Coordinate:
   def southEastNeighbour: Coordinate = Coordinate(x + 2, y - 1)
   def southWestNeighbour: Coordinate = Coordinate(x - 2, y - 1)
 
+  def rotate60: Coordinate
+
 object Coordinate:
 
   def apply(x: Int, y: Int): Coordinate = CoordinateImpl(x, y)
