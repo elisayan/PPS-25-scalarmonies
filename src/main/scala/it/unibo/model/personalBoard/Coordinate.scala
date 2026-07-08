@@ -32,3 +32,5 @@ object Coordinate:
       Coordinate(x - other.x, y - other.y)
     override def *(other: Coordinate): Coordinate =
       Coordinate(x * other.x, y * other.y)
+    override def rotate60: Coordinate =
+      Coordinate((x + 2 * y) / 2, (-3 * x + 2 * y) / 4)

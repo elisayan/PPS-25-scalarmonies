@@ -15,3 +15,9 @@ case class Cell(
     Cell(tokens :+ token)
 
   def topToken: Option[TerrainToken] = tokens.lastOption
+
+  def height: Int = tokens.size
+
+  def placeAnimal: Option[Cell] =
+    if tokens.isEmpty || hasAnimal then None
+    else Some(this.copy(hasAnimal = true))
