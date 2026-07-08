@@ -7,27 +7,6 @@ import it.unibo.model.token.TerrainToken
   */
 sealed trait Card
 
-/** Defines a single spatial and terrain constraint required to compose a
-  * habitat.
-  * @param offset
-  *   The relative coordinate (distance and direction) from the point of origin.
-  * @param terrain
-  *   The type of terrain token required at this specific coordinate.
-  * @param height
-  *   The exact height (number of tokens) required for the terrain column.
-  */
-case class CellRequirement(
-    offset: Coordinate,
-    terrain: TerrainToken,
-    height: Int
-)
-
-/** Models the topological conformation required to place an animal's cubes.
-  * @param requirements
-  *   The list of spatial requirements that make up the habitat.
-  */
-case class Habitat(requirements: List[CellRequirement])
-
 /** Represents an Animal Card, responsible for managing animal cubes and
   * calculating points. The instance is purely immutable: any state modification
   * generates a new card.
