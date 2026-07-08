@@ -1,8 +1,5 @@
 package it.unibo.model.card
 
-import it.unibo.model.personalBoard.Coordinate
-import it.unibo.model.token.TerrainToken
-
 /** Represents the general concept of a Card within the game.
   */
 sealed trait Card
