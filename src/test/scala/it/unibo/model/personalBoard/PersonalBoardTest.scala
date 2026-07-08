@@ -2,6 +2,7 @@ package it.unibo.model.personalBoard
 
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
+import it.unibo.model.token.TerrainToken
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -40,3 +41,19 @@ class PersonalBoardTest extends AnyFlatSpec with Matchers:
     board.getNorthernNeighbour(northBorder) shouldBe None
     board.getNorthWesternNeighbour(northBorder) shouldBe None
     board.getNorthEasternNeighbour(northBorder) shouldBe None
+
+  it should "place an animal correctly on a valid coordinate containing at least one token" in:
+    val boardWithToken = board.placeToken(TerrainToken.Forest, Coordinate(0, 0))
+    val boardWithAnimal = boardWithToken.placeAnimalOnCell(Coordinate(0, 0))
+    boardWithAnimal shouldBe defined
+    boardWithAnimal.get.cells(Coordinate(0, 0)).hasAnimal shouldBe true
+
+  it should "return None when attempting to place an animal on an empty cell" in:
+    val failedPlacement = board.placeAnimalOnCell(Coordinate(0, 0))
+    failedPlacement shouldBe empty
+
+  it should "return None if the cell already has an animal" in:
+    val boardWithToken = board.placeToken(TerrainToken.Forest, Coordinate(0, 0))
+    val boardWithAnimal = boardWithToken.placeAnimalOnCell(Coordinate(0, 0)).get
+    val doublePlacement = boardWithAnimal.placeAnimalOnCell(Coordinate(0, 0))
+    doublePlacement shouldBe empty

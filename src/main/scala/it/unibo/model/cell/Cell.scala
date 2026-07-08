@@ -18,7 +18,7 @@ case class Cell(
 
   def height: Int = tokens.size
 
-  def placeAnimal: Option[Cell] =
+  def occupyWithAnimal: Option[Cell] =
     if tokens.isEmpty || hasAnimal then None
     else Some(this.copy(hasAnimal = true))
 

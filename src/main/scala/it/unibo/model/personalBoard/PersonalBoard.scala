@@ -16,6 +16,7 @@ trait PersonalBoard:
   def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
   def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
   def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard
+  def placeAnimalOnCell(c: Coordinate): Option[PersonalBoard]
 
 object PersonalBoard:
 
@@ -88,3 +89,13 @@ object PersonalBoard:
             this.copy(cells = updatedCells)
           case None => this
       else throw new IllegalStateException("coordinate not valid")
+
+    override def placeAnimalOnCell(c: Coordinate): Option[PersonalBoard] =
+      if isValid(c) then
+        cells.get(c) match
+          case Some(currentCell) =>
+            currentCell.occupyWithAnimal.map(updatedCell =>
+              this.copy(cells = cells + (c -> updatedCell))
+            )
+          case None => None
+      else None

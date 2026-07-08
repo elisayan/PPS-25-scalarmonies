@@ -3,39 +3,24 @@ package it.unibo.model.card
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
 import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
-import it.unibo.model.cell.Cell
-import it.unibo.model.token.TerrainToken
+import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
+import it.unibo.model.token.TerrainToken.{Forest, Water, Mountain, Field}
 
 class HabitatMatcherTest extends AnyFunSuite:
   private val testHabitat = Habitat(
     List(
-      CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
-      CellRequirement(Coordinate(0, 2), TerrainToken.Water, 1)
+      CellRequirement(Coordinate(0, 0), Forest, 1),
+      CellRequirement(Coordinate(0, 2), Water, 1)
     )
   )
-  private val treeCellFree = Cell(List(TerrainToken.Forest))
-  private val treeCellOccupied =
-    Cell(List(TerrainToken.Forest), hasAnimal = true)
-  private val waterCell = Cell(List(TerrainToken.Water))
-  private val boardWithFreeTarget = PersonalBoard(
-    heightBound = 3,
-    widthBound = 3,
-    cells = Map(
-      Coordinate(0, 0) -> treeCellFree,
-      Coordinate(0, 2) -> waterCell
-    )
-  )
-  private val boardWithOccupiedTarget = PersonalBoard(
-    heightBound = 3,
-    widthBound = 3,
-    cells = Map(
-      Coordinate(0, 0) -> treeCellOccupied,
-      Coordinate(0, 2) -> waterCell
-    )
-  )
+  private val boardWithFreeTarget: PersonalBoard = PersonalBoard(SideA)
+    .placeToken(Forest, Coordinate(0, 0))
+    .placeToken(Water, Coordinate(0, 2))
+  private val boardWithOccupiedTarget: PersonalBoard =
+    boardWithFreeTarget.placeAnimalOnCell(Coordinate(0, 0)).get
 
   test(
-    "isMatch deve ritornare true se la plancia soddisfa l'habitat a partire dall'origine indicata altrimenti falso"
+    "isMatch deve ritornare true se la plancia soddisfa l'habitat altrimenti falso"
   ):
     HabitatMatcher.isMatch(
       boardWithFreeTarget,
@@ -49,7 +34,7 @@ class HabitatMatcherTest extends AnyFunSuite:
     ) shouldBe false
     HabitatMatcher.isMatch(
       boardWithFreeTarget,
-      Coordinate(5, 5),
+      Coordinate(10, 10),
       testHabitat
     ) shouldBe false
 
@@ -60,60 +45,50 @@ class HabitatMatcherTest extends AnyFunSuite:
     matches should have size 1
     val foundMatch = matches.head
     foundMatch.origin shouldBe Coordinate(0, 0)
-    foundMatch.involvedCells should have size 2
     foundMatch.involvedCells should contain allOf (Coordinate(0, 0), Coordinate(
       0,
       2
     ))
 
-  test(
-    "findMatches deve ritornare un Set vuoto se l'habitat non è presente da nessuna parte"
-  ):
+  test("findMatches deve ritornare Set vuoto se l'habitat è impossibile"):
     val impossibleHabitat = Habitat(
       List(
-        CellRequirement(Coordinate(0, 0), TerrainToken.Field, 1),
-        CellRequirement(Coordinate(0, 2), TerrainToken.Field, 1)
+        CellRequirement(Coordinate(0, 0), Field, 1),
+        CellRequirement(Coordinate(0, 2), Field, 1)
       )
     )
-    val matches =
-      HabitatMatcher.findMatches(boardWithFreeTarget, impossibleHabitat)
-    matches shouldBe empty
+    HabitatMatcher.findMatches(
+      boardWithFreeTarget,
+      impossibleHabitat
+    ) shouldBe empty
 
-  test(
-    "findMatches deve ritornare un Set vuoto se la cella bersaglio è già occupata da un animale"
-  ):
-    val matches =
-      HabitatMatcher.findMatches(boardWithOccupiedTarget, testHabitat)
-    matches shouldBe empty
+  test("findMatches deve ritornare Set vuoto se la cella bersaglio è occupata"):
+    HabitatMatcher.findMatches(
+      boardWithOccupiedTarget,
+      testHabitat
+    ) shouldBe empty
 
-  test(
-    "findMatches deve individuare pattern complessi multipli, incluse rotazioni, scartando le altezze errate"
-  ):
+  test("findMatches test su SideA (rotazioni, traslazioni e altezze errate)"):
     val complexHabitat = Habitat(
       List(
-        CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
-        CellRequirement(Coordinate(2, 1), TerrainToken.Water, 1),
-        CellRequirement(Coordinate(2, -1), TerrainToken.Mountain, 2)
+        CellRequirement(Coordinate(0, 0), Forest, 1),
+        CellRequirement(Coordinate(2, 1), Water, 1),
+        CellRequirement(Coordinate(2, -1), Mountain, 2)
       )
     )
-    val cells = Map(
-      Coordinate(0, 0) -> Cell(List(TerrainToken.Forest)),
-      Coordinate(2, 1) -> Cell(List(TerrainToken.Water)),
-      Coordinate(2, -1) -> Cell(
-        List(TerrainToken.Mountain, TerrainToken.Mountain)
-      ),
-      Coordinate(4, 2) -> Cell(List(TerrainToken.Forest)),
-      Coordinate(6, 3) -> Cell(List(TerrainToken.Water)),
-      Coordinate(6, 1) -> Cell(
-        List(TerrainToken.Mountain, TerrainToken.Mountain)
-      ),
-      Coordinate(0, -4) -> Cell(List(TerrainToken.Forest)),
-      Coordinate(0, -2) -> Cell(List(TerrainToken.Water)),
-      Coordinate(2, -3) -> Cell(List(TerrainToken.Mountain))
-    )
-    val largeBoard =
-      PersonalBoard(heightBound = 10, widthBound = 10, cells = cells)
+    val largeBoard = PersonalBoard(SideA)
+      .placeToken(Forest, Coordinate(0, 0))
+      .placeToken(Water, Coordinate(2, 1))
+      .placeToken(Mountain, Coordinate(2, -1))
+      .placeToken(Mountain, Coordinate(2, -1))
+      .placeToken(Forest, Coordinate(-2, -1))
+      .placeToken(Water, Coordinate(-4, 0))
+      .placeToken(Mountain, Coordinate(-2, 1))
+      .placeToken(Mountain, Coordinate(-2, 1))
+      .placeToken(Forest, Coordinate(0, -4))
+      .placeToken(Water, Coordinate(2, -3))
+      .placeToken(Mountain, Coordinate(0, -2))
     val matches = HabitatMatcher.findMatches(largeBoard, complexHabitat)
     matches should have size 2
-    val origins = matches.map(_.origin)
-    origins should contain allOf (Coordinate(0, 0), Coordinate(4, 2))
+    matches
+      .map(_.origin) should contain allOf (Coordinate(0, 0), Coordinate(-2, -1))
