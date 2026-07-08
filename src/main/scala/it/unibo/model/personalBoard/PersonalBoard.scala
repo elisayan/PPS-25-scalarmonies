@@ -20,7 +20,7 @@ trait PersonalBoard:
   def getSouthWesternNeighbour(c: Coordinate): Option[Cell]
   def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
   def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
-  def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard
+  def placeToken(token: TerrainToken, c: Coordinate): Option[PersonalBoard]
   def getSide: BoardSide = side
 
 object PersonalBoard:
@@ -37,8 +37,10 @@ object PersonalBoard:
     validCoordinates.map(c => c -> Cell(List())).toMap
 
   def apply(side: BoardSide): PersonalBoard = side match
-    case BoardSide.SideA => PersonalBoardImpl(4, 4, 23, generateHexGrid(4, 4), side)
-    case BoardSide.SideB => PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3), side)
+    case BoardSide.SideA =>
+      PersonalBoardImpl(4, 4, 23, generateHexGrid(4, 4), side)
+    case BoardSide.SideB =>
+      PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3), side)
 
   def unapply(
       board: PersonalBoard
@@ -83,12 +85,15 @@ object PersonalBoard:
         cells.get(c.northWesternNeighbour)
       else None
 
-    override def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard =
+    override def placeToken(
+        token: TerrainToken,
+        c: Coordinate
+    ): Option[PersonalBoard] =
       if isValid(c) then
         cells.get(c) match
           case Some(currentCell) =>
             val updatedCell = currentCell.placeToken(token)
             val updatedCells = cells + (c -> updatedCell)
-            this.copy(cells = updatedCells)
-          case None => this
-      else throw new IllegalStateException("coordinate not valid")
+            Some(copy(cells = updatedCells))
+          case None => None
+      else None
