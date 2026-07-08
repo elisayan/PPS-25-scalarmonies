@@ -10,7 +10,7 @@ class GameView(controller: GameController):
   //private val centralBoardView = CentralBoardView(controller)
   //private val infoPanelView = InfoPanelView(controller)
 
-  val root = new BorderPane //:
+  val root = new BorderPane
     //top = infoPanelView.root
     //center = centralBoardView.root
     //bottom = personalBoardView.root
