@@ -13,7 +13,7 @@ class PersonalBoardTest extends AnyFlatSpec with Matchers:
     if (x / 2).abs % 2 == y.abs % 2
   yield Coordinate(x, y)
   val map: Map[Coordinate, Cell] =
-    validCoordinates.map(c => c -> Cell(List())).toMap
+    validCoordinates.map(c => c -> Cell()).toMap
   val board = PersonalBoard(SideA)
   val westBorder = Coordinate(-4, 0)
   val eastBorder = Coordinate(4, 0)

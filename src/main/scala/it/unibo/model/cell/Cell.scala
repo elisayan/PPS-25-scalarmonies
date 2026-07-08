@@ -2,7 +2,10 @@ package it.unibo.model.cell
 
 import it.unibo.model.token.TerrainToken
 
-case class Cell(private val tokens: List[TerrainToken] = List()):
+case class Cell(
+    private val tokens: List[TerrainToken] = List(),
+    hasAnimal: Boolean = false
+):
 
   def hasTokens: Boolean = tokens.nonEmpty
 
@@ -12,3 +15,12 @@ case class Cell(private val tokens: List[TerrainToken] = List()):
     Cell(tokens :+ token)
 
   def topToken: Option[TerrainToken] = tokens.lastOption
+
+  def height: Int = tokens.size
+
+  def placeAnimal: Option[Cell] =
+    if tokens.isEmpty || hasAnimal then None
+    else Some(this.copy(hasAnimal = true))
+
+object Cell:
+  def apply(): Cell = Cell(List.empty)
