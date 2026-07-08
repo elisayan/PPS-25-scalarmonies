@@ -1,7 +1,8 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.Button
+import scalafx.scene.control.Label
 import scalafx.scene.layout.VBox
 
 class GameView(controller: GameController):

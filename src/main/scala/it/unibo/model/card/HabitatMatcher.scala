@@ -1,6 +1,7 @@
 package it.unibo.model.card
 
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalBoard.PersonalBoard
 
 object HabitatMatcher:
   def isMatch(
