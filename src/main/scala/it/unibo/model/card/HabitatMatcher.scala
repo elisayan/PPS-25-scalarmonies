@@ -2,8 +2,12 @@ package it.unibo.model.card
 
 import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 
-object HabitatMatcher :
-  def isMatch(board: PersonalBoard, origin: Coordinate, habitat: Habitat): Boolean =
+object HabitatMatcher:
+  def isMatch(
+      board: PersonalBoard,
+      origin: Coordinate,
+      habitat: Habitat
+  ): Boolean =
     val isTargetFree = board.cells.get(origin).exists(cell => !cell.hasAnimal)
     isTargetFree && habitat.requirements.forall { req =>
       val targetCoord = origin + req.offset
@@ -17,5 +21,7 @@ object HabitatMatcher :
       rotation <- habitat.allRotations
       origin <- board.cells.keys
       if isMatch(board, origin, rotation)
-      involvedCells = rotation.requirements.map(req => origin + req.offset).toSet
+      involvedCells = rotation.requirements
+        .map(req => origin + req.offset)
+        .toSet
     yield HabitatMatch(origin, involvedCells)
