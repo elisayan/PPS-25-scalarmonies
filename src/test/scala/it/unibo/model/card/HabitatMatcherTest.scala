@@ -55,3 +55,26 @@ class HabitatMatcherTest extends AnyFunSuite:
   test("findMatches deve ritornare un Set vuoto se la cella bersaglio è già occupata da un animale"):
     val matches = HabitatMatcher.findMatches(boardWithOccupiedTarget, testHabitat)
     matches shouldBe empty
+
+  test("findMatches deve individuare pattern complessi multipli, incluse rotazioni, scartando le altezze errate"):
+    val complexHabitat = Habitat(List(
+      CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
+      CellRequirement(Coordinate(2, 1), TerrainToken.Water, 1),
+      CellRequirement(Coordinate(2, -1), TerrainToken.Mountain, 2)
+    ))
+    val cells = Map(
+      Coordinate(0, 0) -> Cell(List(TerrainToken.Forest)),
+      Coordinate(2, 1) -> Cell(List(TerrainToken.Water)),
+      Coordinate(2, -1) -> Cell(List(TerrainToken.Mountain, TerrainToken.Mountain)),
+      Coordinate(4, 2) -> Cell(List(TerrainToken.Forest)),
+      Coordinate(6, 3) -> Cell(List(TerrainToken.Water)),
+      Coordinate(6, 1) -> Cell(List(TerrainToken.Mountain, TerrainToken.Mountain)),
+      Coordinate(0, -4) -> Cell(List(TerrainToken.Forest)),
+      Coordinate(0, -2) -> Cell(List(TerrainToken.Water)),
+      Coordinate(2, -3) -> Cell(List(TerrainToken.Mountain))
+    )
+    val largeBoard = PersonalBoard(heightBound = 10, widthBound = 10, cells = cells)
+    val matches = HabitatMatcher.findMatches(largeBoard, complexHabitat)
+    matches should have size 2
+    val origins = matches.map(_.origin)
+    origins should contain allOf(Coordinate(0, 0), Coordinate(4, 2))
