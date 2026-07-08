@@ -22,5 +22,5 @@ case class Cell(
     if tokens.isEmpty || hasAnimal then None
     else Some(this.copy(hasAnimal = true))
 
-object Token:
+object Cell:
   def apply(): Cell = Cell(List.empty)
