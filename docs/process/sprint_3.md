@@ -1,0 +1,20 @@
+# Sprint 3
+
+**Start Date:** 09/07/2026 \
+**End Date:** 16/07/2026
+
+## Sprint Goal
+Completare l'integrazione e la stabilità del modello logico attraverso lo sviluppo delle componenti precedentemente posticipate, avviando contestualmente la progettazione dell'interfaccia grafica effettiva dell'applicazione supportata da un refactoring del codice e dalla stesura della documentazione tecnica.
+
+## Sprint Backlog
+| Priorità | Titolo                                                                 | Assegnazione | Stima Iniziale | Note                                                                                                               | Giorno 1 | Giorno 2 | Giorno 3 | Giorno 4 | Giorno 5 | Giorno 6 | Giorno 7 |
+|:---------|:-----------------------------------------------------------------------|:-------------|:---------------|:-------------------------------------------------------------------------------------------------------------------|:---------|:---------|:---------|:---------|:---------|:---------|:---------|
+| **1**    | Completamento e integrazione `CentralBoard` con `AnimalCard`           | Filippo      | 3              | Modellazione finale dello stato del tabellone centrale e gestione logica degli slot di offerta                     | 3        | 3        | 2        | 0        | 0        | 0        | 0        |
+| **2**    | Sviluppo e validazione algoritmica dei piazzamenti                     | Elisa        | 5              | Validazione del piazzamento dei dischi sulla plancia rispetto alle regole degli `AnimalCubes`                      | 5        | 5        | 5        | 3        | 2        | 0        | 0        |
+| **3**    | Sviluppo del motore di calcolo del punteggio                           | Daniel       | 5              | Logica di scoring basata sulla conformazione finale della plancia e degli obiettivi delle carte                    | 5        | 5        | 3        | 2        | 0        | 0        | 0        |
+| **4**    | Refactoring architetturale per la pulizia del codice sorgente          | Team         | 3              | Ottimizzazione del codice del modello per garantire il disaccoppiamento e l'applicazione dei principi SOLID        | 3        | 3        | 3        | 2        | 1        | 0        | 0        |
+| **5**    | Stesura della documentazione tecnica di progetto e del processo        | Team         | 3              | Redazione dei report relativi alle scelte architetturali, al design dei componenti e al tracciamento dei requisiti | 3        | 3        | 3        | 3        | 2        | 1        | 0        |
+| **6**    | Progettazione iniziale dell'interfaccia grafica per la `PersonalBoard` | Daniel       | 5              | sviluppo dei componenti visivi per la rappresentazione grafica della plancia                                       | 5        | 5        | 4        | 4        | 2        | 0        | 0        |
+| **7**    | Progettazione iniziale dell'interfaccia grafica per le `AnimalCard`    | Filippo      | 3              | rendering visuale delle carte animale, inclusi i requisiti di pattern e i relativi asset grafici                   | 3        | 3        | 3        | 2        | 1        | 0        | 0        |
+| **8**    | Progettazione iniziale della View globale dell'applicazione            | Elisa        | 5              | orchestrazione dello stage principale, caricamento della scena e integrazione iniziale dei macro-pannelli          | 5        | 5        | 5        | 5        | 3        | 1        | 0        |
+## Sprint Review
