@@ -39,7 +39,7 @@ object GameModel:
       currentPlayerIndex = 0,
       centralBoard = board,
       pouch = updatePouch,
-      turnState = TurnState.WaitingForObligatoryAction
+      turnState = TurnState.WaitingForAction
     )
 
   // solo per test: permette di forzare stato specifico
@@ -51,7 +51,7 @@ object GameModel:
       currentPlayerIndex = 0,
       centralBoard = board,
       pouch = updatedPouch,
-      turnState = TurnState.WaitingForObligatoryAction
+      turnState = TurnState.WaitingForAction
     )
 
   private case class GameModelImpl(
@@ -70,7 +70,7 @@ object GameModel:
     override def isGameOver: Boolean = pouch.isEmpty || hasPlayerAlmostFullBoard
 
     override def takeTokens(slot: Int): GameModel =
-      if turnState != TurnState.WaitingForObligatoryAction then
+      if turnState != TurnState.WaitingForAction then
         throw IllegalStateException("Cannot take tokens in current state")
       centralBoard.take(slot) match
         case None =>
@@ -79,11 +79,11 @@ object GameModel:
           this.copy(
             centralBoard = updatedBoard,
             tokensInHand = tokens,
-            turnState = TurnState.ObligatoryActionDone
+            turnState = TurnState.ActionDone
           )
 
     override def placeToken(coordinate: Coordinate): GameModel =
-      if turnState != TurnState.ObligatoryActionDone then
+      if turnState != TurnState.ActionDone then
         throw IllegalStateException("Cannot place token in current state")
       val token = tokensInHand.head
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
@@ -92,7 +92,7 @@ object GameModel:
       val remainingTokens = tokensInHand.tail
       val newState =
         if remainingTokens.isEmpty then TurnState.TurnComplete
-        else TurnState.ObligatoryActionDone
+        else TurnState.ActionDone
       this.copy(
         players = updatedPlayers,
         tokensInHand = remainingTokens,
@@ -109,7 +109,7 @@ object GameModel:
         centralBoard = refilledBoard,
         pouch = updatedPouch,
         tokensInHand = List(),
-        turnState = TurnState.WaitingForObligatoryAction
+        turnState = TurnState.WaitingForAction
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =

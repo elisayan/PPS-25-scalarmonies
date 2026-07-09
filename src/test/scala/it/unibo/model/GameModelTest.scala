@@ -28,7 +28,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
   it should "start in WaitingForObligatoryAction state" in:
     val model = GameModel(players)
-    model.turnState shouldBe TurnState.WaitingForObligatoryAction
+    model.turnState shouldBe TurnState.WaitingForAction
 
   it should "not be game over at the start" in:
     val model = GameModel(players)
@@ -38,7 +38,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
   it should "move to ObligatoryActionDone after taking tokens" in:
     val model = GameModel(players)
     val updated = model.takeTokens(1)
-    updated.turnState shouldBe TurnState.ObligatoryActionDone
+    updated.turnState shouldBe TurnState.ActionDone
 
   it should "have 3 tokens in hand after taking tokens" in:
     val model = GameModel(players)
