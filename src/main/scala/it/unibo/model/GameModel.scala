@@ -61,6 +61,8 @@ object GameModel:
       override val tokensInHand: List[TerrainToken] = List()
   ) extends GameModel:
 
+    private val MaxAnimalCards = 4
+
     override def currentPlayer: Player = players(currentPlayerIndex)
 
     override def isGameOver: Boolean = pouch.isEmpty || hasPlayerAlmostFullBoard
@@ -117,10 +119,28 @@ object GameModel:
         .toSet
       physicallyValid.filterNot(blockedCells.contains)
 
-    override def takeAnimalCard(card: AnimalCard): GameModel = ???
+    override def takeAnimalCard(card: AnimalCard): GameModel =
+      if turnState == TurnState.TurnComplete then
+        throw IllegalStateException("Cannot take animal card after turn is complete")
+      if currentPlayer.activeCards.size >= MaxAnimalCards then
+        throw IllegalStateException("Player already has maximum animal cards")
 
-    override def placeAnimalCube(card: AnimalCard): GameModel = ???
+      val updatedPlayer = currentPlayer.copy(activeCards = currentPlayer.activeCards :+ card)
+      this.copy(players = players.updated(currentPlayerIndex, updatedPlayer))
 
+    override def placeAnimalCube(card: AnimalCard): GameModel =
+      if turnState == TurnState.TurnComplete then
+        throw IllegalStateException("Cannot place animal cube after turn is complete")
+      val cardIndex = currentPlayer.activeCards.indexOf(card)
+      if cardIndex == -1 then
+        throw IllegalStateException("Card not found in player's active cards")
+      card.placeCube match
+        case None => throw IllegalStateException("No cubes remaining on this card")
+        case Some(updatedCard) =>
+          val updatedCards = currentPlayer.activeCards.updated(cardIndex, updatedCard)
+          val updatedPlayer = currentPlayer.copy(activeCards = updatedCards)
+          this.copy(players = players.updated(currentPlayerIndex, updatedPlayer))
+          
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
         val emptyCells = player.board.cells.values.count(!_.hasTokens)
