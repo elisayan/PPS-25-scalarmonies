@@ -1,10 +1,13 @@
 package it.unibo.controller
 
 import it.unibo.model.GameModel
+import it.unibo.model.TurnState
 import it.unibo.model.personalBoard.Coordinate
 
 trait GameController:
   def currentModel: GameModel
+  def currentPlayerId: Int
+  def currentTurnState: TurnState
   def onTakeTokens(slot: Int): Unit
   def onPlaceToken(coordinate: Coordinate): Unit
   def onEndTurn(): Unit
@@ -20,6 +23,10 @@ object GameController:
   ) extends GameController:
 
     override def currentModel: GameModel = model
+
+    override def currentPlayerId: Int = model.currentPlayer.id
+
+    override def currentTurnState: TurnState = model.turnState
 
     override def onTakeTokens(slot: Int): Unit =
       model = model.takeTokens(slot)

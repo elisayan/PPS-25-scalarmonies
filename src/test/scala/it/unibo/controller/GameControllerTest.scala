@@ -16,7 +16,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     val model = GameModel(players)
     val controller = GameController(model, () => ())
     controller.onTakeTokens(1)
-    controller.currentModel.turnState shouldBe TurnState.ObligatoryActionDone
+    controller.currentModel.turnState shouldBe TurnState.ActionDone
 
   it should "refresh view after taking tokens" in:
     var refreshed = false
@@ -49,4 +49,4 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     controller.onEndTurn()
 
     controller.currentModel.currentPlayer.id shouldBe 2
-    controller.currentModel.turnState shouldBe TurnState.WaitingForObligatoryAction
+    controller.currentModel.turnState shouldBe TurnState.WaitingForAction
