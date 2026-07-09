@@ -3,11 +3,16 @@ package it.unibo.model.personalBoard
 import it.unibo.model.cell.Cell
 import it.unibo.model.token.TerrainToken
 
+enum BoardSide:
+  case SideA, SideB
+
 trait PersonalBoard:
+
   def heightBound: Int
   def widthBound: Int
   def totalCells: Int
   def cells: Map[Coordinate, Cell]
+  def side: BoardSide
 
   def getNorthernNeighbour(c: Coordinate): Option[Cell]
   def getSouthernNeighbour(c: Coordinate): Option[Cell]
@@ -15,13 +20,11 @@ trait PersonalBoard:
   def getSouthWesternNeighbour(c: Coordinate): Option[Cell]
   def getNorthEasternNeighbour(c: Coordinate): Option[Cell]
   def getNorthWesternNeighbour(c: Coordinate): Option[Cell]
-  def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard
+  def placeToken(token: TerrainToken, c: Coordinate): Option[PersonalBoard]
+  def getSide: BoardSide = side
   def placeAnimalOnCell(c: Coordinate): Option[PersonalBoard]
 
 object PersonalBoard:
-
-  enum BoardSide:
-    case SideA, SideB
 
   private def generateHexGrid(
       widthBound: Int,
@@ -35,8 +38,10 @@ object PersonalBoard:
     validCoordinates.map(c => c -> Cell(List())).toMap
 
   def apply(side: BoardSide): PersonalBoard = side match
-    case BoardSide.SideA => PersonalBoardImpl(4, 4, 23, generateHexGrid(4, 4))
-    case BoardSide.SideB => PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3))
+    case BoardSide.SideA =>
+      PersonalBoardImpl(4, 4, 23, generateHexGrid(4, 4), side)
+    case BoardSide.SideB =>
+      PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3), side)
 
   def unapply(
       board: PersonalBoard
@@ -49,7 +54,8 @@ object PersonalBoard:
       override val heightBound: Int,
       override val widthBound: Int,
       override val totalCells: Int,
-      override val cells: Map[Coordinate, Cell]
+      override val cells: Map[Coordinate, Cell],
+      override val side: BoardSide
   ) extends PersonalBoard:
 
     private def isValid(c: Coordinate): Boolean = cells.contains(c)
@@ -80,15 +86,18 @@ object PersonalBoard:
         cells.get(c.northWesternNeighbour)
       else None
 
-    override def placeToken(token: TerrainToken, c: Coordinate): PersonalBoard =
+    override def placeToken(
+        token: TerrainToken,
+        c: Coordinate
+    ): Option[PersonalBoard] =
       if isValid(c) then
         cells.get(c) match
           case Some(currentCell) =>
             val updatedCell = currentCell.placeToken(token)
             val updatedCells = cells + (c -> updatedCell)
-            this.copy(cells = updatedCells)
-          case None => this
-      else throw new IllegalStateException("coordinate not valid")
+            Some(copy(cells = updatedCells))
+          case None => None
+      else None
 
     override def placeAnimalOnCell(c: Coordinate): Option[PersonalBoard] =
       if isValid(c) then

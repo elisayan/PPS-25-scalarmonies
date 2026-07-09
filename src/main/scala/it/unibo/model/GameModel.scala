@@ -76,7 +76,7 @@ object GameModel:
         throw IllegalStateException("Cannot place token in current state")
       val token = tokensInHand.head
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
-      val updatedPlayer = currentPlayer.copy(board = updatedBoard)
+      val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
       val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
       val remainingTokens = tokensInHand.tail
       val newState =

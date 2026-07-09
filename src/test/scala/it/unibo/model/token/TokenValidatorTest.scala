@@ -1,7 +1,7 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
+import it.unibo.model.personalBoard.BoardSide.SideA
 import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -150,8 +150,8 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val neighbour = origin.northEasternNeighbour // (2, 1)
     val farNeighbour = origin.northNeighbour // (0, 2)
     val board = PersonalBoard(SideA)
-    val b = board.placeToken(Mountain, neighbour)
-    val b2 = b.placeToken(Water, farNeighbour)
+    val b = board.placeToken(Mountain, neighbour).get
+    val b2 = b.placeToken(Water, farNeighbour).get
     val result = TokenValidator.validPositions(Mountain, b2)
     result should contain(origin)
     result should contain(neighbour)
@@ -162,8 +162,8 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val origin = Coordinate(0, 0)
     val neighbour = origin.northEasternNeighbour
     val board2 = PersonalBoard(SideA)
-    val b = board2.placeToken(Water, origin)
-    val b2 = b.placeToken(Field, neighbour)
+    val b = board2.placeToken(Water, origin).get
+    val b2 = b.placeToken(Field, neighbour).get
     val result = TokenValidator.validPositions(Building, b2)
     result should not contain origin
     result should not contain neighbour

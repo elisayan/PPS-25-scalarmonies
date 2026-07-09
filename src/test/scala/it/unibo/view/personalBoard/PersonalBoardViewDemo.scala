@@ -1,10 +1,10 @@
 package it.unibo.view.personalBoard
 
 import it.unibo.model.personalBoard.PersonalBoard
-import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
 import scalafx.application.JFXApp3
+import it.unibo.model.personalBoard.BoardSide.SideA
 import scalafx.scene.Scene
-import scalafx.scene.layout.{Pane, StackPane}
+import scalafx.scene.layout.Pane
 
 object PersonalBoardViewDemo extends JFXApp3:
   override def start(): Unit =
