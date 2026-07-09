@@ -1,10 +1,12 @@
 package it.unibo.model
 
-import it.unibo.model.card.{AnimalCard, HabitatMatcher}
+import it.unibo.model.card.AnimalCard
+import it.unibo.model.card.HabitatMatcher
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalBoard.Coordinate
 import it.unibo.model.pouch.Pouches.Pouch
-import it.unibo.model.token.{TerrainToken, TokenValidator}
+import it.unibo.model.token.TerrainToken
+import it.unibo.model.token.TokenValidator
 
 trait GameModel:
   def currentPlayer: Player
@@ -111,36 +113,60 @@ object GameModel:
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
-      val physicallyValid = TokenValidator.validPositions(token, currentPlayer.board)
+      val physicallyValid =
+        TokenValidator.validPositions(token, currentPlayer.board)
       val blockedCells: Set[Coordinate] = currentPlayer.activeCards
         .filter(_.placedCubes > 0)
-        .flatMap(card => HabitatMatcher.findMatches(currentPlayer.board, card.habitat))
+        .flatMap(card =>
+          HabitatMatcher.findMatches(currentPlayer.board, card.habitat)
+        )
         .flatMap(m => m.involvedCells + m.origin)
         .toSet
       physicallyValid.filterNot(blockedCells.contains)
 
     override def takeAnimalCard(card: AnimalCard): GameModel =
       if turnState == TurnState.TurnComplete then
-        throw IllegalStateException("Cannot take animal card after turn is complete")
+        throw IllegalStateException(
+          "Cannot take animal card after turn is complete"
+        )
       if currentPlayer.activeCards.size >= MaxAnimalCards then
         throw IllegalStateException("Player already has maximum animal cards")
 
-      val updatedPlayer = currentPlayer.copy(activeCards = currentPlayer.activeCards :+ card)
+      val updatedPlayer =
+        currentPlayer.copy(activeCards = currentPlayer.activeCards :+ card)
       this.copy(players = players.updated(currentPlayerIndex, updatedPlayer))
 
     override def placeAnimalCube(card: AnimalCard): GameModel =
       if turnState == TurnState.TurnComplete then
-        throw IllegalStateException("Cannot place animal cube after turn is complete")
+        throw IllegalStateException(
+          "Cannot place animal cube after turn is complete"
+        )
       val cardIndex = currentPlayer.activeCards.indexOf(card)
       if cardIndex == -1 then
         throw IllegalStateException("Card not found in player's active cards")
       card.placeCube match
-        case None => throw IllegalStateException("No cubes remaining on this card")
+        case None =>
+          throw IllegalStateException("No cubes remaining on this card")
         case Some(updatedCard) =>
-          val updatedCards = currentPlayer.activeCards.updated(cardIndex, updatedCard)
-          val updatedPlayer = currentPlayer.copy(activeCards = updatedCards)
-          this.copy(players = players.updated(currentPlayerIndex, updatedPlayer))
-          
+          val (newActiveCards, newCompletedCards) =
+            if updatedCard.placedCubes == updatedCard.maxCubes then
+              (
+                currentPlayer.activeCards.filterNot(_ == card),
+                currentPlayer.completedCards :+ updatedCard
+              )
+            else
+              (
+                currentPlayer.activeCards.updated(cardIndex, updatedCard),
+                currentPlayer.completedCards
+              )
+          val updatedPlayer = currentPlayer.copy(
+            activeCards = newActiveCards,
+            completedCards = newCompletedCards
+          )
+          this.copy(players =
+            players.updated(currentPlayerIndex, updatedPlayer)
+          )
+
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
         val emptyCells = player.board.cells.values.count(!_.hasTokens)
