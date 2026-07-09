@@ -138,7 +138,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val nearlyFullBoard = PersonalBoard(SideA).cells.keys.toList
       .take(21) // occupa 21 celle su 23
       .foldLeft(PersonalBoard(SideA)) { (b, coord) =>
-        b.placeToken(TerrainToken.Water, coord)
+        b.placeToken(TerrainToken.Water, coord).get
       }
     val modelWithFullBoard = GameModel(
       List(

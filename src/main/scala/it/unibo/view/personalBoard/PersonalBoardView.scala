@@ -47,10 +47,12 @@ case class PersonalBoardView(board: PersonalBoard) extends Pane:
           (startX, startY + (rowIndex * deltaY))
         }
     }
+
+  val f: String => Unit = (a: String) => println(a)
   private val cells: List[CellView] =
     flattenedOrderedCells.zip(pixelPositions).map {
       case ((coord, cell), (pixelX, pixelY)) =>
-        val view = CellView(coord, cell, (pixelX, pixelY))
+        val view = CellView(coord, cell, (pixelX, pixelY), f)
         view
     }
 
