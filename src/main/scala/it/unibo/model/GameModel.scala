@@ -1,9 +1,10 @@
 package it.unibo.model
 
+import it.unibo.model.card.{AnimalCard, HabitatMatcher}
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalBoard.Coordinate
 import it.unibo.model.pouch.Pouches.Pouch
-import it.unibo.model.token.TerrainToken
+import it.unibo.model.token.{TerrainToken, TokenValidator}
 
 trait GameModel:
   def currentPlayer: Player
@@ -19,6 +20,12 @@ trait GameModel:
   def placeToken(coordinate: Coordinate): GameModel
 
   def endTurn(): GameModel
+
+  def highlightedCells(token: TerrainToken): List[Coordinate]
+
+  def takeAnimalCard(card: AnimalCard): GameModel
+
+  def placeAnimalCube(card: AnimalCard): GameModel
 
 object GameModel:
   def apply(players: List[Player]): GameModel =
@@ -100,6 +107,19 @@ object GameModel:
         tokensInHand = List(),
         turnState = TurnState.WaitingForObligatoryAction
       )
+
+    override def highlightedCells(token: TerrainToken): List[Coordinate] =
+      val physicallyValid = TokenValidator.validPositions(token, currentPlayer.board)
+      val blockedCells: Set[Coordinate] = currentPlayer.activeCards
+        .filter(_.placedCubes > 0)
+        .flatMap(card => HabitatMatcher.findMatches(currentPlayer.board, card.habitat))
+        .flatMap(m => m.involvedCells + m.origin)
+        .toSet
+      physicallyValid.filterNot(blockedCells.contains)
+
+    override def takeAnimalCard(card: AnimalCard): GameModel = ???
+
+    override def placeAnimalCube(card: AnimalCard): GameModel = ???
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>

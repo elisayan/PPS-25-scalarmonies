@@ -1,6 +1,7 @@
 package it.unibo.model
 
-import it.unibo.model.personalBoard.PersonalBoard
+import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
+import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
 import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator
@@ -148,3 +149,26 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     )
     modelWithFullBoard.isGameOver shouldBe true
   }
+
+  // highlightedCells
+  "GameModel" should "return valid positions when no habitats are completed" in {
+    val model = GameModel(players)
+    val afterTake = model.takeTokens(1)
+    val token = afterTake.tokensInHand.head
+    val highlighted = afterTake.highlightedCells(token)
+    highlighted should not be empty
+  }
+
+  it should "exclude cells of completed habitats from highlighted cells" in {
+    // habitat minimo: richiede una cella a offset (0,0) con Mountain altezza 1
+    val simpleHabitat = Habitat(List(CellRequirement(Coordinate(0, 0), TerrainToken.Mountain, 1)))
+    val card = AnimalCard("Test", simpleHabitat, List(1, 2, 3))
+    // piazziamo un Mountain su (0,0) e simuliamo cubo già piazzato
+    val boardWithMountain = PersonalBoard(SideA).placeToken(TerrainToken.Mountain, Coordinate(0, 0))
+    val playerWithCard = Player(1, boardWithMountain, activeCards = List(card.placeCube.get)) // cubo già piazzato
+    val model = GameModel(List(playerWithCard, Player(2, PersonalBoard(SideA))))
+    val afterTake = model.takeTokens(1)
+    val highlighted = afterTake.highlightedCells(TerrainToken.Mountain)
+    highlighted should not contain Coordinate(0, 0)
+  }
+
