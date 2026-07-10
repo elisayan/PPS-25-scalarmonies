@@ -7,6 +7,8 @@ trait ScoreCalculator:
 
   def calculateScore(personalBoard: PersonalBoard): Score
 
+  def calculateDetailedScore(board: PersonalBoard): (Score, Map[String, Score])
+
   object ScoreCalculator:
 
     def apply(): ScoreCalculator = ScoreCalculatorImpl()
@@ -36,3 +38,5 @@ trait ScoreCalculator:
         ???
 
       private def scoreFromSpirits(personalBoard: PersonalBoard): Score = ???
+
+      override def calculateDetailedScore(board: PersonalBoard): (Score, Map[String, Score]) = ???
