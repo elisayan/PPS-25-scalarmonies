@@ -23,7 +23,8 @@ trait GameModel:
 object GameModel:
   def apply(players: List[Player]): GameModel =
     val pouch = Pouch.initialPouch()
-    val (board, updatePouch) = CentralBoard.empty.fill(pouch)
+    // TODO Modified central board implementation by adding animal cards
+    val (board, updatePouch, deck) = CentralBoard.empty.fill(pouch, List.empty)
 
     GameModelImpl(
       players = players,
@@ -36,7 +37,7 @@ object GameModel:
   // solo per test: permette di forzare stato specifico
   def apply(players: List[Player], forceEmptyPouch: Boolean): GameModel =
     val pouch = if forceEmptyPouch then Pouch(List()) else Pouch.initialPouch()
-    val (board, updatedPouch) = CentralBoard.empty.fill(pouch)
+    val (board, updatedPouch, deck) = CentralBoard.empty.fill(pouch, List.empty)
     GameModelImpl(
       players = players,
       currentPlayerIndex = 0,
@@ -60,8 +61,8 @@ object GameModel:
 
     override def takeTokens(slot: Int): GameModel =
       if turnState != TurnState.WaitingForObligatoryAction then
-        throw IllegalStateException("Cannot take tokens in current state")
-      centralBoard.take(slot) match
+        throw IllegalStateException("Cannot takeTokens tokens in current state")
+      centralBoard.takeTokens(slot) match
         case None =>
           throw IllegalStateException(s"Slot $slot is empty or invalid")
         case Some((tokens, updatedBoard)) =>
@@ -92,7 +93,8 @@ object GameModel:
       if turnState != TurnState.TurnComplete then
         throw IllegalStateException("Cannot end turn before placing all tokens")
       val nextIndex = (currentPlayerIndex + 1) % players.size
-      val (refilledBoard, updatedPouch) = centralBoard.fill(pouch)
+      val (refilledBoard, updatedPouch, deck) =
+        centralBoard.fill(pouch, List.empty)
       this.copy(
         currentPlayerIndex = nextIndex,
         centralBoard = refilledBoard,
