@@ -17,7 +17,7 @@ case class TokenView(token: TerrainToken) extends StackPane:
       radius = 2
       offsetX = 2
       offsetY = 2
-      color = Color.rgb(0,0,0,0.3)
+      color = Color.rgb(0, 0, 0, 0.3)
 
   children.add(tokenShape)
 

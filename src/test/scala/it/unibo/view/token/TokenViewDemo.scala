@@ -19,7 +19,7 @@ object TokenViewDemo extends JFXApp3:
       TokenView(TerrainToken.Building)
     )
 
-    val container = new HBox(10):   // spacing 10px tra i token
+    val container = new HBox(10): // spacing 10px tra i token
       children = tokens
       padding = Insets(20)
       style = "-fx-background-color: white;"
