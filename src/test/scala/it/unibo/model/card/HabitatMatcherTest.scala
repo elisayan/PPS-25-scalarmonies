@@ -3,7 +3,7 @@ package it.unibo.model.card
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
 import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
-import it.unibo.model.personalBoard.PersonalBoard.BoardSide.SideA
+import it.unibo.model.personalBoard.BoardSide.SideA
 import it.unibo.model.token.TerrainToken.{Forest, Water, Mountain, Field}
 
 class HabitatMatcherTest extends AnyFunSuite:
@@ -14,8 +14,8 @@ class HabitatMatcherTest extends AnyFunSuite:
     )
   )
   private val boardWithFreeTarget: PersonalBoard = PersonalBoard(SideA)
-    .placeToken(Forest, Coordinate(0, 0))
-    .placeToken(Water, Coordinate(0, 2))
+    .placeToken(Forest, Coordinate(0, 0)).get
+    .placeToken(Water, Coordinate(0, 2)).get
   private val boardWithOccupiedTarget: PersonalBoard =
     boardWithFreeTarget.placeAnimalOnCell(Coordinate(0, 0)).get
 
@@ -77,18 +77,18 @@ class HabitatMatcherTest extends AnyFunSuite:
       )
     )
     val largeBoard = PersonalBoard(SideA)
-      .placeToken(Forest, Coordinate(0, 0))
-      .placeToken(Water, Coordinate(2, 1))
-      .placeToken(Mountain, Coordinate(2, -1))
-      .placeToken(Mountain, Coordinate(2, -1))
-      .placeToken(Forest, Coordinate(-2, -1))
-      .placeToken(Water, Coordinate(-4, 0))
-      .placeToken(Mountain, Coordinate(-2, 1))
-      .placeToken(Mountain, Coordinate(-2, 1))
-      .placeToken(Forest, Coordinate(0, -4))
-      .placeToken(Water, Coordinate(2, -3))
+      .placeToken(Forest, Coordinate(0, 0)).get
+      .placeToken(Water, Coordinate(2, 1)).get
+      .placeToken(Mountain, Coordinate(2, -1)).get
+      .placeToken(Mountain, Coordinate(2, -1)).get
+      .placeToken(Forest, Coordinate(-2, -1)).get
+      .placeToken(Water, Coordinate(-4, 0)).get
+      .placeToken(Mountain, Coordinate(-2, 1)).get
+      .placeToken(Mountain, Coordinate(-2, 1)).get
+      .placeToken(Forest, Coordinate(0, -4)).get
+      .placeToken(Water, Coordinate(2, -3)).get
       .placeToken(Mountain, Coordinate(0, -2))
-    val matches = HabitatMatcher.findMatches(largeBoard, complexHabitat)
+    val matches = HabitatMatcher.findMatches(largeBoard.get, complexHabitat)
     matches should have size 2
     matches
       .map(_.origin) should contain allOf (Coordinate(0, 0), Coordinate(-2, -1))
