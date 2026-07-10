@@ -10,7 +10,7 @@ object Score:
 
   val zero: Score = 0
 
-  extension(s: Score)
+  extension (s: Score)
 
     def +(other: Score): Score = other + s
 
@@ -19,7 +19,3 @@ object Score:
       if res < 0 then 0 else res
 
     def toInt: Int = s
-
-
-
-
