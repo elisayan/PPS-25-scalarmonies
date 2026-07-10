@@ -23,8 +23,8 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     
     total.toInt shouldBe 0
     
-    details("Fiumi").toInt shouldBe 0
-    details("Montagne").toInt shouldBe 0
+    details("Water").toInt shouldBe 0
+    details("Mountains").toInt shouldBe 0
   }
 
   it should "correctly isolate and calculate score from fields" in {
