@@ -18,9 +18,15 @@ class GameModelTest extends AnyFlatSpec with Matchers:
   private val simpleHabitat = Habitat(
     List(CellRequirement(Coordinate(0, 0), TerrainToken.Mountain, 1))
   )
+
   private val testCard = AnimalCard("Squirrel", simpleHabitat, List(1, 2, 3))
 
   private def modelAfterTake(model: GameModel): GameModel = model.takeTokens(1)
+
+  private val CardSlot = 1
+
+  private def modelWithCards(cards: List[AnimalCard]): GameModel =
+    GameModel(players, cards)
 
   "GameModel" should "start with Player 1 as current player" in:
     val model = GameModel(players)
@@ -169,78 +175,104 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
   // take and place animalCard
   it should "allow taking animal card before taking tokens" in:
-    val model = GameModel(players)
-    // WaitingForObligatoryAction -> permesso
-    noException should be thrownBy model.takeAnimalCard(testCard)
+    val model = modelWithCards(List(testCard))
 
-  it should "allow taking animal card in ObligatoryActionDone state" in:
-    val model = GameModel(players)
+    noException should be thrownBy model.takeAnimalCard(CardSlot)
+
+  it should "allow taking animal card in ActionDone state" in:
+    val model = modelWithCards(List(testCard))
     val afterTake = modelAfterTake(model)
-    noException should be thrownBy afterTake.takeAnimalCard(testCard)
+
+    noException should be thrownBy afterTake.takeAnimalCard(CardSlot)
 
   it should "reject taking animal card when turn is complete" in:
-    val model = GameModel(players)
+    val model = modelWithCards(List(testCard))
     val afterTake = modelAfterTake(model)
+
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
       val coord =
         TokenValidator.validPositions(token, m.currentPlayer.board).head
       m.placeToken(coord)
     } // TurnComplete
-    assertThrows[IllegalStateException] { afterPlace.takeAnimalCard(testCard) }
+
+    assertThrows[IllegalStateException] {
+      afterPlace.takeAnimalCard(CardSlot)
+    }
 
   it should "allow placing animal cube before taking tokens" in:
-    val model = GameModel(players)
-    val afterCard = model.takeAnimalCard(testCard)
-    noException should be thrownBy afterCard.placeAnimalCube(testCard)
+    val model = modelWithCards(List(testCard))
+    val afterCard = model.takeAnimalCard(CardSlot)
+
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
+    noException should be thrownBy afterCard.placeAnimalCube(cardTaken)
 
   it should "reject placing animal cube when turn is complete" in:
-    val model = GameModel(players)
-    val afterCard = model.takeAnimalCard(testCard)
+    val model = modelWithCards(List(testCard))
+    val afterCard = model.takeAnimalCard(CardSlot)
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
     val afterTake = afterCard.takeTokens(1)
+
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
       val coord =
         TokenValidator.validPositions(token, m.currentPlayer.board).head
       m.placeToken(coord)
     } // TurnComplete
-    assertThrows[IllegalStateException] { afterPlace.placeAnimalCube(testCard) }
+
+    assertThrows[IllegalStateException] {
+      afterPlace.placeAnimalCube(cardTaken)
+    }
 
   // complete animal cards
-  it should "move a completed card to completedCards when all cubes are placed" in {
-    val model = GameModel(players)
-    // carta con un solo cubo -> si completa al primo piazzamento
+  it should "move a completed card to completedCards when all cubes are placed" in:
     val oneUseCard = AnimalCard("Rabbit", simpleHabitat, List(1))
-    val afterCard = model.takeAnimalCard(oneUseCard)
-    val afterCube = afterCard.placeAnimalCube(oneUseCard)
-    afterCube.currentPlayer.activeCards should not contain oneUseCard
-    afterCube.currentPlayer.completedCards should have size 1
-  }
+    val model = modelWithCards(List(oneUseCard))
 
-  it should "free a slot in activeCards after card is completed" in {
-    val model = GameModel(players)
+    val afterCard = model.takeAnimalCard(CardSlot)
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
+    val afterCube = afterCard.placeAnimalCube(cardTaken)
+
+    afterCube.currentPlayer.activeCards should not contain cardTaken
+    afterCube.currentPlayer.completedCards should have size 1
+
+  it should "free a slot in activeCards after card is completed" in:
     val card1 = AnimalCard("A", simpleHabitat, List(1))
     val card2 = AnimalCard("B", simpleHabitat, List(1))
     val card3 = AnimalCard("C", simpleHabitat, List(1))
     val card4 = AnimalCard("D", simpleHabitat, List(1))
     val card5 = AnimalCard("E", simpleHabitat, List(1))
-    // riempiamo i 4 slot
-    val afterCards = model
-      .takeAnimalCard(card1)
-      .takeAnimalCard(card2)
-      .takeAnimalCard(card3)
-      .takeAnimalCard(card4)
-    // completiamo card1 -> libera uno slot
-    val afterCube = afterCards.placeAnimalCube(card1)
+
+    val playerWithFullCards = Player(
+      1,
+      PersonalBoard(SideA),
+      activeCards = List(card1, card2, card3, card4)
+    )
+
+    val model = GameModel(
+      List(
+        playerWithFullCards,
+        Player(2, PersonalBoard(SideA))
+      ),
+      deck = List(card5)
+    )
+
+    val afterCube = model.placeAnimalCube(card1)
+
     afterCube.currentPlayer.activeCards should have size 3
     afterCube.currentPlayer.completedCards should have size 1
-    // ora possiamo prendere card5 perché c'è uno slot libero
-    noException should be thrownBy afterCube.takeAnimalCard(card5)
-  }
 
-  it should "keep completed card points separate from active cards" in {
-    val model = GameModel(players)
+    noException should be thrownBy afterCube.takeAnimalCard(CardSlot)
+
+  it should "keep completed card points separate from active cards" in:
     val oneUseCard = AnimalCard("Rabbit", simpleHabitat, List(3))
-    val afterCard = model.takeAnimalCard(oneUseCard)
-    val afterCube = afterCard.placeAnimalCube(oneUseCard)
+    val model = modelWithCards(List(oneUseCard))
+
+    val afterCard = model.takeAnimalCard(CardSlot)
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
+    val afterCube = afterCard.placeAnimalCube(cardTaken)
+
     afterCube.currentPlayer.completedCards.head.currentPoints shouldBe 3
     afterCube.currentPlayer.activeCards shouldBe empty
-  }
