@@ -52,6 +52,15 @@ object ScoreCalculator:
 
     private def scoreFromSpirits(board: PersonalBoard): Score = Score.zero
 
-    override def calculateDetailedScore(board: PersonalBoard, cards: List[AnimalCard]): (Score, Map[String, Score]) = ???
+    override def calculateDetailedScore(board: PersonalBoard, cards: List[AnimalCard]): (Score, Map[String, Score]) =
+      val map: Map[String, Score] = Map(
+        "Field"        -> scoreFromFields(board),
+        "Water"        -> scoreFromWater(board),
+        "Building"     -> scoreFromBuildings(board),
+        "Forest"       -> scoreFromForests(board),
+        "Mountain"     -> scoreFromMountains(board),
+        "Animal Cards" -> scoreFromAnimalCards(cards)
+      )
 
+      (calculateScore(board, cards), map)
 
