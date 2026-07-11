@@ -32,7 +32,7 @@ object FieldsScoring:
       else
         val (completedGroup, leftOver) =
           buildGroup(Set(unprocessed.head), unprocessed.tail)
-        val points = if completedGroup.size >= 3 then Score(5) else Score.zero
+        val points = if completedGroup.size >= 2 then Score(5) else Score.zero
         calculateTotal(leftOver, currentScore + points)
 
     calculateTotal(allFields, Score.zero)
