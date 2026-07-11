@@ -24,7 +24,7 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     val (total, details) = calculator.calculateDetailedScore(emptyBoard, emptyCardList)
     total.toInt shouldBe 0
     details("Water").toInt shouldBe 0
-    details("Mountains").toInt shouldBe 0
+    details("Mountain").toInt shouldBe 0
   }
 
   it should "correctly isolate and calculate score from fields" in:
@@ -34,7 +34,7 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     val f2 = f1.get.placeToken(TerrainToken.Field, Coordinate(0, 2))
     val f3 = f2.get.placeToken(TerrainToken.Field, Coordinate(4, 0))
     val (total, details) = calculator.calculateDetailedScore(f3.get, emptyCardList)
-    details("Fields").toInt shouldBe 5
+    details("Field").toInt shouldBe 5
     details("Water").toInt shouldBe 0
     total.toInt shouldBe 5
 
@@ -82,8 +82,9 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     val w4 = w3.get.placeToken(Water, Coordinate(-2, -1))
     val w5 = w4.get.placeToken(Water, Coordinate(-4, 0))
     val w6 = w5.get.placeToken(Water, Coordinate(0, 0))
-    val (total, details) = calculator.calculateDetailedScore(w6.get, emptyCardList)
-    details("Water").toInt shouldBe 11
+    val w7 = w6.get.placeToken(Water, Coordinate(2, 1))
+    val (total, details) = calculator.calculateDetailedScore(w7.get, emptyCardList)
+    details("Water").toInt shouldBe 15
 
   it should "correctly calculate score from water when using the default strategy" in:
     val waterBoard = createMockBoard()
@@ -91,7 +92,7 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     val (total, details) = calculator.calculateDetailedScore(waterBoard, emptyCardList)
 
     details("Water").toInt shouldBe 10
-    details("Fields").toInt shouldBe 0
+    details("Field").toInt shouldBe 0
     total.toInt shouldBe 10
 
 

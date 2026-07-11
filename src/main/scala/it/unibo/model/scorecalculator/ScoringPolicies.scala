@@ -4,6 +4,12 @@ import it.unibo.model.personalBoard.{Coordinate, PersonalBoard, BoardSide}
 import it.unibo.model.scorecalculator.Score.Score
 import it.unibo.model.token.TerrainToken
 
+def pointsForHeight(height: Int): Score = height match
+  case 1 => Score(1)
+  case 2 => Score(3)
+  case 3 => Score(7)
+  case _ => Score.zero
+
 object FieldsScoring:
 
   def compute(
@@ -46,11 +52,7 @@ object MountainsScoring:
     }
     val allMountains = mountainHeights.keySet
 
-    def pointsForHeight(height: Int): Score = height match
-      case 1 => Score(1)
-      case 2 => Score(3)
-      case 3 => Score(7)
-      case _ => Score.zero
+
 
     @scala.annotation.tailrec
     def calculateTotal(
@@ -84,10 +86,7 @@ object BuildingsScoring:
       val neighbourTerrains: Set[TerrainToken] = coord.allNeighbours
         .flatMap(board.cells.get)
         .flatMap(_.topToken)
-
-      neighbourTerrains.contains(
-        TerrainToken.Building
-      ) && neighbourTerrains.size >= 3
+      neighbourTerrains.size >= 3
 
     val validBuildingsCount = allBuildings.count(isValidBuilding)
     Score(validBuildingsCount * 5)
@@ -99,12 +98,6 @@ object ForestsScoring:
       case (coord, cell) if cell.topToken.contains(TerrainToken.Forest) =>
         coord -> cell.height
     }
-
-    def pointsForHeight(height: Int): Score = height match
-      case 1 => Score(1)
-      case 2 => Score(3)
-      case 4 => Score(7)
-      case _ => Score.zero
 
     treeHeights.values.foldLeft(Score.zero) { (acc, height) =>
       acc + pointsForHeight(height)
