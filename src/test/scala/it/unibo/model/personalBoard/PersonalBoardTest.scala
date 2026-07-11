@@ -44,7 +44,7 @@ class PersonalBoardTest extends AnyFlatSpec with Matchers:
 
   it should "place an animal correctly on a valid coordinate containing at least one token" in:
     val boardWithToken = board.placeToken(TerrainToken.Forest, Coordinate(0, 0))
-    val boardWithAnimal = boardWithToken.placeAnimalOnCell(Coordinate(0, 0))
+    val boardWithAnimal = boardWithToken.get.placeAnimalOnCell(Coordinate(0, 0))
     boardWithAnimal shouldBe defined
     boardWithAnimal.get.cells(Coordinate(0, 0)).hasAnimal shouldBe true
 
@@ -54,6 +54,6 @@ class PersonalBoardTest extends AnyFlatSpec with Matchers:
 
   it should "return None if the cell already has an animal" in:
     val boardWithToken = board.placeToken(TerrainToken.Forest, Coordinate(0, 0))
-    val boardWithAnimal = boardWithToken.placeAnimalOnCell(Coordinate(0, 0)).get
+    val boardWithAnimal = boardWithToken.get.placeAnimalOnCell(Coordinate(0, 0)).get
     val doublePlacement = boardWithAnimal.placeAnimalOnCell(Coordinate(0, 0))
     doublePlacement shouldBe empty

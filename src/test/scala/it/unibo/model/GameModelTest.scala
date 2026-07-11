@@ -166,7 +166,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       PersonalBoard(SideA).placeToken(TerrainToken.Mountain, Coordinate(0, 0))
     val playerWithCard = Player(
       1,
-      boardWithMountain,
+      boardWithMountain.get,
       activeCards = List(card.placeCube.get)
     ) // cubo già piazzato
     val model = GameModel(List(playerWithCard, Player(2, PersonalBoard(SideA))))
