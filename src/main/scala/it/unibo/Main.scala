@@ -19,6 +19,7 @@ object Main extends JFXApp3:
     val controller = GameController(GameModel(players), () => view.refresh())
 
     view = GameView(controller)
+    view.refresh()
     stage = new JFXApp3.PrimaryStage:
       title = "Scalarmonies"
       scene = new Scene:
