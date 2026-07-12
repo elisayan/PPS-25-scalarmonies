@@ -106,43 +106,35 @@ object ForestsScoring:
 object WaterScoring:
 
   def compute(
-      board: PersonalBoard,
-      buildGroup: (
-          Set[Coordinate],
-          Set[Coordinate]
-      ) => (Set[Coordinate], Set[Coordinate])
-  ): Score =
+               board: PersonalBoard,
+               buildGroup: (
+                 Set[Coordinate],
+                   Set[Coordinate]
+                 ) => (Set[Coordinate], Set[Coordinate])
+             ): Score =
     val allWater: Set[Coordinate] = board.cells.collect {
       case (coord, cell) if cell.topToken.contains(TerrainToken.Water) => coord
     }.toSet
+    
+    def maxPathInGroup(group: Set[Coordinate]): Int =
+      def dfs(current: Coordinate, visited: Set[Coordinate]): Int =
+        val validNeighbours = current.allNeighbours.intersect(group).diff(visited)
+        if validNeighbours.isEmpty then visited.size
+        else validNeighbours.map(next => dfs(next, visited + next)).max
 
-    def longestPathInGroup(
-        current: Coordinate,
-        visited: Set[Coordinate],
-        group: Set[Coordinate]
-    ): Int =
-      val validNeighbours = current.allNeighbours.intersect(group).diff(visited)
-      if validNeighbours.isEmpty then visited.size
-      else
-        validNeighbours
-          .map(next => longestPathInGroup(next, visited + next, group))
-          .max
+      if group.isEmpty then 0
+      else group.map(start => dfs(start, Set(start))).max
 
     @scala.annotation.tailrec
     def findRiverLengths(
-        unprocessed: Set[Coordinate],
-        lengths: List[Int]
-    ): List[Int] =
+                          unprocessed: Set[Coordinate],
+                          lengths: List[Int]
+                        ): List[Int] =
       if unprocessed.isEmpty then lengths
       else
         val (completedGroup, leftOver) =
           buildGroup(Set(unprocessed.head), unprocessed.tail)
-
-        val maxLengthForThisGroup = completedGroup
-          .map(start => longestPathInGroup(start, Set(start), completedGroup))
-          .maxOption
-          .getOrElse(0)
-
+        val maxLengthForThisGroup = maxPathInGroup(completedGroup)
         findRiverLengths(leftOver, maxLengthForThisGroup :: lengths)
 
     def pointsForSideA(length: Int): Score = length match
@@ -153,7 +145,15 @@ object WaterScoring:
       case 5           => Score(11)
       case 6           => Score(15)
       case l           => Score(15 + (l - 6) * 4)
-
+    
+    @scala.annotation.tailrec
+    def countIslands(unprocessedLand: Set[Coordinate], islandCount: Int): Int =
+      if unprocessedLand.isEmpty then islandCount
+      else
+        val (_, leftOverLand) =
+          buildGroup(Set(unprocessedLand.head), unprocessedLand.tail)
+        countIslands(leftOverLand, islandCount + 1)
+    
     board.side match
       case BoardSide.SideA =>
         val allLengths = findRiverLengths(allWater, Nil)
@@ -161,4 +161,7 @@ object WaterScoring:
         pointsForSideA(longestRiver)
 
       case BoardSide.SideB =>
-        Score(10)
+        
+        val allLand = board.cells.keySet.diff(allWater)
+        val totalIslands = countIslands(allLand, 0)
+        Score(totalIslands * 5)

@@ -87,20 +87,43 @@ class ScoreCalculatorTest extends AnyFlatSpec with Matchers:
     val w2 = w1.get.placeToken(Water, Coordinate(0, -2))
     val w3 = w2.get.placeToken(Water, Coordinate(4, -4))
     val w4 = w3.get.placeToken(Water, Coordinate(-2, -1))
-    val w5 = w4.get.placeToken(Water, Coordinate(-4, 0))
-    val w6 = w5.get.placeToken(Water, Coordinate(0, 0))
-    val w7 = w6.get.placeToken(Water, Coordinate(2, 1))
-    val (total, details) = calculator.calculateDetailedScore(w7.get, emptyCardList)
-    details("Water").toInt shouldBe 15
+    val (total, details) = calculator.calculateDetailedScore(w4.get, emptyCardList)
+    details("Water").toInt shouldBe 8
 
-  it should "correctly calculate score from water when using the default strategy" in:
-    val waterBoard = createMockBoardB()
+    val waterBoard2 = createMockBoardA()
+    val step1 = waterBoard2.placeToken(Water, Coordinate(4, -4))
+    val step2 = step1.get.placeToken(Water, Coordinate(2, -3))
+    val step3 = step2.get.placeToken(Water, Coordinate(0, -2))
+    val branchLeft = step3.get.placeToken(Water, Coordinate(0, 0))
+    val branchLeft2 = branchLeft.get.placeToken(Water, Coordinate(0, 2))
+    val finalBoard = branchLeft2.get.placeToken(Water, Coordinate(-2, -3))
+    val finalBoard2 = finalBoard.get.placeToken(Water, Coordinate(-4, -4))
+    val (total2, details2) = calculator.calculateDetailedScore(finalBoard2.get, emptyCardList)
+    details2("Water").toInt shouldBe 11
 
-    val (total, details) = calculator.calculateDetailedScore(waterBoard, emptyCardList)
+  it should "correctly calculate score for islands created by water on Side B" in:
+    val boardB1 = createMockBoardB()
 
-    details("Water").toInt shouldBe 10
-    details("Field").toInt shouldBe 0
-    total.toInt shouldBe 10
+    val w1 = boardB1.placeToken(Water, Coordinate(4, -2))
+    val w2 = w1.get.placeToken(Water, Coordinate(6, -1))
+    val finalBoard1 = w2.get.placeToken(Water, Coordinate(2, -3))
+
+    val (total1, details1) = calculator.calculateDetailedScore(finalBoard1.get, emptyCardList)
+
+    details1("Water").toInt shouldBe 10
+
+    val boardB2 = createMockBoardB()
+
+    val step1 = boardB2.placeToken(Water, Coordinate(-6, 1))
+    val step2 = step1.get.placeToken(Water, Coordinate(-4, 2))
+    val step3 = step2.get.placeToken(Water, Coordinate(-2, 1))
+    val step4 = step3.get.placeToken(Water, Coordinate(0, 0))
+    val step5 = step4.get.placeToken(Water, Coordinate(2, 1))
+    val finalBoard2 = step5.get.placeToken(Water, Coordinate(2, 3))
+
+    val (total2, details2) = calculator.calculateDetailedScore(finalBoard2.get, emptyCardList)
+
+    details2("Water").toInt shouldBe 15
 
 
   it should "return the same total score between standard and detailed calculation" in:
