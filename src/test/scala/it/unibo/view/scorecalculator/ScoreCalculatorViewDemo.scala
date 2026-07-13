@@ -28,6 +28,6 @@ object ScoreCalculatorViewDemo extends JFXApp3:
       ScoreCalculatorView(list, (0.0, 0.0), calculator)
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
-      scene = new scene(root, 800, 400)
+      scene = new scene(root, 800, 600)
 
 
