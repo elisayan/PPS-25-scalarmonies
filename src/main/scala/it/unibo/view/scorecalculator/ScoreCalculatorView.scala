@@ -5,7 +5,18 @@ import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken._
 import it.unibo.view.token.TokenView
-import scalafx.scene.layout.{GridPane, HBox, VBox, Background, BackgroundFill, CornerRadii, Border, BorderStroke, BorderStrokeStyle, BorderWidths}
+import scalafx.scene.layout.{
+  GridPane,
+  HBox,
+  VBox,
+  Background,
+  BackgroundFill,
+  CornerRadii,
+  Border,
+  BorderStroke,
+  BorderStrokeStyle,
+  BorderWidths
+}
 import scalafx.scene.text.{Font, FontWeight, Text}
 import scalafx.scene.paint.Color
 import scalafx.scene.effect.DropShadow
@@ -13,10 +24,10 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.Includes.*
 
 case class ScoreCalculatorView(
-                                playerBoards: List[Player],
-                                pos: (Double, Double) = (0.0, 0.0),
-                                calculator: ScoreCalculator
-                              ) extends HBox:
+    playerBoards: List[Player],
+    pos: (Double, Double) = (0.0, 0.0),
+    calculator: ScoreCalculator
+) extends HBox:
 
   private val MaxPlayers = 4
 
@@ -25,10 +36,12 @@ case class ScoreCalculatorView(
     padding = Insets(30.0)
     alignment = Pos.Center
     relocate(pos._1, pos._2)
-    
-    background = new Background(Array(
-      new BackgroundFill(Color.Beige, new CornerRadii(15), Insets.Empty)
-    ))
+
+    background = new Background(
+      Array(
+        new BackgroundFill(Color.Beige, new CornerRadii(15), Insets.Empty)
+      )
+    )
 
     val activePlayers = playerBoards
 
@@ -36,28 +49,37 @@ case class ScoreCalculatorView(
       if i < activePlayers.size then
         val player = activePlayers(i)
         children.add(createActiveLane(player, player.board))
-      else
-        children.add(createEmptyLane())
+      else children.add(createEmptyLane())
 
   private def createActiveLane(player: Player, board: PersonalBoard): VBox =
-    val (totalScore, details) = calculator.calculateDetailedScore(board, player.activeCards ::: player.completedCards)
+    val (totalScore, details) = calculator.calculateDetailedScore(
+      board,
+      player.activeCards ::: player.completedCards
+    )
 
     new VBox():
       spacing = 20.0
       padding = Insets(20.0)
       alignment = Pos.TopCenter
       minWidth = 180.0
-      
-      background = new Background(Array(
-        new BackgroundFill(Color.White, new CornerRadii(12), Insets.Empty)
-      ))
-      
-      border = new Border(new BorderStroke(
-        Color.LightGrey, BorderStrokeStyle.Solid, new CornerRadii(12), new BorderWidths(1)
-      ))
-      
+
+      background = new Background(
+        Array(
+          new BackgroundFill(Color.White, new CornerRadii(12), Insets.Empty)
+        )
+      )
+
+      border = new Border(
+        new BorderStroke(
+          Color.LightGrey,
+          BorderStrokeStyle.Solid,
+          new CornerRadii(12),
+          new BorderWidths(1)
+        )
+      )
+
       effect = new DropShadow(8.0, 0.0, 4.0, Color.gray(0.0, 0.15))
-      
+
       val nameText = new Text("pippo".toUpperCase)
       nameText.font = Font.font("Arial", FontWeight.Bold, 16)
       nameText.fill = Color.Black
@@ -67,11 +89,46 @@ case class ScoreCalculatorView(
         vgap = 12.0
         alignment = Pos.Center
 
-        add(createTerrainBox(TokenView(Forest), details.getOrElse("Forest", 0).toString), 0, 0)
-        add(createTerrainBox(TokenView(Mountain), details.getOrElse("Mountain", 0).toString), 0, 1)
-        add(createTerrainBox(TokenView(Field), details.getOrElse("Field", 0).toString), 0, 2)
-        add(createTerrainBox(TokenView(Water), details.getOrElse("Water", 0).toString), 0, 3)
-        add(createTerrainBox(TokenView(Building), details.getOrElse("Building", 0).toString), 0, 4)
+        add(
+          createTerrainBox(
+            TokenView(Forest),
+            details.getOrElse("Forest", 0).toString
+          ),
+          0,
+          0
+        )
+        add(
+          createTerrainBox(
+            TokenView(Mountain),
+            details.getOrElse("Mountain", 0).toString
+          ),
+          0,
+          1
+        )
+        add(
+          createTerrainBox(
+            TokenView(Field),
+            details.getOrElse("Field", 0).toString
+          ),
+          0,
+          2
+        )
+        add(
+          createTerrainBox(
+            TokenView(Water),
+            details.getOrElse("Water", 0).toString
+          ),
+          0,
+          3
+        )
+        add(
+          createTerrainBox(
+            TokenView(Building),
+            details.getOrElse("Building", 0).toString
+          ),
+          0,
+          4
+        )
 
         val animalBox: HBox = new HBox():
           spacing = 8.0
@@ -88,11 +145,15 @@ case class ScoreCalculatorView(
       val totalBox: VBox = new VBox():
         alignment = Pos.Center
         padding = Insets(15, 0, 0, 0)
-        
-        border = new Border(new BorderStroke(
-          Color.LightGrey, BorderStrokeStyle.Solid, CornerRadii.Empty,
-          new BorderWidths(1, 0, 0, 0)
-        ))
+
+        border = new Border(
+          new BorderStroke(
+            Color.LightGrey,
+            BorderStrokeStyle.Solid,
+            CornerRadii.Empty,
+            new BorderWidths(1, 0, 0, 0)
+          )
+        )
 
         val totalLabel = new Text("TOTALE")
         totalLabel.font = Font.font("Arial", FontWeight.Normal, 11)
@@ -127,14 +188,21 @@ case class ScoreCalculatorView(
       alignment = Pos.Center
       minWidth = 180.0
       opacity = 0.5
-      
-      background = new Background(Array(
-        new BackgroundFill(Color.Silver, new CornerRadii(12), Insets.Empty)
-      ))
-      
-      border = new Border(new BorderStroke(
-        Color.Gray, BorderStrokeStyle.Dashed, new CornerRadii(12), new BorderWidths(2)
-      ))
+
+      background = new Background(
+        Array(
+          new BackgroundFill(Color.Silver, new CornerRadii(12), Insets.Empty)
+        )
+      )
+
+      border = new Border(
+        new BorderStroke(
+          Color.Gray,
+          BorderStrokeStyle.Dashed,
+          new CornerRadii(12),
+          new BorderWidths(2)
+        )
+      )
 
       val nameText = new Text("---")
       nameText.font = Font.font("Arial", FontWeight.Bold, 16)

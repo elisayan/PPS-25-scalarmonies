@@ -94,7 +94,7 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
     val r6 = start.rotate60.rotate60.rotate60.rotate60.rotate60.rotate60
     r6 should be(start)
 
-  it should "return all correct neighbours" in :
+  it should "return all correct neighbours" in:
     val center = Coordinate(0, 0)
     val expectedNeighbours = Set(
       Coordinate(0, 2), // North: (0, 0 + 2)
@@ -119,9 +119,8 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
     center.isNeighbour(distantCoordinate) shouldBe false
     actualNeighbours.contains(distantCoordinate) shouldBe false
 
-  it should "correctly check whether another coordinate is its neighbour" in :
+  it should "correctly check whether another coordinate is its neighbour" in:
     val center = Coordinate(0, 0)
-
 
     val validNeighbours = Set(
       Coordinate(0, 2), // North
@@ -150,6 +149,3 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
 
     val farAway = Coordinate(100, -50)
     center.isNeighbour(farAway) shouldBe false
-
-
-

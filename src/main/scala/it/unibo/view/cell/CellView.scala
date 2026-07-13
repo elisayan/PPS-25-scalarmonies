@@ -14,16 +14,15 @@ import scalafx.scene.text.Text
 import scalafx.Includes.*
 
 case class CellView(
-                     coordinate: Coordinate,
-                     var cell: Cell,
-                     pos: (Double, Double) = (0.0, 0.0),
-                     onCellClicked: String => Unit // Aggiornato a Coordinate => Unit per essere type-safe
-                   ) extends StackPane:
+    coordinate: Coordinate,
+    var cell: Cell,
+    pos: (Double, Double) = (0.0, 0.0),
+    onCellClicked: String => Unit // Aggiornato a Coordinate => Unit per essere type-safe
+) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
   private val label = new Text()
   children.addAll(hexagon, label)
-
 
   private def setHexagon(): Unit =
     hexagon.getPoints.addAll(
@@ -45,23 +44,21 @@ case class CellView(
   hexagon.onMouseClicked = (event: MouseEvent) =>
     onCellClicked(
       "ciao" // Passa direttamente l'oggetto Coordinate tipato
-      //triggera la chiamata a Controller che avvisa Model che deve distruggere e ricostruire nuovo mondo
+      // triggera la chiamata a Controller che avvisa Model che deve distruggere e ricostruire nuovo mondo
     )
 
   def updateState(newCell: Cell): Unit =
     println(
       s"Aggiornamento cella $coordinate nel view con i nuovi dati del modello"
-      //dopo aver costruito nuovo mondo faccio update linkando questa CellView a nuova Cell
-      //con stesse Coordinate ma List[Token] AGGIORNATA
+      // dopo aver costruito nuovo mondo faccio update linkando questa CellView a nuova Cell
+      // con stesse Coordinate ma List[Token] AGGIORNATA
     )
     this.cell = newCell
     placeTokenView()
 
   def highlight(enabled: Boolean): Unit =
-    if enabled then
-      hexagon.fill = Color.LightGreen
-    else
-      hexagon.fill = Color.LightGrey
+    if enabled then hexagon.fill = Color.LightGreen
+    else hexagon.fill = Color.LightGrey
 
   private def placeTokenView(): Unit =
     val tokens = cell.getTokens
@@ -75,7 +72,10 @@ case class CellView(
       children.add(tv)
     }
 
-  private def createConfiguredTokenView(token: TerrainToken, offsetY: Double): TokenView =
+  private def createConfiguredTokenView(
+      token: TerrainToken,
+      offsetY: Double
+  ): TokenView =
     val tv = TokenView(token)
     tv.setScaleX(0.8)
     tv.setScaleY(0.8)

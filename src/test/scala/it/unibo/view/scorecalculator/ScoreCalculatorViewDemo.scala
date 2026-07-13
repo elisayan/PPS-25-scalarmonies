@@ -29,5 +29,3 @@ object ScoreCalculatorViewDemo extends JFXApp3:
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
       scene = new scene(root, 800, 600)
-
-

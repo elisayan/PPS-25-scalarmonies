@@ -14,8 +14,10 @@ class HabitatMatcherTest extends AnyFunSuite:
     )
   )
   private val boardWithFreeTarget: PersonalBoard = PersonalBoard(SideA)
-    .placeToken(Forest, Coordinate(0, 0)).get
-    .placeToken(Water, Coordinate(0, 2)).get
+    .placeToken(Forest, Coordinate(0, 0))
+    .get
+    .placeToken(Water, Coordinate(0, 2))
+    .get
   private val boardWithOccupiedTarget: PersonalBoard =
     boardWithFreeTarget.placeAnimalOnCell(Coordinate(0, 0)).get
 
@@ -77,16 +79,26 @@ class HabitatMatcherTest extends AnyFunSuite:
       )
     )
     val largeBoard = PersonalBoard(SideA)
-      .placeToken(Forest, Coordinate(0, 0)).get
-      .placeToken(Water, Coordinate(2, 1)).get
-      .placeToken(Mountain, Coordinate(2, -1)).get
-      .placeToken(Mountain, Coordinate(2, -1)).get
-      .placeToken(Forest, Coordinate(-2, -1)).get
-      .placeToken(Water, Coordinate(-4, 0)).get
-      .placeToken(Mountain, Coordinate(-2, 1)).get
-      .placeToken(Mountain, Coordinate(-2, 1)).get
-      .placeToken(Forest, Coordinate(0, -4)).get
-      .placeToken(Water, Coordinate(2, -3)).get
+      .placeToken(Forest, Coordinate(0, 0))
+      .get
+      .placeToken(Water, Coordinate(2, 1))
+      .get
+      .placeToken(Mountain, Coordinate(2, -1))
+      .get
+      .placeToken(Mountain, Coordinate(2, -1))
+      .get
+      .placeToken(Forest, Coordinate(-2, -1))
+      .get
+      .placeToken(Water, Coordinate(-4, 0))
+      .get
+      .placeToken(Mountain, Coordinate(-2, 1))
+      .get
+      .placeToken(Mountain, Coordinate(-2, 1))
+      .get
+      .placeToken(Forest, Coordinate(0, -4))
+      .get
+      .placeToken(Water, Coordinate(2, -3))
+      .get
       .placeToken(Mountain, Coordinate(0, -2))
     val matches = HabitatMatcher.findMatches(largeBoard.get, complexHabitat)
     matches should have size 2

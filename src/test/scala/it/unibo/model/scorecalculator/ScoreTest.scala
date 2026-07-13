@@ -19,7 +19,7 @@ class ScoreTest extends AnyFlatSpec with Matchers:
 
   it should "throw an IllegalArgumentException if created with a negative value" in {
 
-    an [IllegalArgumentException] should be thrownBy {
+    an[IllegalArgumentException] should be thrownBy {
       Score(-5)
     }
   }

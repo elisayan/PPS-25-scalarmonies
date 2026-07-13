@@ -52,8 +52,6 @@ object MountainsScoring:
     }
     val allMountains = mountainHeights.keySet
 
-
-
     @scala.annotation.tailrec
     def calculateTotal(
         unprocessed: Set[Coordinate],
@@ -106,19 +104,20 @@ object ForestsScoring:
 object WaterScoring:
 
   def compute(
-               board: PersonalBoard,
-               buildGroup: (
-                 Set[Coordinate],
-                   Set[Coordinate]
-                 ) => (Set[Coordinate], Set[Coordinate])
-             ): Score =
+      board: PersonalBoard,
+      buildGroup: (
+          Set[Coordinate],
+          Set[Coordinate]
+      ) => (Set[Coordinate], Set[Coordinate])
+  ): Score =
     val allWater: Set[Coordinate] = board.cells.collect {
       case (coord, cell) if cell.topToken.contains(TerrainToken.Water) => coord
     }.toSet
-    
+
     def maxPathInGroup(group: Set[Coordinate]): Int =
       def dfs(current: Coordinate, visited: Set[Coordinate]): Int =
-        val validNeighbours = current.allNeighbours.intersect(group).diff(visited)
+        val validNeighbours =
+          current.allNeighbours.intersect(group).diff(visited)
         if validNeighbours.isEmpty then visited.size
         else validNeighbours.map(next => dfs(next, visited + next)).max
 
@@ -127,9 +126,9 @@ object WaterScoring:
 
     @scala.annotation.tailrec
     def findRiverLengths(
-                          unprocessed: Set[Coordinate],
-                          lengths: List[Int]
-                        ): List[Int] =
+        unprocessed: Set[Coordinate],
+        lengths: List[Int]
+    ): List[Int] =
       if unprocessed.isEmpty then lengths
       else
         val (completedGroup, leftOver) =
@@ -145,7 +144,7 @@ object WaterScoring:
       case 5           => Score(11)
       case 6           => Score(15)
       case l           => Score(15 + (l - 6) * 4)
-    
+
     @scala.annotation.tailrec
     def countIslands(unprocessedLand: Set[Coordinate], islandCount: Int): Int =
       if unprocessedLand.isEmpty then islandCount
@@ -153,7 +152,7 @@ object WaterScoring:
         val (_, leftOverLand) =
           buildGroup(Set(unprocessedLand.head), unprocessedLand.tail)
         countIslands(leftOverLand, islandCount + 1)
-    
+
     board.side match
       case BoardSide.SideA =>
         val allLengths = findRiverLengths(allWater, Nil)
@@ -161,7 +160,6 @@ object WaterScoring:
         pointsForSideA(longestRiver)
 
       case BoardSide.SideB =>
-        
         val allLand = board.cells.keySet.diff(allWater)
         val totalIslands = countIslands(allLand, 0)
         Score(totalIslands * 5)

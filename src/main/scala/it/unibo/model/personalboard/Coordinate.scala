@@ -47,4 +47,5 @@ object Coordinate:
         southWesternNeighbour
       )
 
-    override def isNeighbour(other: Coordinate): Boolean = allNeighbours.contains(other)
+    override def isNeighbour(other: Coordinate): Boolean =
+      allNeighbours.contains(other)
