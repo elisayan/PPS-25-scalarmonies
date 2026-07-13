@@ -1,6 +1,5 @@
 package it.unibo.model
 
-import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
@@ -277,3 +276,35 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
     afterCube.currentPlayer.completedCards.head.currentPoints shouldBe 3
     afterCube.currentPlayer.activeCards shouldBe empty
+
+  // cancelTurn
+  it should "restore state to beginning of turn after cancelTurn" in:
+    val model = GameModel(players)
+    val afterTake = model.takeTokens(1)
+    val afterCancel = afterTake.cancelTurn()
+    afterCancel.turnState shouldBe TurnState.WaitingForAction
+    afterCancel.tokensInHand shouldBe empty
+
+  it should "restore player board after cancelTurn" in :
+    val model = GameModel(players)
+    val boardBefore = model.currentPlayer.board
+    val afterTake = model.takeTokens(1)
+    val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
+      val coord = TokenValidator.validPositions(token, m.currentPlayer.board).head
+      m.placeToken(coord)
+    }
+    val afterCancel = afterPlace.cancelTurn()
+    afterCancel.currentPlayer.board.cells shouldBe boardBefore.cells
+
+  it should "restore central board after cancelTurn" in :
+    val model = GameModel(players)
+    val boardBefore = model.currentPlayer.board
+    val afterTake = model.takeTokens(1)
+    val afterCancel = afterTake.cancelTurn()
+    afterCancel.currentPlayer.board.cells shouldBe boardBefore.cells
+
+  it should "do nothing if cancelTurn is called without any action" in :
+    val model = GameModel(players)
+    val afterCancel = model.cancelTurn()
+    afterCancel.turnState shouldBe TurnState.WaitingForAction
+    afterCancel.currentPlayer.id shouldBe 1

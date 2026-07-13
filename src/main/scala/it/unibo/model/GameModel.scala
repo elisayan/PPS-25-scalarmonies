@@ -19,6 +19,7 @@ trait GameModel:
   def endTurn(): GameModel
   def highlightedCells(token: TerrainToken): List[Coordinate]
   def placeAnimalCube(card: AnimalCard): GameModel
+  def cancelTurn(): GameModel
 
 object GameModel:
   def apply(players: List[Player], deck: List[AnimalCard] = List()): GameModel =
@@ -53,6 +54,7 @@ object GameModel:
       centralBoard: CentralBoard,
       pouch: Pouch,
       deck: List[AnimalCard],
+      turnSnapshot: Option[GameModelImpl] = None,
       override val turnState: TurnState,
       override val tokensInHand: List[TerrainToken] = List()
   ) extends GameModel:
@@ -75,7 +77,8 @@ object GameModel:
           this.copy(
             centralBoard = updatedBoard,
             tokensInHand = tokens,
-            turnState = TurnState.ActionDone
+            turnState = TurnState.ActionDone,
+            turnSnapshot = turnSnapshot.orElse(Some(this))
           )
 
     override def takeAnimalCard(slot: Int): GameModel =
@@ -93,7 +96,8 @@ object GameModel:
           )
           this.copy(
             centralBoard = updatedBoard,
-            players = players.updated(currentPlayerIndex, updatedPlayer)
+            players = players.updated(currentPlayerIndex, updatedPlayer),
+            turnSnapshot = turnSnapshot.orElse(Some(this))
           )
 
     override def placeToken(coordinate: Coordinate): GameModel =
@@ -130,7 +134,8 @@ object GameModel:
         pouch = updatedPouch,
         deck = updatedDeck,
         tokensInHand = List(),
-        turnState = TurnState.WaitingForAction
+        turnState = TurnState.WaitingForAction,
+        turnSnapshot = None
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
@@ -180,8 +185,16 @@ object GameModel:
           )
 
           this.copy(
-            players = players.updated(currentPlayerIndex, updatedPlayer)
+            players = players.updated(currentPlayerIndex, updatedPlayer),
+            turnSnapshot = turnSnapshot.orElse(Some(this))
           )
+
+    override def cancelTurn(): GameModel =
+      turnSnapshot match {
+        case Some(snapshot) => snapshot.copy(turnSnapshot = None)
+        case None => this
+      }
+
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
