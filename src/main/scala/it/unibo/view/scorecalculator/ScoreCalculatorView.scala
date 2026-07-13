@@ -1,7 +1,7 @@
 package it.unibo.view.scorecalculator
 
 import it.unibo.model.Player
-import it.unibo.model.personalBoard.PersonalBoard
+import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken._
 import it.unibo.view.token.TokenView

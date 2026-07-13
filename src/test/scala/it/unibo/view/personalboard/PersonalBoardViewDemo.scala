@@ -1,8 +1,8 @@
-package it.unibo.view.personalBoard
+package it.unibo.view.personalboard
 
-import it.unibo.model.personalBoard.PersonalBoard
+import it.unibo.model.personalboard.PersonalBoard
 import scalafx.application.JFXApp3
-import it.unibo.model.personalBoard.BoardSide.SideA
+import it.unibo.model.personalboard.BoardSide.SideA
 import scalafx.scene.Scene
 import scalafx.scene.layout.Pane
 

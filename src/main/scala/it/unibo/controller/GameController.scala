@@ -2,7 +2,7 @@ package it.unibo.controller
 
 import it.unibo.model.GameModel
 import it.unibo.model.TurnState
-import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalboard.Coordinate
 
 trait GameController:
   def currentModel: GameModel

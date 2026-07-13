@@ -2,7 +2,7 @@ package it.unibo.view.cell
 
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken.*
 import it.unibo.view.token.TokenView
 import scalafx.scene.Scene

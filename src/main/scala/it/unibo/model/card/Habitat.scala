@@ -1,6 +1,6 @@
 package it.unibo.model.card
 
-import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 
 /** Defines a single spatial and terrain constraint required to compose a

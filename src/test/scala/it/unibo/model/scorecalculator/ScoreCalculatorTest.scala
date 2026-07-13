@@ -1,10 +1,10 @@
 package it.unibo.model.scorecalculator
 
 import it.unibo.model.card.AnimalCard
-import it.unibo.model.personalBoard.BoardSide.{SideA, SideB}
+import it.unibo.model.personalboard.BoardSide.{SideA, SideB}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.scorecalculator.Score.toInt
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TerrainToken.{Building, Field, Forest, Ground, Water}

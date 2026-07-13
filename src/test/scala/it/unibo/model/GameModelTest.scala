@@ -1,9 +1,9 @@
 package it.unibo.model
 
-import it.unibo.model.personalBoard.PersonalBoard
-import it.unibo.model.personalBoard.BoardSide.SideA
+import it.unibo.model.personalboard.PersonalBoard
+import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator
 import org.scalatest.flatspec.AnyFlatSpec

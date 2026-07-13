@@ -1,4 +1,4 @@
-package it.unibo.model.personalBoard
+package it.unibo.model.personalboard
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

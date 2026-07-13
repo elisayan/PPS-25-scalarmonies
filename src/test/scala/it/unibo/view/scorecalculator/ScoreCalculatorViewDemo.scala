@@ -1,8 +1,8 @@
 package it.unibo.view.scorecalculator
 
 import it.unibo.model.Player
-import it.unibo.model.personalBoard.BoardSide.SideA
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.BoardSide.SideA
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken.{Field, Forest, Mountain}
 import scalafx.application.JFXApp3

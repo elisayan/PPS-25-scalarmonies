@@ -1,7 +1,7 @@
-package it.unibo.model.personalBoard
+package it.unibo.model.personalboard
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.BoardSide.SideA
+import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.TerrainToken
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

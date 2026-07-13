@@ -3,7 +3,7 @@ package it.unibo.model
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.card.HabitatMatcher
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
-import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator

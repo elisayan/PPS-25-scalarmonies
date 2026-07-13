@@ -1,4 +1,4 @@
-package it.unibo.model.personalBoard
+package it.unibo.model.personalboard
 
 import it.unibo.model.cell.Cell
 import it.unibo.model.token.TerrainToken

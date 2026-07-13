@@ -2,7 +2,7 @@ package it.unibo.model.card
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
-import it.unibo.model.personalBoard.Coordinate
+import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 
 class AnimalCardTest extends AnyFunSuite:

@@ -1,8 +1,8 @@
 package it.unibo.model.token
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalBoard.BoardSide.SideA
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.BoardSide.SideA
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

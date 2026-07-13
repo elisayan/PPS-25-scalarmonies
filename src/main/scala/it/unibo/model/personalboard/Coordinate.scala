@@ -1,4 +1,4 @@
-package it.unibo.model.personalBoard
+package it.unibo.model.personalboard
 
 trait Coordinate:
   def x: Int

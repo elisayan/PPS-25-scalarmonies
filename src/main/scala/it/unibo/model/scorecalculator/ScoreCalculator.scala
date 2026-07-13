@@ -1,7 +1,7 @@
 package it.unibo.model.scorecalculator
 
 import it.unibo.model.card.AnimalCard
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.scorecalculator.Score.Score
 
 trait ScoreCalculator:

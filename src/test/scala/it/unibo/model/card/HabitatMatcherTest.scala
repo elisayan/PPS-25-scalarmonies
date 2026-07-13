@@ -2,8 +2,8 @@ package it.unibo.model.card
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
-import it.unibo.model.personalBoard.{Coordinate, PersonalBoard}
-import it.unibo.model.personalBoard.BoardSide.SideA
+import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.TerrainToken.{Forest, Water, Mountain, Field}
 
 class HabitatMatcherTest extends AnyFunSuite:
