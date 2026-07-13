@@ -2,7 +2,6 @@ package it.unibo
 
 import it.unibo.controller.GameController
 import it.unibo.model._
-import it.unibo.model.*
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.view.GameView

@@ -1,7 +1,8 @@
 package it.unibo.view.personalboard
 
 import it.unibo.model.cell.Cell
-import it.unibo.model.personalboard.BoardSide.{SideA, SideB}
+import it.unibo.model.personalboard.BoardSide.SideA
+import it.unibo.model.personalboard.BoardSide.SideB
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.view.cell.CellView
