@@ -5,10 +5,10 @@ import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken._
 import it.unibo.view.token.TokenView
-import scalafx.scene.effect.DropShadow
+import scalafx.Includes._
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
-import scalafx.Includes._
+import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.Background
 import scalafx.scene.layout.BackgroundFill
 import scalafx.scene.layout.Border
