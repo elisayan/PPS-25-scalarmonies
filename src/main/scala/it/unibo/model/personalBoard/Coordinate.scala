@@ -14,6 +14,8 @@ trait Coordinate:
   def northWesternNeighbour: Coordinate = Coordinate(x - 2, y + 1)
   def southEasternNeighbour: Coordinate = Coordinate(x + 2, y - 1)
   def southWesternNeighbour: Coordinate = Coordinate(x - 2, y - 1)
+  def allNeighbours: Set[Coordinate]
+  def isNeighbour(other: Coordinate): Boolean
 
   def rotate60: Coordinate
 
@@ -34,3 +36,15 @@ object Coordinate:
       Coordinate(x * other.x, y * other.y)
     override def rotate60: Coordinate =
       Coordinate((x + 2 * y) / 2, (-3 * x + 2 * y) / 4)
+
+    override def allNeighbours: Set[Coordinate] =
+      Set(
+        northNeighbour,
+        southNeighbour,
+        northEasternNeighbour,
+        northWesternNeighbour,
+        southEasternNeighbour,
+        southWesternNeighbour
+      )
+
+    override def isNeighbour(other: Coordinate): Boolean = allNeighbours.contains(other)

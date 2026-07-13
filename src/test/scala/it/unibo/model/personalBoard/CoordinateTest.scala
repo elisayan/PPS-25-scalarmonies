@@ -93,3 +93,63 @@ class CoordinateTest extends AnyFlatSpec with Matchers:
         y should equal(1)
     val r6 = start.rotate60.rotate60.rotate60.rotate60.rotate60.rotate60
     r6 should be(start)
+
+  it should "return all correct neighbours" in :
+    val center = Coordinate(0, 0)
+    val expectedNeighbours = Set(
+      Coordinate(0, 2), // North: (0, 0 + 2)
+      Coordinate(0, -2), // South: (0, 0 - 2)
+      Coordinate(2, 1), // North-East: (0 + 2, 0 + 1)
+      Coordinate(-2, 1), // North-West: (0 - 2, 0 + 1)
+      Coordinate(2, -1), // South-East: (0 + 2, 0 - 1)
+      Coordinate(-2, -1) // South-West: (0 - 2, 0 - 1)
+    )
+
+    val actualNeighbours = center.allNeighbours
+
+    actualNeighbours shouldBe expectedNeighbours
+
+    actualNeighbours.size shouldBe 6
+
+    expectedNeighbours.foreach(neighbour =>
+      center.isNeighbour(neighbour) shouldBe true
+    )
+
+    val distantCoordinate = Coordinate(4, 4)
+    center.isNeighbour(distantCoordinate) shouldBe false
+    actualNeighbours.contains(distantCoordinate) shouldBe false
+
+  it should "correctly check whether another coordinate is its neighbour" in :
+    val center = Coordinate(0, 0)
+
+
+    val validNeighbours = Set(
+      Coordinate(0, 2), // North
+      Coordinate(0, -2), // South
+      Coordinate(2, 1), // North-East
+      Coordinate(-2, 1), // North-West
+      Coordinate(2, -1), // South-East
+      Coordinate(-2, -1) // South-West
+    )
+
+    validNeighbours.foreach(neighbour =>
+      center.isNeighbour(neighbour) shouldBe true
+    )
+
+    val trickyNonNeighbours = Set(
+      Coordinate(0, 1),
+      Coordinate(1, 0),
+      Coordinate(1, 1),
+      Coordinate(2, 2),
+      Coordinate(0, 0)
+    )
+
+    trickyNonNeighbours.foreach(nonNeighbour =>
+      center.isNeighbour(nonNeighbour) shouldBe false
+    )
+
+    val farAway = Coordinate(100, -50)
+    center.isNeighbour(farAway) shouldBe false
+
+
+
