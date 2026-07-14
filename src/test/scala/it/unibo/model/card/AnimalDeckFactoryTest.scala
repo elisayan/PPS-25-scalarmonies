@@ -11,7 +11,7 @@ class AnimalDeckFactoryTest extends AnyFunSuite:
 
   test("Ogni carta deve possedere un requisito bersaglio in Coordinate(0,0)"):
     deck.foreach { card =>
-      card.habitat.requirements.map(_.offset) should contain (Coordinate(0, 0))
+      card.habitat.requirements.map(_.offset) should contain(Coordinate(0, 0))
     }
 
   test("Le carte devono contenere almeno un punteggio nella lista points"):
@@ -19,7 +19,9 @@ class AnimalDeckFactoryTest extends AnyFunSuite:
       card.points should not be empty
     }
 
-  test("createShuffledDeck deve mescolare l'ordine delle carte mantenendo gli stessi elementi"):
+  test(
+    "createShuffledDeck deve mescolare l'ordine delle carte mantenendo gli stessi elementi"
+  ):
     val deck2 = AnimalDeckFactory.createShuffledDeck()
     deck should not equal deck2
     deck should contain theSameElementsAs deck2
