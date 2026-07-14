@@ -20,6 +20,11 @@ trait AnimalCard extends Card:
     */
   def points: List[Int]
 
+  /** @return
+    *   the id of the image of the card
+    */
+  def imageId: String
+
   /** @return The maximum number of animal cubes this card can hold. */
   def maxCubes: Int
 
@@ -51,14 +56,20 @@ object AnimalCard:
     * @return
     *   A new immutable instance of [[AnimalCard]].
     */
-  def apply(name: String, habitat: Habitat, points: List[Int]): AnimalCard =
-    AnimalCardImpl(name, habitat, points, points.length)
+  def apply(
+      name: String,
+      habitat: Habitat,
+      points: List[Int],
+      imageId: String = "default.png"
+  ): AnimalCard =
+    AnimalCardImpl(name, habitat, points, points.length, imageId)
 
   private case class AnimalCardImpl(
       override val name: String,
       override val habitat: Habitat,
       override val points: List[Int],
-      cubesRemaining: Int
+      cubesRemaining: Int,
+      override val imageId: String
   ) extends AnimalCard:
 
     override val maxCubes: Int = points.length
