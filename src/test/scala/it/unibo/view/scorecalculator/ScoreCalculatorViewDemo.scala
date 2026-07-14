@@ -20,8 +20,8 @@ object ScoreCalculatorViewDemo extends JFXApp3:
     b2 = b2.placeToken(Mountain, Coordinate(0, 0)).get
     b2 = b2.placeToken(Mountain, Coordinate(0, -2)).get
 
-    val p1 = Player(1, b1)
-    val p2 = Player(2, b2)
+    val p1 = Player(1, "Player1", b1)
+    val p2 = Player(2, "Player2", b2)
     val list = List(p1, p2)
 
     val root: Pane =

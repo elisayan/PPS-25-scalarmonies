@@ -11,8 +11,8 @@ import org.scalatest.matchers.should.Matchers
 class GameModelTest extends AnyFlatSpec with Matchers:
 
   private val players = List(
-    Player(1, PersonalBoard(SideA)),
-    Player(2, PersonalBoard(SideA))
+    Player(1, "Player1", PersonalBoard(SideA)),
+    Player(2, "Player2", PersonalBoard(SideA))
   )
 
   private val simpleHabitat = Habitat(
@@ -124,8 +124,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
   it should "be game over when pouch is empty" in:
     val emptyPouchPlayers = List(
-      Player(1, PersonalBoard(SideA)),
-      Player(2, PersonalBoard(SideA))
+      Player(1, "Player1", PersonalBoard(SideA)),
+      Player(2, "Player2", PersonalBoard(SideA))
     )
     val model = GameModel(emptyPouchPlayers, forceEmptyPouch = true)
     model.isGameOver shouldBe true
@@ -141,8 +141,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       }
     val modelWithFullBoard = GameModel(
       List(
-        Player(1, nearlyFullBoard),
-        Player(2, PersonalBoard(SideA))
+        Player(1, "Player1", nearlyFullBoard),
+        Player(2, "Player2", PersonalBoard(SideA))
       )
     )
     modelWithFullBoard.isGameOver shouldBe true
@@ -165,10 +165,13 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       PersonalBoard(SideA).placeToken(TerrainToken.Mountain, Coordinate(0, 0))
     val playerWithCard = Player(
       1,
+      "Player1",
       boardWithMountain.get,
       activeCards = List(card.placeCube.get)
     ) // cubo già piazzato
-    val model = GameModel(List(playerWithCard, Player(2, PersonalBoard(SideA))))
+    val model = GameModel(
+      List(playerWithCard, Player(2, "Player2", PersonalBoard(SideA)))
+    )
     val afterTake = model.takeTokens(1)
     val highlighted = afterTake.highlightedCells(TerrainToken.Mountain)
     highlighted should not contain Coordinate(0, 0)
@@ -246,6 +249,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
     val playerWithFullCards = Player(
       1,
+      "Player1",
       PersonalBoard(SideA),
       activeCards = List(card1, card2, card3, card4)
     )
@@ -253,7 +257,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val model = GameModel(
       List(
         playerWithFullCards,
-        Player(2, PersonalBoard(SideA))
+        Player(2, "Player2", PersonalBoard(SideA))
       ),
       deck = List(card5)
     )
@@ -285,25 +289,26 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     afterCancel.turnState shouldBe TurnState.WaitingForAction
     afterCancel.tokensInHand shouldBe empty
 
-  it should "restore player board after cancelTurn" in :
+  it should "restore player board after cancelTurn" in:
     val model = GameModel(players)
     val boardBefore = model.currentPlayer.board
     val afterTake = model.takeTokens(1)
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord = TokenValidator.validPositions(token, m.currentPlayer.board).head
+      val coord =
+        TokenValidator.validPositions(token, m.currentPlayer.board).head
       m.placeToken(coord)
     }
     val afterCancel = afterPlace.cancelTurn()
     afterCancel.currentPlayer.board.cells shouldBe boardBefore.cells
 
-  it should "restore central board after cancelTurn" in :
+  it should "restore central board after cancelTurn" in:
     val model = GameModel(players)
     val boardBefore = model.currentPlayer.board
     val afterTake = model.takeTokens(1)
     val afterCancel = afterTake.cancelTurn()
     afterCancel.currentPlayer.board.cells shouldBe boardBefore.cells
 
-  it should "do nothing if cancelTurn is called without any action" in :
+  it should "do nothing if cancelTurn is called without any action" in:
     val model = GameModel(players)
     val afterCancel = model.cancelTurn()
     afterCancel.turnState shouldBe TurnState.WaitingForAction
