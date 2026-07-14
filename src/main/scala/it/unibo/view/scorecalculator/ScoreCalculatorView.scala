@@ -5,23 +5,24 @@ import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken._
 import it.unibo.view.token.TokenView
-import scalafx.scene.layout.{
-  GridPane,
-  HBox,
-  VBox,
-  Background,
-  BackgroundFill,
-  CornerRadii,
-  Border,
-  BorderStroke,
-  BorderStrokeStyle,
-  BorderWidths
-}
-import scalafx.scene.text.{Font, FontWeight, Text}
-import scalafx.scene.paint.Color
+import scalafx.Includes._
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
 import scalafx.scene.effect.DropShadow
-import scalafx.geometry.{Insets, Pos}
-import scalafx.Includes.*
+import scalafx.scene.layout.Background
+import scalafx.scene.layout.BackgroundFill
+import scalafx.scene.layout.Border
+import scalafx.scene.layout.BorderStroke
+import scalafx.scene.layout.BorderStrokeStyle
+import scalafx.scene.layout.BorderWidths
+import scalafx.scene.layout.CornerRadii
+import scalafx.scene.layout.GridPane
+import scalafx.scene.layout.HBox
+import scalafx.scene.layout.VBox
+import scalafx.scene.paint.Color
+import scalafx.scene.text.Font
+import scalafx.scene.text.FontWeight
+import scalafx.scene.text.Text
 
 case class ScoreCalculatorView(
     playerBoards: List[Player],

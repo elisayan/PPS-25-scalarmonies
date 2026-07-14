@@ -1,6 +1,8 @@
 package it.unibo.model.scorecalculator
 
-import it.unibo.model.personalboard.{Coordinate, PersonalBoard, BoardSide}
+import it.unibo.model.personalboard.BoardSide
+import it.unibo.model.personalboard.Coordinate
+import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.Score.Score
 import it.unibo.model.token.TerrainToken
 

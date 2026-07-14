@@ -190,11 +190,9 @@ object GameModel:
           )
 
     override def cancelTurn(): GameModel =
-      turnSnapshot match {
+      turnSnapshot match
         case Some(snapshot) => snapshot.copy(turnSnapshot = None)
-        case None => this
-      }
-
+        case None           => this
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
