@@ -17,7 +17,7 @@ Implementare le fondamenta del dominio di gioco (Plancia, Dischi e Sacchetto) ut
 | **5**    | Sviluppo struttura `CentralBoard`                                | Filippo      | 8              | Logica per popolare e aggiornare gli slot dell'offerta                         | 8        | 8        | 8        | 5        | 0        | 0        | 0        |
 | **6**    | Sviluppo validazione piazzamento                                 | Elisa        | 8              | Implementazione controllo validità piazzamento dischi (limiti fisici e logici) | 5        | 5        | 5        | 3        | 3        | 0        | 0        |
 | **7**    | Test unitari per logiche Sacchetto                               | Filippo      | 3              | Verifica dell'estrazione dei dischi dal sacchetto nell'offerta comune          | 3        | 3        | 3        | 3        | 3        | 1        | 0        |
-| **8**    | Test unitari piazzamento Dischi                                  | Elisa        | 5              | Verifica della corretta validazione nel piazzamento dei dischi                 |          |          |          |          |          |          |          |
+| **8**    | Test unitari piazzamento Dischi                                  | Elisa        | 5              | Verifica della corretta validazione nel piazzamento dei dischi                 | 5        | 5        | 5        | 3        | 3        | 0        | 0        |
 
 ---
 
