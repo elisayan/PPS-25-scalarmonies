@@ -19,17 +19,6 @@ object Main extends JFXApp3:
       )
 
     var view: GameView = null
-    val controller = GameController(
-      GameModel(players),
-      (newModel, logMessage) =>
-        view.refresh(newModel.currentPlayer.name, logMessage)
-    )
 
-    view = GameView(controller)
 
-    controller.startGame()
 
-    stage = new JFXApp3.PrimaryStage:
-      title = "Scalarmonies"
-      scene = new Scene:
-        root = view.root
