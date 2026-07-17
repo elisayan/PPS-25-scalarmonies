@@ -1,10 +1,11 @@
 package it.unibo.view.cell
 
+import it.unibo.controller.GameController
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.token.TokenView
-import scalafx.Includes._
+import scalafx.Includes.*
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
@@ -16,7 +17,7 @@ case class CellView(
     coordinate: Coordinate,
     var cell: Cell,
     pos: (Double, Double) = (0.0, 0.0),
-    onCellClicked: String => Unit // Aggiornato a Coordinate => Unit per essere type-safe
+    controller: GameController
 ) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
@@ -41,10 +42,8 @@ case class CellView(
     placeTokenView()
 
   hexagon.onMouseClicked = (event: MouseEvent) =>
-    onCellClicked(
-      "ciao" // Passa direttamente l'oggetto Coordinate tipato
-      // triggera la chiamata a Controller che avvisa Model che deve distruggere e ricostruire nuovo mondo
-    )
+    // richiamo metodo del controller per gestire click su esagono
+    println("hello")
 
   def updateState(newCell: Cell): Unit =
     println(

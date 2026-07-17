@@ -1,6 +1,7 @@
 package it.unibo.view.scorecalculator
 
-import it.unibo.model.Player
+import it.unibo.controller.GameController
+import it.unibo.model.{GameModel, Player}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.scorecalculator.ScoreCalculator
@@ -12,6 +13,8 @@ import scalafx.scene.layout.{Pane, StackPane}
 object ScoreCalculatorViewDemo extends JFXApp3:
 
   override def start(): Unit =
+    val model: GameModel = GameModel(List())
+    val controller: GameController = GameController(model, (_, _) => ())
     val calculator = ScoreCalculator()
     var b1 = PersonalBoard(SideA)
     b1 = b1.placeToken(Field, Coordinate(0, 0)).get
@@ -25,7 +28,7 @@ object ScoreCalculatorViewDemo extends JFXApp3:
     val list = List(p1, p2)
 
     val root: Pane =
-      ScoreCalculatorView(list, (0.0, 0.0), calculator)
+      ScoreCalculatorView(list, (0.0, 0.0), calculator, controller)
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
       scene = new scene(root, 800, 600)

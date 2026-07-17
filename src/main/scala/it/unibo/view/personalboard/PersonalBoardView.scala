@@ -1,5 +1,6 @@
 package it.unibo.view.personalboard
 
+import it.unibo.controller.GameController
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.BoardSide.SideB
@@ -9,7 +10,8 @@ import it.unibo.view.cell.CellView
 import scalafx.scene.layout.Pane
 import scalafx.scene.layout.StackPane
 
-case class PersonalBoardView(board: PersonalBoard) extends Pane:
+case class PersonalBoardView(board: PersonalBoard, controller: GameController)
+    extends Pane:
 
   private val modelCells: List[(Coordinate, Cell)] = board.cells.toList
 
@@ -49,11 +51,10 @@ case class PersonalBoardView(board: PersonalBoard) extends Pane:
         }
     }
 
-  val f: String => Unit = (a: String) => println(a)
   private val cells: List[CellView] =
     flattenedOrderedCells.zip(pixelPositions).map {
       case ((coord, cell), (pixelX, pixelY)) =>
-        val view = CellView(coord, cell, (pixelX, pixelY), f)
+        val view = CellView(coord, cell, (pixelX, pixelY), controller)
         view
     }
 
