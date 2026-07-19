@@ -60,7 +60,7 @@ object AnimalCard:
       name: String,
       habitat: Habitat,
       points: List[Int],
-      imageId: String = "default.png"
+      imageId: String = "animal/default.png"
   ): AnimalCard =
     AnimalCardImpl(name, habitat, points, points.length, imageId)
 

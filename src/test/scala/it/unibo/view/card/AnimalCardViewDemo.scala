@@ -21,8 +21,8 @@ object AnimalCardViewDemo extends JFXApp3:
     val emptyCard = AnimalCard(
       name = "Orso Bruno",
       habitat = mockHabitat,
-      points = List(4, 7, 12),
-      imageId = "orso.png"
+      points = List(4, 7, 12, 16, 22),
+      imageId = "default.png"
     )
     val cardWithOneCube = emptyCard.placeCube.getOrElse(emptyCard)
     val emptyCardNode = AnimalCardView(emptyCard)
