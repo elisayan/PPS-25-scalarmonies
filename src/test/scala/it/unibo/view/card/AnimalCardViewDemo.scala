@@ -15,8 +15,8 @@ object AnimalCardViewDemo extends JFXApp3:
   override def start(): Unit =
     val mockHabitat = Habitat(List(
       CellRequirement(Coordinate(0, 0), TerrainToken.Field, 1),
-      CellRequirement(Coordinate(0, -1), TerrainToken.Forest, 2),
-      CellRequirement(Coordinate(1, 0), TerrainToken.Water, 1)
+      CellRequirement(Coordinate(0, -2), TerrainToken.Forest, 2),
+      CellRequirement(Coordinate(2, 1), TerrainToken.Water, 1)
     ))
     val emptyCard = AnimalCard(
       name = "Orso Bruno",
