@@ -2,7 +2,7 @@ package it.unibo.view.centralboard
 
 import it.unibo.controller.GameController
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
-import it.unibo.view.animalcard.AnimalCardView
+import it.unibo.view.card.AnimalCardView
 import it.unibo.view.token.TokenView
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.layout.{HBox, VBox}
