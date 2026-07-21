@@ -27,6 +27,7 @@ object Main extends JFXApp3:
 
     controller.startGame()
 
+
     stage = new JFXApp3.PrimaryStage:
       title = "Scalarmonies"
       scene = new Scene:

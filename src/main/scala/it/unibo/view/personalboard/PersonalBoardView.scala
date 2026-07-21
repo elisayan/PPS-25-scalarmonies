@@ -27,9 +27,9 @@ case class PersonalBoardView(board: PersonalBoard, controller: GameController)
   private val flattenedOrderedCells: List[(Coordinate, Cell)] =
     orderedModelGroups.flatten
 
-  private val deltaX = 32.0
-  private val deltaY = 36.0
-  private val shiftY = 18.0
+  private val deltaX = 40.0
+  private val deltaY = 45.0
+  private val shiftY = 22.0
   private val side = board.getSide match
     case SideA => 5
     case SideB => 7
@@ -59,4 +59,3 @@ case class PersonalBoardView(board: PersonalBoard, controller: GameController)
     }
 
   cells.foreach(c => children.add(c))
-  cells.foreach(c => println(s"pos:${c.pos}"))
