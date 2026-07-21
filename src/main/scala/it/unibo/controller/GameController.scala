@@ -4,6 +4,7 @@ import it.unibo.model.GameModel
 import it.unibo.model.TurnState
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.Coordinate
+import it.unibo.view.GameView
 
 trait GameController:
   def startGame(): Unit
@@ -21,12 +22,14 @@ object GameController:
 
   def apply(
       model: GameModel,
+      view: GameView,
       refresh: (GameModel, String) => Unit
   ): GameController =
-    GameControllerImpl(model, refresh)
+    GameControllerImpl(model, view, refresh)
 
   private class GameControllerImpl(
       private var model: GameModel,
+      private var view: GameView,
       refresh: (GameModel, String) => Unit
   ) extends GameController:
 
@@ -56,6 +59,7 @@ object GameController:
         model = model.placeToken(coordinate)
         val level = model.currentPlayer.board.cells(coordinate).getTokens.size
         refresh(model, s"$playerName posiziona $name al livello $level")
+        view.updatePlayersContainer(model.currentPlayer)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")

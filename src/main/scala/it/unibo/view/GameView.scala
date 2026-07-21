@@ -1,6 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
+import it.unibo.model.Player
 import it.unibo.view.infopanel.InfoPanelView
 import scalafx.scene.layout.BorderPane
 
@@ -22,3 +23,5 @@ class GameView(controller: GameController):
     if logMessage.startsWith("HEADER:") then
       infoPanelView.addTurnHeader(logMessage.stripPrefix("HEADER:"))
     else infoPanelView.addEntry(playerName, logMessage)
+
+  def updatePlayersContainer(player: Player): Unit = ???

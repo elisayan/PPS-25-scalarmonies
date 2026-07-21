@@ -20,12 +20,10 @@ object Main extends JFXApp3:
 
     var view: GameView = null
     val controller = GameController(
-      GameModel(players),
+      GameModel(players), view,
       (newModel, logMessage) =>
         view.refresh(newModel.currentPlayer.name, logMessage)
     )
-
-    view = GameView(controller)
 
     controller.startGame()
 
