@@ -18,7 +18,7 @@ object Main extends JFXApp3:
         Player(2, "Player2", PersonalBoard(SideA))
       )
 
-    var view: GameView = null
+    var view: GameView = GameView()
     val controller = GameController(
       GameModel(players), view,
       (newModel, logMessage) =>
@@ -26,9 +26,3 @@ object Main extends JFXApp3:
     )
 
     controller.startGame()
-
-
-    stage = new JFXApp3.PrimaryStage:
-      title = "Scalarmonies"
-      scene = new Scene:
-        root = view.root

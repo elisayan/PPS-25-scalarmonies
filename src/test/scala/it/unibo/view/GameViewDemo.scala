@@ -20,7 +20,7 @@ object GameViewDemo extends JFXApp3:
       fullScreen = true
       val model: GameModel = GameModel(List())
       val controller: GameController = GameController(model, (_, _) => ())
-      val root: GameView = GameView(controller)
+      val root: GameView = GameView()
       val tokens: List[TokenView] =
         List(TokenView(Field), TokenView(Building), TokenView(Water))
       val boardSample: PersonalBoard = PersonalBoard(SideA)

@@ -1,6 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
+import it.unibo.model.Player
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
@@ -12,7 +13,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.layout.LayoutIncludes.jfxBorderStrokeStyle2sfx
 import scalafx.scene.text.{Font, FontWeight, Text}
 
-class GameView(controller: GameController) extends GridPane:
+class GameView extends GridPane:
 
   private val systemMessageBar: HBox = new HBox():
     alignment = Pos.Center
@@ -107,7 +108,12 @@ class GameView(controller: GameController) extends GridPane:
     playersContainer.children.clear()
     boards.foreach(board => playersContainer.children.add(board))
 
+  def refresh(playerName: String, logMessage: String): Unit = ???
+
+  def updatePlayersContainer(player: Player): Unit = ???
+
 
 
   initLayout()
-  def updatePlayersContainer(player: Player): Unit = ???
+
+
