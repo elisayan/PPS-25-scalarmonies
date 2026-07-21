@@ -42,8 +42,7 @@ case class CellView(
     placeTokenView()
 
   hexagon.onMouseClicked = (event: MouseEvent) =>
-    // richiamo metodo del controller per gestire click su esagono
-    println("hello")
+    controller.onPlaceToken(coordinate)
 
   def updateState(newCell: Cell): Unit =
     println(

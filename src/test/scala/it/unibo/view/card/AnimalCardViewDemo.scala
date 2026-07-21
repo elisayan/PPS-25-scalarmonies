@@ -1,18 +1,21 @@
 package it.unibo.view.card
 
+import it.unibo.controller.GameController
+import it.unibo.model.GameModel
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
-import scalafx.scene.layout.{StackPane, HBox}
+import scalafx.scene.layout.{HBox, StackPane}
 import scalafx.scene.paint.Color
 import scalafx.geometry.{Insets, Pos}
-
-import it.unibo.model.card.{AnimalCard, Habitat, CellRequirement}
+import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 
 object AnimalCardViewDemo extends JFXApp3:
 
   override def start(): Unit =
+    val model: GameModel = GameModel(List())
+    val controller: GameController = GameController(model, (_, _) => ())
     val mockHabitat = Habitat(
       List(
         CellRequirement(Coordinate(0, 0), TerrainToken.Field, 1),
@@ -27,8 +30,8 @@ object AnimalCardViewDemo extends JFXApp3:
       imageId = "default.png"
     )
     val cardWithOneCube = emptyCard.placeCube.getOrElse(emptyCard)
-    val emptyCardNode = AnimalCardView(emptyCard)
-    val updatedCardNode = AnimalCardView(cardWithOneCube)
+    val emptyCardNode = AnimalCardView(emptyCard, controller)
+    val updatedCardNode = AnimalCardView(cardWithOneCube, controller)
     stage = new JFXApp3.PrimaryStage:
       title = "Test Visivo: Animal Card"
       width = 450

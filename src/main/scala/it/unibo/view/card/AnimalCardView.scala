@@ -1,17 +1,19 @@
 package it.unibo.view.card
 
+import it.unibo.controller.GameController
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.card.Habitat
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
-import scalafx.Includes._
+import scalafx.Includes.*
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
 import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout._
+import scalafx.scene.input.MouseEvent
+import scalafx.scene.layout.*
 
 object AnimalCardView:
 
@@ -34,6 +36,7 @@ object AnimalCardView:
 
   def apply(
       card: AnimalCard,
+      controller: GameController,
       cardWidth: Double = 180.0,
       cardHeight: Double = 280.0
   ): Node =
@@ -61,6 +64,8 @@ object AnimalCardView:
       prefHeight = cardHeight
       center = new VBox:
         alignment = Pos.TopCenter
+        onMouseClicked = (event: MouseEvent) =>
+          controller.onTakeAnimalCard(1)
         spacing = spacingVBox
         children = Seq(
           renderImage(card.imageId, imgSize, mainFont),
