@@ -15,7 +15,7 @@ object PersonalBoardViewDemo extends JFXApp3:
     val player = Player(1, "Daniel", PersonalBoard(SideA), List(), List())
     val view = GameView()
     val controller: GameController = GameController(model, view, (_, _) => ())
-    val root: Pane = PersonalBoardView(player, controller)
+    val root: Pane = PersonalBoardView(player, controller.onPlaceToken)
 
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Personal Board"

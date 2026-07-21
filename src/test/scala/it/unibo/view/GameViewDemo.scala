@@ -26,7 +26,7 @@ object GameViewDemo extends JFXApp3:
       val boardSample: PersonalBoard = PersonalBoard(SideA)
       val player = Player(1, "Filo", boardSample, List(), List())
       val boards: List[PersonalBoardView] =
-        List(PersonalBoardView(player, controller), PersonalBoardView(player, controller))
+        List(PersonalBoardView(player, controller.onPlaceToken), PersonalBoardView(player, controller.onPlaceToken))
       val infoPanel: InfoPanelView = InfoPanelView()
       infoPanel.addTurnHeader("Player 1")
       infoPanel.addEntry("Player 1", "Player 1 fakes drawing a card")
