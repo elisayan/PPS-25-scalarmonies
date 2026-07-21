@@ -55,7 +55,7 @@ case class PersonalBoardView(player: Player, controller: GameController)
   private val cells: List[CellView] =
     flattenedOrderedCells.zip(pixelPositions).map {
       case ((coord, cell), (pixelX, pixelY)) =>
-        val view = CellView(coord, cell, (pixelX, pixelY), controller)
+        val view = CellView(coord, cell, (pixelX, pixelY), coord => controller.onPlaceToken(coord))
         view
     }
 

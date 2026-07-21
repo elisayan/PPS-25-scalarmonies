@@ -13,12 +13,7 @@ import scalafx.scene.shape.Polygon
 import scalafx.scene.text.Font
 import scalafx.scene.text.Text
 
-case class CellView(
-    coordinate: Coordinate,
-    var cell: Cell,
-    pos: (Double, Double) = (0.0, 0.0),
-    controller: GameController
-) extends StackPane:
+case class CellView(coordinate: Coordinate, var cell: Cell, pos: (Double, Double) = (0.0, 0.0), onCellClicked: Coordinate => Unit) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
   private val label = new Text()
@@ -41,8 +36,7 @@ case class CellView(
     label.mouseTransparent = true
     placeTokenView()
 
-  hexagon.onMouseClicked = (event: MouseEvent) =>
-    controller.onPlaceToken(coordinate)
+  hexagon.onMouseClicked = _ => onCellClicked(coordinate)
 
   def updateState(newCell: Cell): Unit =
     println(

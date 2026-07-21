@@ -28,8 +28,7 @@ import scalafx.scene.text.Text
 case class ScoreCalculatorView(
     playerBoards: List[Player],
     pos: (Double, Double) = (0.0, 0.0),
-    calculator: ScoreCalculator,
-    controller: GameController
+    calculator: ScoreCalculator
 ) extends HBox:
 
   private val MaxPlayers = 4

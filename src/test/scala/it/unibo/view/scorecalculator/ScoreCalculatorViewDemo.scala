@@ -29,7 +29,7 @@ object ScoreCalculatorViewDemo extends JFXApp3:
     val list = List(p1, p2)
 
     val root: Pane =
-      ScoreCalculatorView(list, (0.0, 0.0), calculator, controller)
+      ScoreCalculatorView(list, (0.0, 0.0), calculator)
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
       scene = new scene(root, 800, 600)

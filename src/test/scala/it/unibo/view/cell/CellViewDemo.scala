@@ -20,7 +20,8 @@ object CellViewDemo extends JFXApp3:
     val c1 = c.placeToken(Ground)
     val c2 = c1.placeToken(Ground)
     val c3 = c2.placeToken(Forest)
-    val cv = CellView(Coordinate(0, 0), c3, (20.0, 50.0), controller)
+    val coord = Coordinate(0, 0)
+    val cv = CellView(Coordinate(0, 0), c3, (20.0, 50.0), coord => println("ciao"))
     val root: StackPane = StackPane()
     root.children.add(cv)
     stage = new JFXApp3.PrimaryStage:
