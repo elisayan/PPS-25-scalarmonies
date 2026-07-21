@@ -4,6 +4,7 @@ import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.TokenValidator
+import it.unibo.view.GameView
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -16,7 +17,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
 
   // helper: controller che ignora il refresh
   private def freshController(): GameController =
-    GameController(GameModel(players), (_, _) => ())
+    GameController(GameModel(players), GameView(), (_, _) => ())
 
   "GameController" should "update model after taking tokens" in:
     val controller = freshController()
@@ -26,14 +27,14 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "refresh view after taking tokens" in:
     var refreshed = false
     val controller =
-      GameController(GameModel(players), (_, _) => refreshed = true)
+      GameController(GameModel(players), GameView(), (_, _) => refreshed = true)
     controller.onTakeTokens(1)
     refreshed shouldBe true
 
   it should "pass the log message to refresh after taking tokens" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), GameView(), (_, msg) => lastMessage = msg)
     controller.onTakeTokens(1)
     lastMessage should include("prende")
 
@@ -50,7 +51,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "pass the log message to refresh after endTurn" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), GameView(), (_, msg) => lastMessage = msg)
     controller.onTakeTokens(1)
     controller.currentModel.tokensInHand.foreach { token =>
       val coord = TokenValidator
@@ -83,7 +84,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "pass error message to refresh on illegal action" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), GameView(), (_, msg) => lastMessage = msg)
     controller.onTakeTokens(1)
     controller.onTakeTokens(1) // illegale
     lastMessage should include("Errore")

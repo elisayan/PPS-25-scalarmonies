@@ -6,6 +6,7 @@ import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken.{Field, Forest, Mountain}
+import it.unibo.view.GameView
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene as scene
 import scalafx.scene.layout.{Pane, StackPane}
@@ -14,7 +15,7 @@ object ScoreCalculatorViewDemo extends JFXApp3:
 
   override def start(): Unit =
     val model: GameModel = GameModel(List())
-    val controller: GameController = GameController(model, (_, _) => ())
+    val controller: GameController = GameController(model, GameView(), (_, _) => ())
     val calculator = ScoreCalculator()
     var b1 = PersonalBoard(SideA)
     b1 = b1.placeToken(Field, Coordinate(0, 0)).get

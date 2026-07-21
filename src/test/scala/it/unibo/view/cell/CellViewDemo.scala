@@ -5,6 +5,7 @@ import it.unibo.model.GameModel
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken.*
+import it.unibo.view.GameView
 import it.unibo.view.token.TokenView
 import scalafx.scene.Scene
 import scalafx.application.JFXApp3
@@ -14,7 +15,7 @@ object CellViewDemo extends JFXApp3:
 
   override def start(): Unit =
     val model: GameModel = GameModel(List())
-    val controller: GameController = GameController(model, (_, _) => ())
+    val controller: GameController = GameController(model, GameView(), (_, _) => ())
     val c = Cell()
     val c1 = c.placeToken(Ground)
     val c2 = c1.placeToken(Ground)

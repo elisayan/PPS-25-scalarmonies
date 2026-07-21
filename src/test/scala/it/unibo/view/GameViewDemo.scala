@@ -1,7 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
-import it.unibo.model.GameModel
+import it.unibo.model.{GameModel, Player}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.token.TerrainToken.{Building, Field, Water}
@@ -19,13 +19,14 @@ object GameViewDemo extends JFXApp3:
       title = "Harmonies Game"
       fullScreen = true
       val model: GameModel = GameModel(List())
-      val controller: GameController = GameController(model, (_, _) => ())
+      val controller: GameController = GameController(model, GameView(), (_, _) => ())
       val root: GameView = GameView()
       val tokens: List[TokenView] =
         List(TokenView(Field), TokenView(Building), TokenView(Water))
       val boardSample: PersonalBoard = PersonalBoard(SideA)
+      val player = Player(1, "Filo", boardSample, List(), List())
       val boards: List[PersonalBoardView] =
-        List(PersonalBoardView(boardSample, controller), PersonalBoardView(boardSample, controller))
+        List(PersonalBoardView(player, controller), PersonalBoardView(player, controller))
       val infoPanel: InfoPanelView = InfoPanelView()
       infoPanel.addTurnHeader("Player 1")
       infoPanel.addEntry("Player 1", "Player 1 fakes drawing a card")

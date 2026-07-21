@@ -6,6 +6,7 @@ import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.{TerrainToken, TokenValidator}
+import it.unibo.view.GameView
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.layout.StackPane
@@ -35,7 +36,7 @@ object InfoPanelViewDemo extends JFXApp3:
     var panel: InfoPanelView = null
 
     val controller = GameController(
-      GameModel(players, deck = testDeck),
+      GameModel(players, deck = testDeck), GameView(),
       (newModel, msg) =>
         if panel != null then
           panel match
