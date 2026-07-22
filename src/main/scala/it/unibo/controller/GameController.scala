@@ -22,14 +22,12 @@ object GameController:
 
   def apply(
       model: GameModel,
-      view: GameView,
       refresh: (GameModel, String) => Unit
   ): GameController =
-    GameControllerImpl(model, view, refresh)
+    GameControllerImpl(model, refresh)
 
   private class GameControllerImpl(
       private var model: GameModel,
-      private var view: GameView,
       refresh: (GameModel, String) => Unit
   ) extends GameController:
 
@@ -59,7 +57,7 @@ object GameController:
         model = model.placeToken(coordinate)
         val level = model.currentPlayer.board.cells(coordinate).getTokens.size
         refresh(model, s"$playerName posiziona $name al livello $level")
-        view.updatePlayersContainer(model.currentPlayer)
+        //view.updatePlayersContainer(model.currentPlayer)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")

@@ -17,12 +17,12 @@ object Main extends JFXApp3:
         Player(1, "Player1", PersonalBoard(SideA)),
         Player(2, "Player2", PersonalBoard(SideA))
       )
-
-    var view: GameView = GameView()
+    
     val controller = GameController(
-      GameModel(players), view,
+      GameModel(players),
       (newModel, logMessage) =>
-        view.refresh(newModel.currentPlayer.name, logMessage)
+        println(s"${newModel.currentPlayer.name} sta facendo $logMessage")
     )
+    var view: GameView = GameView(controller)
 
     controller.startGame()

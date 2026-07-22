@@ -13,7 +13,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.layout.LayoutIncludes.jfxBorderStrokeStyle2sfx
 import scalafx.scene.text.{Font, FontWeight, Text}
 
-class GameView extends GridPane:
+case class GameView(controller: GameController) extends GridPane:
 
   private val systemMessageBar: HBox = new HBox():
     alignment = Pos.Center
