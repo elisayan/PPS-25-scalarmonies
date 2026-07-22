@@ -1,7 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
-import it.unibo.model.Player
+import it.unibo.model.{GameModel, Player}
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
@@ -104,13 +104,20 @@ case class GameView(controller: GameController) extends GridPane:
     infoPanelLog.children.clear()
     infoPanelLog.children.add(panel.root)
 
-  def updatePlayersBoards(boards: List[PersonalBoardView]): Unit =
+  def updatePlayersBoards(players: List[Player]): Unit =
     playersContainer.children.clear()
-    boards.foreach(board => playersContainer.children.add(board))
+    players.foreach(player => playersContainer.children.add(PersonalBoardView(player, controller.onPlaceToken)))
+
+  def updateState(model: GameModel): Unit =
+    updatePlayersBoards(model.getPlayers)
+    updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
+    //manca metodo per la common board
+    //non so come aggiornare info panel
+    updateSystemMessageBar(s"${model.currentPlayer.name} sta giocando il proprio turno")
 
   def refresh(playerName: String, logMessage: String): Unit = ???
 
-  def updatePlayersContainer(player: Player): Unit = ???
+
 
 
 

@@ -17,7 +17,7 @@ case class CellView(
     coordinate: Coordinate,
     var cell: Cell,
     pos: (Double, Double) = (0.0, 0.0),
-    controller: GameController
+    onCellClicked: Coordinate => Unit
 ) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
@@ -42,7 +42,7 @@ case class CellView(
     placeTokenView()
 
   hexagon.onMouseClicked = (event: MouseEvent) =>
-    controller.onPlaceToken(coordinate)
+    onCellClicked(coordinate)
 
   def updateState(newCell: Cell): Unit =
     println(

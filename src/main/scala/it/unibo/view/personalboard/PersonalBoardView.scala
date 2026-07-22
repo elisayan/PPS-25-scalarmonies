@@ -11,7 +11,7 @@ import it.unibo.view.cell.CellView
 import scalafx.scene.layout.Pane
 import scalafx.scene.layout.StackPane
 
-case class PersonalBoardView(player: Player, controller: GameController)
+case class PersonalBoardView(player: Player, onCellClicked: Coordinate => Unit)
     extends Pane:
 
   private val modelCells: List[(Coordinate, Cell)] = player.board.cells.toList
@@ -55,7 +55,7 @@ case class PersonalBoardView(player: Player, controller: GameController)
   private val cells: List[CellView] =
     flattenedOrderedCells.zip(pixelPositions).map {
       case ((coord, cell), (pixelX, pixelY)) =>
-        val view = CellView(coord, cell, (pixelX, pixelY), controller)
+        val view = CellView(coord, cell, (pixelX, pixelY), onCellClicked)
         view
     }
 
