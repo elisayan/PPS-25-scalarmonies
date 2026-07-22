@@ -17,6 +17,7 @@ trait GameController:
   def onTakeAnimalCard(slot: Int): Unit
   def onPlaceAnimalCube(card: AnimalCard): Unit
   def onCancelTurn(): Unit
+  def start(): Unit
 
 object GameController:
 
@@ -106,3 +107,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
+
+    override def start(): Unit =
+      var view = GameView(this)
+      //view.updateState(model) devo aggiornare la view iniziale per mostrare stato iniziale
