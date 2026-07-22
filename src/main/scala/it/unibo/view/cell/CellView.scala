@@ -44,15 +44,6 @@ case class CellView(
   hexagon.onMouseClicked = (event: MouseEvent) =>
     onCellClicked(coordinate)
 
-  def updateState(newCell: Cell): Unit =
-    println(
-      s"Aggiornamento cella $coordinate nel view con i nuovi dati del modello"
-      // dopo aver costruito nuovo mondo faccio update linkando questa CellView a nuova Cell
-      // con stesse Coordinate ma List[Token] AGGIORNATA
-    )
-    this.cell = newCell
-    placeTokenView()
-
   def highlight(enabled: Boolean): Unit =
     if enabled then hexagon.fill = Color.LightGreen
     else hexagon.fill = Color.LightGrey
