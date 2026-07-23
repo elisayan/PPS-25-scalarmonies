@@ -73,6 +73,43 @@ class GameView(controller: GameController) extends GridPane:
       )
     )
 
+  private def updateSystemMessageBar(message: String): Unit =
+    systemMessageBar.children.clear()
+    val msgTxt = new Text(message)
+    msgTxt.font = Font.font("Arial", FontWeight.Bold, 18.0)
+    systemMessageBar.children.add(msgTxt)
+
+  private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
+    personalTokenSidebar.children.clear()
+    tokens.foreach(token =>
+      token.setScaleX(0.8)
+      token.setScaleY(0.8)
+      personalTokenSidebar.children.add(token)
+    )
+
+  private def updateInfoPanelLog(panel: InfoPanelView): Unit =
+    infoPanelLog.children.clear()
+    infoPanelLog.children.add(panel.root)
+
+  private def updatePlayerAreas(areas: List[PlayerAreaView]): Unit =
+    playersContainer.children.clear()
+    areas.foreach { area =>playersContainer.children.add(area)
+  }
+
+  private def updateCentralBoard(board: CentralBoardView): Unit =
+    commonMarketBar.children.clear()
+    commonMarketBar.children.add(board)
+
+  def refresh(playerName: String, logMessage: String): Unit = ???
+
+  private def createPlayerArea(player: Player): PlayerAreaView =
+    val boardView = PersonalBoardView(player, controller.onPlaceToken)
+    val cards = player.activeCards.map(c => AnimalCardView(c))
+    val completedCards = player.completedCards.map(c => AnimalCardView(c))
+    val area = PlayerAreaView(boardView, cards, completedCards, player.name)
+    area
+
+
   private def initLayout(): Unit =
     padding = Insets(10)
     hgap = 5.0
@@ -104,40 +141,10 @@ class GameView(controller: GameController) extends GridPane:
     GridPane.setRowSpan(infoPanelLog, 3)
     add(infoPanelLog, 2, 0)
 
-  def updateSystemMessageBar(message: String): Unit =
-    systemMessageBar.children.clear()
-    val msgTxt = new Text(message)
-    msgTxt.font = Font.font("Arial", FontWeight.Bold, 18.0)
-    systemMessageBar.children.add(msgTxt)
-
-  def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
-    personalTokenSidebar.children.clear()
-    tokens.foreach(token =>
-      token.setScaleX(0.8)
-      token.setScaleY(0.8)
-      personalTokenSidebar.children.add(token)
-    )
-
-  def updateInfoPanelLog(panel: InfoPanelView): Unit =
-    infoPanelLog.children.clear()
-    infoPanelLog.children.add(panel.root)
-
-  def updatePlayerAreas(areas: List[PlayerAreaView]): Unit =
-    playersContainer.children.clear()
-    areas.foreach { area =>playersContainer.children.add(area)
-  }
-
   def updateState(model: GameModel): Unit =
-    //updatePlayersBoards(model.getPlayers)
+    updatePlayerAreas(model.getPlayers.map(p => createPlayerArea(p)))
     updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
-    //manca metodo per la common board
-    //non so come aggiornare info panel
-    updateSystemMessageBar(s"${model.currentPlayer.name} sta giocando il proprio turno")
-
-  def refresh(playerName: String, logMessage: String): Unit = ???
-
-  def updateCentralBoard(board: CentralBoardView): Unit =
-    commonMarketBar.children.clear()
-    commonMarketBar.children.add(board)
+    updateCentralBoard(CentralBoardView(model.centralBoard, controller.onTakeAnimalCard, controller.onTakeTokens))
+    //non so come aggiornare info panel e system message bar
 
   initLayout()
