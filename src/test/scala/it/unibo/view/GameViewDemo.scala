@@ -1,7 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
-import it.unibo.model.GameModel
+import it.unibo.model.{GameModel, Player}
 import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalboard.BoardSide.SideA
@@ -101,7 +101,8 @@ object GameViewDemo extends JFXApp3:
 
       // player 1
       val board1 = PersonalBoard(SideA)
-      val boardView1 = PersonalBoardView(board1, controller)
+      val player1 = Player(id = 1, name = "Player 1", board = board1, activeCards = animalCards.take(2), completedCards = animalCards.drop(2))
+      val boardView1 = PersonalBoardView(player1, controller.onPlaceToken)
       val availableCards1: List[Node] =
         animalCards.take(2).map(c => AnimalCardView(c, 90, 140))
       val completedCards1: List[Node] =
@@ -111,7 +112,8 @@ object GameViewDemo extends JFXApp3:
 
       // player 2
       val board2 = PersonalBoard(SideA)
-      val boardView2 = PersonalBoardView(board2, controller)
+      val player2 = Player(id = 2, name = "Player 2", board = board2, activeCards = animalCards.take(1), completedCards = List())
+      val boardView2 = PersonalBoardView(player2, controller.onPlaceToken)
       val availableCards2: List[Node] =
         animalCards.take(1).map(c => AnimalCardView(c, 90, 140))
       val completedCards2: List[Nothing] = List.empty

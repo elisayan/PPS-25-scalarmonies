@@ -1,7 +1,6 @@
 package it.unibo.view.playerarea
 
-import it.unibo.controller.GameController
-import it.unibo.model.GameModel
+import it.unibo.model.Player
 import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
@@ -14,12 +13,11 @@ import scalafx.scene.Scene
 object PlayerAreaViewDemo extends JFXApp3:
 
   override def start(): Unit =
-
-    val model = GameModel(List())
-    val controller = GameController(model, (_, msg) => println(msg))
-
     val board = PersonalBoard(SideA)
-    val boardView = PersonalBoardView(board, controller)
+
+    val player = Player(id = 1, name = "Player 1", board = board, activeCards = List(), completedCards = List())
+
+    val boardView = PersonalBoardView(player, coordinate => println(s"Clicked: $coordinate"))
 
     val forestHabitat = Habitat(
       List(
