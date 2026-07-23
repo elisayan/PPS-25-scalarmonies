@@ -1,10 +1,10 @@
 package it.unibo.controller
 
-import it.unibo.model.GameModel
-import it.unibo.model.TurnState
+import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.card.AnimalCard
-import it.unibo.model.personalboard.{BoardSide, Coordinate}
+import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
 import it.unibo.view.GameView
+import it.unibo.view.homepage.HomeView
 
 trait GameController:
   def startGame(): Unit
@@ -18,7 +18,7 @@ trait GameController:
   def onPlaceAnimalCube(card: AnimalCard): Unit
   def onCancelTurn(): Unit
   def start(): Unit
-  def onStartGame(side: BoardSide, names: List[String]): Unit
+  def onStartGame(names: List[String], side: BoardSide): Unit
 
 object GameController:
 
@@ -116,8 +116,13 @@ object GameController:
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
 
-    override def start(): Unit = ??? //inizializzo e mostro view iniziale di ferro
+    override def start(): Unit =
+      val homeView = HomeView(onStartGame)
 
-    override def onStartGame(side: BoardSide, names: List[String]): Unit = ???
+    override def onStartGame(names: List[String], side: BoardSide): Unit =
+      val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
+      model = GameModel(players)
+      view.updateState(model)
+
 
 
