@@ -12,19 +12,13 @@ object Main extends JFXApp3:
 
   override def start(): Unit =
 
-    val players =
-      List(
-        Player(1, "Player1", PersonalBoard(SideA)),
-        Player(2, "Player2", PersonalBoard(SideA))
-      )
-
     stage = new JFXApp3.PrimaryStage:
       title = "ScalHarmonies"
-      width = 500
-      height = 600
-      
-      val controller = GameController(GameModel(players),
-        (newModel, logMessage) =>
-          println(s"${newModel.currentPlayer.name} sta facendo $logMessage"), stage)
-      
-      controller.startGame()
+
+    stage.fullScreen =  true
+
+    val controller = GameController(GameModel(List()),
+      (newModel, logMessage) =>
+        println(s"${newModel.currentPlayer.name} sta facendo $logMessage"), stage)
+
+    controller.start()

@@ -34,6 +34,7 @@ case class CentralBoardView(
         )
       cardView.onMouseClicked = _ => onCardClicked(slot)
       cardsContainer.children.add(cardView)
+      println(s"slot $slot" + card.toString)
 
   private val tokensContainer = new StackPane:
     prefWidth = 200
