@@ -1,55 +1,92 @@
 package it.unibo.view.centralboard
 
-import it.unibo.controller.GameController
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.view.card.AnimalCardView
 import it.unibo.view.token.TokenView
-import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.layout.{HBox, VBox}
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
+import scalafx.scene.image.Image
+import scalafx.scene.image.ImageView
+import scalafx.scene.layout.HBox
+import scalafx.scene.layout.StackPane
 
 case class CentralBoardView(
-                             board: CentralBoard,
-                             controller: GameController
-                           ) extends HBox:
+    board: CentralBoard,
+    onCardClicked: Int => Unit,
+    onTokenClicked: Int => Unit
+) extends HBox:
 
-  spacing = 20.0
-  padding = Insets(10)
+  spacing = 30
+  padding = Insets(20)
   alignment = Pos.Center
 
-  private val slotIds: List[Int] =
-    List(1, 2, 3, 4, 5)
+  private val cardsContainer = new HBox:
+    spacing = 10
+    alignment = Pos.Center
 
-  private val slotViews: List[VBox] =
-    slotIds.map { slot =>
+  board.availableCards.foreach:
+    case (slot, card) =>
+      val cardView =
+        AnimalCardView(
+          card,
+          cardWidth = 90,
+          cardHeight = 140
+        )
+      cardView.onMouseClicked = _ => onCardClicked(slot)
+      cardsContainer.children.add(cardView)
 
-      val slotContainer = new VBox:
-        spacing = 10.0
-        alignment = Pos.Center
+  private val tokensContainer = new StackPane:
+    prefWidth = 200
+    prefHeight = 200
 
-      board.availableCards.get(slot).foreach { card =>
-        val cardView = AnimalCardView(card)
+  private val boardImage =
+    new ImageView(
+      new Image(
+        getClass.getResource("/centralboard/central_board.png").toString
+      )
+    ):
+      fitWidth = 200
+      fitHeight = 200
+      preserveRatio = true
+  tokensContainer.children.add(boardImage)
 
-        cardView.onMouseClicked = _ =>
-          controller.onTakeAnimalCard(slot)
+  private val tokenPositions =
+    Map(
+      1 -> (80.0, 45.0),
+      2 -> (155.0, 45.0),
+      3 -> (50.0, 120.0),
+      4 -> (180.0, 120.0),
+      5 -> (120.0, 160.0)
+    )
 
-        slotContainer.children.add(cardView)
-      }
+  board.availableTokens.foreach:
+    case (slot, tokens) =>
+      val tokenStack = new StackPane:
+        prefWidth = 70
+        prefHeight = 70
 
-      board.availableTokens
-        .getOrElse(slot, List.empty)
-        .foreach { token =>
-
+      tokens.zipWithIndex.foreach:
+        case (token, index) =>
           val tokenView = TokenView(token)
+          tokenView.setScaleX(0.65)
+          tokenView.setScaleY(0.65)
 
-          tokenView.onMouseClicked = _ =>
-            controller.onTakeTokens(slot)
+          tokenView.translateX = index * 6
+          tokenView.translateY = -index * 4
 
-          slotContainer.children.add(tokenView)
-        }
+          tokenView.onMouseClicked = _ => onTokenClicked(slot)
+          tokenStack.children.add(tokenView)
 
-      slotContainer
-    }
+      tokenPositions
+        .get(slot)
+        .foreach:
+          case (x, y) =>
+            tokenStack.translateX = x - 120
+            tokenStack.translateY = y - 100
 
-  slotViews.foreach(slotView =>
-    children.add(slotView)
+      tokensContainer.children.add(tokenStack)
+
+  children.addAll(
+    cardsContainer,
+    tokensContainer
   )

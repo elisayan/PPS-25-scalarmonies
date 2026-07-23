@@ -73,4 +73,4 @@ object CentralBoards:
         b.cardSlots.collect { case (id, Some(card)) => id -> card }
 
       def availableTokens: Map[Int, List[TerrainToken]] =
-        b.tokenSlots.filter { case (_, tokens) => tokens.nonEmpty}
+        b.tokenSlots.filter { case (_, tokens) => tokens.nonEmpty }
