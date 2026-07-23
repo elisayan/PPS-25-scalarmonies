@@ -3,6 +3,7 @@ package it.unibo.view
 import it.unibo.controller.GameController
 import it.unibo.model.{GameModel, Player}
 import it.unibo.model.token.TerrainToken
+import it.unibo.view.centralboard.CentralBoardView
 import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.token.TokenView
@@ -117,7 +118,10 @@ case class GameView(controller: GameController) extends GridPane:
 
   def refresh(playerName: String, logMessage: String): Unit = ???
 
-
+  def updateCentralBoard(board: CentralBoardView): Unit = {
+    commonMarketBar.children.clear()
+    commonMarketBar.children.add(board)
+  }
 
 
 

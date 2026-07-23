@@ -71,3 +71,6 @@ object CentralBoards:
 
       def availableCards: Map[Int, AnimalCard] =
         b.cardSlots.collect { case (id, Some(card)) => id -> card }
+
+      def availableTokens: Map[Int, List[TerrainToken]] =
+        b.tokenSlots.filter { case (_, tokens) => tokens.nonEmpty}
