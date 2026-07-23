@@ -8,134 +8,54 @@ import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.card.AnimalCardView
 import it.unibo.view.personalboard.PersonalBoardView
-
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
-
 
 object PlayerAreaViewDemo extends JFXApp3:
 
   override def start(): Unit =
 
-    val model =
-      GameModel(List())
+    val model = GameModel(List())
+    val controller = GameController(model, (_, msg) => println(msg))
 
-    val controller =
-      GameController(
-        model,
-        (_, message) => println(message)
-      )
+    val board = PersonalBoard(SideA)
+    val boardView = PersonalBoardView(board, controller)
 
+    val forestHabitat = Habitat(List(
+      CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
+      CellRequirement(Coordinate(1, 1), TerrainToken.Field, 2)
+    ))
 
-    // -----------------------------
-    // Personal board finta
-    // -----------------------------
+    val waterHabitat = Habitat(List(
+      CellRequirement(Coordinate(0, 0), TerrainToken.Water, 1),
+      CellRequirement(Coordinate(-1, 1), TerrainToken.Mountain, 2)
+    ))
 
-    val board =
-      PersonalBoard(SideA)
+    val animalCards = List(
+      AnimalCard("Orso",  forestHabitat, List(4, 7, 12, 16),  imageId = "default.png"),
+      AnimalCard("Lontra", waterHabitat, List(3, 6, 10, 15),  imageId = "default.png"),
+      AnimalCard("Volpe", forestHabitat, List(5, 8, 12, 18),  imageId = "default.png"),
+      AnimalCard("Gufo",  waterHabitat,  List(4, 9, 14, 20),  imageId = "default.png"),
+      AnimalCard("Cervo", forestHabitat, List(3, 7, 11, 16),  imageId = "default.png")
+    )
 
-    val boardView =
-      PersonalBoardView(
-        board,
-        controller
-      )
+    val availableCards = animalCards.take(2).map(card =>
+      AnimalCardView(card, cardWidth = 90, cardHeight = 140)
+    )
 
+    val completedCards = animalCards.drop(1).map(card =>
+      AnimalCardView(card, cardWidth = 55, cardHeight = 85)
+    )
 
-    // -----------------------------
-    // Habitat per le carte
-    // -----------------------------
+    val playerArea = PlayerAreaView(
+      boardView,
+      availableCards,
+      completedCards,
+      "Player 1",
+      maxCardSlots = 4
+    )
 
-    val habitatForest =
-      Habitat(
-        List(
-          CellRequirement(
-            Coordinate(0,0),
-            TerrainToken.Forest,
-            1
-          ),
-          CellRequirement(
-            Coordinate(1,1),
-            TerrainToken.Field,
-            2
-          )
-        )
-      )
-
-
-    val habitatWater =
-      Habitat(
-        List(
-          CellRequirement(
-            Coordinate(0,0),
-            TerrainToken.Water,
-            1
-          ),
-          CellRequirement(
-            Coordinate(-1,1),
-            TerrainToken.Mountain,
-            2
-          )
-        )
-      )
-
-
-    // -----------------------------
-    // Animal cards
-    // -----------------------------
-
-    val animalCards =
-      List(
-        AnimalCard(
-          name = "Orso",
-          habitat = habitatForest,
-          points = List(4,7,12,16),
-          imageId = "default.png"
-        ),
-
-        AnimalCard(
-          name = "Lontra",
-          habitat = habitatWater,
-          points = List(3,6,10,15),
-          imageId = "default.png"
-        ),
-
-        AnimalCard(
-          name = "Volpe",
-          habitat = habitatForest,
-          points = List(5,8,12,18),
-          imageId = "default.png"
-        )
-      )
-
-
-    // trasformazione Model -> View
-
-    val cardViews =
-      animalCards.map(card =>
-        AnimalCardView(card)
-      )
-
-
-    // -----------------------------
-    // Player Area
-    // -----------------------------
-
-    val playerArea =
-      PlayerAreaView(
-        boardView,
-        cardViews,
-        "Player 1"
-      )
-
-
-    stage =
-      new JFXApp3.PrimaryStage:
-
-        title = "Player Area Demo"
-
-        scene =
-          new Scene(
-            playerArea,
-            1200,
-            800
-          )
+    stage = new JFXApp3.PrimaryStage:
+      title = "Player Area Demo"
+      scene = new Scene(playerArea) // ← niente width/height fissi
+      sizeToScene()
