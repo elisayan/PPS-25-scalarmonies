@@ -34,8 +34,9 @@ object AnimalCardView:
 
   def apply(
       card: AnimalCard,
+      onCardClicked: Int => Unit,
       cardWidth: Double = 180.0,
-      cardHeight: Double = 280.0
+      cardHeight: Double = 280.0,
   ): Node =
     val paddingSize = cardWidth * Layout.PaddingRatio
     val imgSize = cardWidth * Layout.ImgSizeRatio
@@ -62,6 +63,7 @@ object AnimalCardView:
       center = new VBox:
         alignment = Pos.TopCenter
         spacing = spacingVBox
+        //onMouseClicked = onCardClicked(slot)
         children = Seq(
           renderImage(card.imageId, imgSize, mainFont),
           new Region:

@@ -26,9 +26,11 @@ object AnimalCardViewDemo extends JFXApp3:
       points = List(4, 7, 12, 16, 22),
       imageId = "default.png"
     )
+    def fakeFun(slot: Int): Unit =
+      println("ciao")
     val cardWithOneCube = emptyCard.placeCube.getOrElse(emptyCard)
-    val emptyCardNode = AnimalCardView(emptyCard)
-    val updatedCardNode = AnimalCardView(cardWithOneCube)
+    val emptyCardNode = AnimalCardView(emptyCard, fakeFun)
+    val updatedCardNode = AnimalCardView(cardWithOneCube, fakeFun)
     stage = new JFXApp3.PrimaryStage:
       title = "Test Visivo: Animal Card"
       width = 450
