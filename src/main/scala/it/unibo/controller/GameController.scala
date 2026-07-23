@@ -6,6 +6,7 @@ import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
 import scalafx.application.JFXApp3
+import scalafx.scene.Scene
 
 trait GameController:
   def startGame(): Unit
@@ -123,6 +124,7 @@ object GameController:
       val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
       model = GameModel(players)
       view.updateState(model)
+      stage.fullScreen = true
       stage.scene = new Scene(view)
 
 
