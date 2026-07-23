@@ -4,6 +4,7 @@ import it.unibo.model.GameModel
 import it.unibo.model.TurnState
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.Coordinate
+import it.unibo.view.GameView
 
 trait GameController:
   def startGame(): Unit
@@ -16,6 +17,7 @@ trait GameController:
   def onTakeAnimalCard(slot: Int): Unit
   def onPlaceAnimalCube(card: AnimalCard): Unit
   def onCancelTurn(): Unit
+  def start(): Unit
 
 object GameController:
 
@@ -29,6 +31,8 @@ object GameController:
       private var model: GameModel,
       refresh: (GameModel, String) => Unit
   ) extends GameController:
+
+    private val view = GameView(this)
 
     override def startGame(): Unit =
       refresh(model, s"HEADER:${model.currentPlayer.name}")
@@ -45,6 +49,7 @@ object GameController:
         model = model.takeTokens(slot)
         val tokenNames = model.tokensInHand.map(_.toString).mkString(", ")
         refresh(model, s"$playerName prende $tokenNames")
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
@@ -56,6 +61,7 @@ object GameController:
         model = model.placeToken(coordinate)
         val level = model.currentPlayer.board.cells(coordinate).getTokens.size
         refresh(model, s"$playerName posiziona $name al livello $level")
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
@@ -64,6 +70,7 @@ object GameController:
       try
         model = model.endTurn()
         refresh(model, s"HEADER:${model.currentPlayer.name}")
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
@@ -78,6 +85,7 @@ object GameController:
           model,
           s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition"
         )
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
@@ -92,6 +100,7 @@ object GameController:
           refresh(model, s"$playerName finisce una carta animale")
           refresh(model, s"$playerName posiziona un cubo")
         else refresh(model, s"$playerName posiziona un cubo")
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
@@ -101,6 +110,10 @@ object GameController:
         val playerName = model.currentPlayer.name
         model = model.cancelTurn()
         refresh(model, s"$playerName annulla il turno")
+        view.updateState(model)
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
+
+    override def start(): Unit =
+      view.updateState(model)

@@ -20,6 +20,7 @@ trait GameModel:
   def highlightedCells(token: TerrainToken): List[Coordinate]
   def placeAnimalCube(card: AnimalCard): GameModel
   def cancelTurn(): GameModel
+  def getPlayers: List[Player]
 
 object GameModel:
   def apply(players: List[Player], deck: List[AnimalCard] = List()): GameModel =
@@ -193,6 +194,9 @@ object GameModel:
       turnSnapshot match
         case Some(snapshot) => snapshot.copy(turnSnapshot = None)
         case None           => this
+
+    override def getPlayers: List[Player] =
+      players
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>

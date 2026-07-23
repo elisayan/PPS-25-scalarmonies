@@ -17,7 +17,7 @@ case class CellView(
     coordinate: Coordinate,
     var cell: Cell,
     pos: (Double, Double) = (0.0, 0.0),
-    controller: GameController
+    onCellClicked: Coordinate => Unit
 ) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
@@ -42,17 +42,7 @@ case class CellView(
     placeTokenView()
 
   hexagon.onMouseClicked = (event: MouseEvent) =>
-    // richiamo metodo del controller per gestire click su esagono
-    println("hello")
-
-  def updateState(newCell: Cell): Unit =
-    println(
-      s"Aggiornamento cella $coordinate nel view con i nuovi dati del modello"
-      // dopo aver costruito nuovo mondo faccio update linkando questa CellView a nuova Cell
-      // con stesse Coordinate ma List[Token] AGGIORNATA
-    )
-    this.cell = newCell
-    placeTokenView()
+    onCellClicked(coordinate)
 
   def highlight(enabled: Boolean): Unit =
     if enabled then hexagon.fill = Color.LightGreen

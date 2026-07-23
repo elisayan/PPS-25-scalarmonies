@@ -32,11 +32,7 @@ object AnimalCardView:
     val ConcentricScale = 0.22
     val AnimalCubeRatio = 0.35
 
-  def apply(
-      card: AnimalCard,
-      cardWidth: Double = 180.0,
-      cardHeight: Double = 280.0
-  ): Node =
+  def apply(card: AnimalCard, cardWidth: Double = 180.0, cardHeight: Double = 280.0): Node =
     val paddingSize = cardWidth * Layout.PaddingRatio
     val imgSize = cardWidth * Layout.ImgSizeRatio
     val habW = cardWidth * Layout.HabWidthRatio
