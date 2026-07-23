@@ -5,6 +5,7 @@ import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
+import scalafx.application.JFXApp3
 
 trait GameController:
   def startGame(): Unit
@@ -22,15 +23,13 @@ trait GameController:
 
 object GameController:
 
-  def apply(
-      model: GameModel,
-      refresh: (GameModel, String) => Unit
-  ): GameController =
-    GameControllerImpl(model, refresh)
+  def apply(model: GameModel, refresh: (GameModel, String) => Unit, stage: JFXApp3.PrimaryStage): GameController =
+    GameControllerImpl(model, refresh, stage)
 
   private class GameControllerImpl(
       private var model: GameModel,
-      refresh: (GameModel, String) => Unit
+      refresh: (GameModel, String) => Unit,
+      stage: JFXApp3.PrimaryStage
   ) extends GameController:
 
     private val view = GameView(this)
@@ -118,13 +117,13 @@ object GameController:
 
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
-      //stage.scene = new Scene(homeView)
+      stage.scene = new Scene(homeView)
 
     override def onStartGame(names: List[String], side: BoardSide): Unit =
       val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
       model = GameModel(players)
       view.updateState(model)
-      //stage.scene = new Scene(view)
+      stage.scene = new Scene(view)
 
 
 
