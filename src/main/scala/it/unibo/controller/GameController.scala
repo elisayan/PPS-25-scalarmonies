@@ -118,11 +118,13 @@ object GameController:
 
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
+      //stage.scene = new Scene(homeView)
 
     override def onStartGame(names: List[String], side: BoardSide): Unit =
       val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
       model = GameModel(players)
       view.updateState(model)
+      //stage.scene = new Scene(view)
 
 
 
