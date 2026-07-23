@@ -96,7 +96,8 @@ object CentralBoardViewDemo extends JFXApp3:
     val centralBoardView =
       CentralBoardView(
         board = centralBoard,
-        controller = controller
+        onCardClicked = controller.onTakeAnimalCard,
+        onTokenClicked = controller.onTakeTokens
       )
 
     stage = new JFXApp3.PrimaryStage:

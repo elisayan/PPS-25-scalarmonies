@@ -29,8 +29,8 @@ object AnimalCardViewDemo extends JFXApp3:
     def fakeFun(slot: Int): Unit =
       println("ciao")
     val cardWithOneCube = emptyCard.placeCube.getOrElse(emptyCard)
-    val emptyCardNode = AnimalCardView(emptyCard, fakeFun)
-    val updatedCardNode = AnimalCardView(cardWithOneCube, fakeFun)
+    val emptyCardNode = AnimalCardView(emptyCard)
+    val updatedCardNode = AnimalCardView(cardWithOneCube)
     stage = new JFXApp3.PrimaryStage:
       title = "Test Visivo: Animal Card"
       width = 450

@@ -9,7 +9,8 @@ import scalafx.scene.layout.{HBox, VBox}
 
 case class CentralBoardView(
                              board: CentralBoard,
-                             controller: GameController
+                             onCardClicked: Int => Unit,
+                             onTokenClicked: Int => Unit
                            ) extends HBox:
 
   spacing = 20.0
@@ -30,7 +31,7 @@ case class CentralBoardView(
         val cardView = AnimalCardView(card)
 
         cardView.onMouseClicked = _ =>
-          controller.onTakeAnimalCard(slot)
+         onCardClicked(slot)
 
         slotContainer.children.add(cardView)
       }
@@ -42,7 +43,7 @@ case class CentralBoardView(
           val tokenView = TokenView(token)
 
           tokenView.onMouseClicked = _ =>
-            controller.onTakeTokens(slot)
+            onTokenClicked(slot)
 
           slotContainer.children.add(tokenView)
         }

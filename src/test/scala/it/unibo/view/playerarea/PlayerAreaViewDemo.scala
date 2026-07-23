@@ -1,14 +1,13 @@
 package it.unibo.view.playerarea
 
 import it.unibo.controller.GameController
-import it.unibo.model.GameModel
+import it.unibo.model.{GameModel, Player}
 import it.unibo.model.card.{AnimalCard, CellRequirement, Habitat}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.card.AnimalCardView
 import it.unibo.view.personalboard.PersonalBoardView
-
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 
@@ -33,11 +32,13 @@ object PlayerAreaViewDemo extends JFXApp3:
 
     val board =
       PersonalBoard(SideA)
+      
+    val player = Player(1, "pippo", board)
 
     val boardView =
       PersonalBoardView(
-        board,
-        controller
+        player,
+        controller.onPlaceToken
       )
 
 
