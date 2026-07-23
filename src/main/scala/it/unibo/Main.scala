@@ -17,12 +17,14 @@ object Main extends JFXApp3:
         Player(1, "Player1", PersonalBoard(SideA)),
         Player(2, "Player2", PersonalBoard(SideA))
       )
-    
-    val controller = GameController(
-      GameModel(players),
-      (newModel, logMessage) =>
-        println(s"${newModel.currentPlayer.name} sta facendo $logMessage")
-    )
-    var view: GameView = GameView(controller)
 
-    controller.startGame()
+    stage = new JFXApp3.PrimaryStage:
+      title = "ScalHarmonies"
+      width = 500
+      height = 600
+      
+      val controller = GameController(GameModel(players),
+        (newModel, logMessage) =>
+          println(s"${newModel.currentPlayer.name} sta facendo $logMessage"), stage)
+      
+      controller.startGame()
