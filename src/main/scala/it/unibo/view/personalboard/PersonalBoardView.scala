@@ -34,9 +34,12 @@ case class PersonalBoardView(board: PersonalBoard, controller: GameController)
     case SideA => 5
     case SideB => 7
 
+  private val offsetX = 10.0
+  private val offsetY = 10.0
+
   private val pixelPositions: List[(Double, Double)] =
     val colHead = LazyList
-      .iterate((100.0, 200.0, 0)) { case (startX, startY, colIdx) =>
+      .iterate((offsetX, offsetY, 0)) { case (startX, startY, colIdx) =>
         val nextCol = colIdx + 1
         if nextCol == 1 || nextCol == 3 || nextCol == 5 then
           (startX + deltaX, startY + shiftY, nextCol)
