@@ -21,31 +21,60 @@ object PlayerAreaViewDemo extends JFXApp3:
     val board = PersonalBoard(SideA)
     val boardView = PersonalBoardView(board, controller)
 
-    val forestHabitat = Habitat(List(
-      CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
-      CellRequirement(Coordinate(1, 1), TerrainToken.Field, 2)
-    ))
+    val forestHabitat = Habitat(
+      List(
+        CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1),
+        CellRequirement(Coordinate(1, 1), TerrainToken.Field, 2)
+      )
+    )
 
-    val waterHabitat = Habitat(List(
-      CellRequirement(Coordinate(0, 0), TerrainToken.Water, 1),
-      CellRequirement(Coordinate(-1, 1), TerrainToken.Mountain, 2)
-    ))
+    val waterHabitat = Habitat(
+      List(
+        CellRequirement(Coordinate(0, 0), TerrainToken.Water, 1),
+        CellRequirement(Coordinate(-1, 1), TerrainToken.Mountain, 2)
+      )
+    )
 
     val animalCards = List(
-      AnimalCard("Orso",  forestHabitat, List(4, 7, 12, 16),  imageId = "default.png"),
-      AnimalCard("Lontra", waterHabitat, List(3, 6, 10, 15),  imageId = "default.png"),
-      AnimalCard("Volpe", forestHabitat, List(5, 8, 12, 18),  imageId = "default.png"),
-      AnimalCard("Gufo",  waterHabitat,  List(4, 9, 14, 20),  imageId = "default.png"),
-      AnimalCard("Cervo", forestHabitat, List(3, 7, 11, 16),  imageId = "default.png")
+      AnimalCard(
+        "Orso",
+        forestHabitat,
+        List(4, 7, 12, 16),
+        imageId = "default.png"
+      ),
+      AnimalCard(
+        "Lontra",
+        waterHabitat,
+        List(3, 6, 10, 15),
+        imageId = "default.png"
+      ),
+      AnimalCard(
+        "Volpe",
+        forestHabitat,
+        List(5, 8, 12, 18),
+        imageId = "default.png"
+      ),
+      AnimalCard(
+        "Gufo",
+        waterHabitat,
+        List(4, 9, 14, 20),
+        imageId = "default.png"
+      ),
+      AnimalCard(
+        "Cervo",
+        forestHabitat,
+        List(3, 7, 11, 16),
+        imageId = "default.png"
+      )
     )
 
-    val availableCards = animalCards.take(2).map(card =>
-      AnimalCardView(card, cardWidth = 90, cardHeight = 140)
-    )
+    val availableCards = animalCards
+      .take(2)
+      .map(card => AnimalCardView(card, cardWidth = 90, cardHeight = 140))
 
-    val completedCards = animalCards.drop(1).map(card =>
-      AnimalCardView(card, cardWidth = 55, cardHeight = 85)
-    )
+    val completedCards = animalCards
+      .drop(1)
+      .map(card => AnimalCardView(card, cardWidth = 55, cardHeight = 85))
 
     val playerArea = PlayerAreaView(
       boardView,
@@ -57,5 +86,5 @@ object PlayerAreaViewDemo extends JFXApp3:
 
     stage = new JFXApp3.PrimaryStage:
       title = "Player Area Demo"
-      scene = new Scene(playerArea) // ← niente width/height fissi
+      scene = new Scene(playerArea)
       sizeToScene()

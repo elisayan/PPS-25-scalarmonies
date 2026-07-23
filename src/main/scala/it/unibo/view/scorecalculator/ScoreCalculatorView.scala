@@ -4,9 +4,9 @@ import it.unibo.controller.GameController
 import it.unibo.model.Player
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
-import it.unibo.model.token.TerrainToken.*
+import it.unibo.model.token.TerrainToken._
 import it.unibo.view.token.TokenView
-import scalafx.Includes.*
+import scalafx.Includes._
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.effect.DropShadow

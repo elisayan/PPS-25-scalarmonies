@@ -1,19 +1,20 @@
 package it.unibo.view.playerarea
 
 import it.unibo.view.personalboard.PersonalBoardView
-import scalafx.geometry.{Insets, Pos}
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
-import scalafx.scene.layout.*
+import scalafx.scene.layout._
 import scalafx.scene.paint.Color
 
 class PlayerAreaView(
-                      boardView: PersonalBoardView,
-                      cards: List[Node],
-                      completedCards: List[Node],
-                      playerName: String,
-                      maxCardSlots: Int = 4
-                    ) extends VBox:
+    boardView: PersonalBoardView,
+    cards: List[Node],
+    completedCards: List[Node],
+    playerName: String,
+    maxCardSlots: Int = 4
+) extends VBox:
 
   private val cardSlots: List[Node] = List.tabulate(maxCardSlots) { i =>
     if i < cards.size then cards(i)
@@ -37,7 +38,8 @@ class PlayerAreaView(
     children.add(boardView)
 
   private val nameLabel = new Label(playerName):
-    style = "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"
+    style =
+      "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"
     alignment = Pos.Center
 
   private val completedCardsContainer = new FlowPane(5, 5):
@@ -48,9 +50,11 @@ class PlayerAreaView(
   padding = Insets(12)
   spacing = 8
   alignment = Pos.TopCenter
-  background = new Background(Array(
-    new BackgroundFill(Color.web("#eee8d0"), CornerRadii(12), Insets.Empty)
-  ))
+  background = new Background(
+    Array(
+      new BackgroundFill(Color.web("#eee8d0"), CornerRadii(12), Insets.Empty)
+    )
+  )
 
   children.addAll(
     cardsContainer,
