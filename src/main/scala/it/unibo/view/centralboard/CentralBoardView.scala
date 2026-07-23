@@ -54,16 +54,23 @@ case class CentralBoardView(
     Map(
       1 -> (80.0, 45.0),
       2 -> (155.0, 45.0),
-      3 -> (50.0, 120.0),
-      4 -> (180.0, 120.0),
-      5 -> (120.0, 160.0)
+      3 -> (53.0, 115.0),
+      4 -> (178.0, 115.0),
+      5 -> (115.0, 155.0)
     )
 
   board.availableTokens.foreach:
     case (slot, tokens) =>
       val tokenStack = new StackPane:
-        prefWidth = 70
-        prefHeight = 70
+        prefWidth = 60
+        prefHeight = 60
+
+      val trianglePositions =
+        List(
+          (20.0, 15.0), // alto sinistra
+          (42.0, 15.0), // alto destra
+          (31.0, 35.0)  // basso centro
+        )
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
@@ -71,9 +78,9 @@ case class CentralBoardView(
           tokenView.setScaleX(0.65)
           tokenView.setScaleY(0.65)
 
-          tokenView.translateX = index * 6
-          tokenView.translateY = -index * 4
-
+          val (x, y) = trianglePositions(index)
+          tokenView.translateX = x
+          tokenView.translateY = y
           tokenView.onMouseClicked = _ => onTokenClicked(slot)
           tokenStack.children.add(tokenView)
 
@@ -81,8 +88,8 @@ case class CentralBoardView(
         .get(slot)
         .foreach:
           case (x, y) =>
-            tokenStack.translateX = x - 120
-            tokenStack.translateY = y - 100
+            tokenStack.translateX = x - 145
+            tokenStack.translateY = y - 120
 
       tokensContainer.children.add(tokenStack)
 
