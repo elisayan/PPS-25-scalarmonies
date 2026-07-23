@@ -6,6 +6,7 @@ import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.TokenValidator
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import scalafx.application.JFXApp3
 
 class GameControllerTest extends AnyFlatSpec with Matchers:
 
@@ -14,9 +15,13 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     Player(2, "Player2", PersonalBoard(SideA))
   )
 
+  val stage: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
+    title = "ScalHarmonies"
+
   // helper: controller che ignora il refresh
   private def freshController(): GameController =
-    GameController(GameModel(players), (_, _) => ())
+
+    GameController(GameModel(players), (_, _) => (), stage)
 
   "GameController" should "update model after taking tokens" in:
     val controller = freshController()
@@ -26,14 +31,14 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "refresh view after taking tokens" in:
     var refreshed = false
     val controller =
-      GameController(GameModel(players), (_, _) => refreshed = true)
+      GameController(GameModel(players), (_, _) => refreshed = true,stage)
     controller.onTakeTokens(1)
     refreshed shouldBe true
 
   it should "pass the log message to refresh after taking tokens" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
     controller.onTakeTokens(1)
     lastMessage should include("prende")
 
@@ -50,7 +55,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "pass the log message to refresh after endTurn" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
     controller.onTakeTokens(1)
     controller.currentModel.tokensInHand.foreach { token =>
       val coord = TokenValidator
@@ -83,7 +88,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   it should "pass error message to refresh on illegal action" in:
     var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg)
+      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
     controller.onTakeTokens(1)
     controller.onTakeTokens(1) // illegale
     lastMessage should include("Errore")

@@ -14,7 +14,9 @@ object ScoreCalculatorViewDemo extends JFXApp3:
 
   override def start(): Unit =
     val model: GameModel = GameModel(List())
-    val controller: GameController = GameController(model, (_, _) => ())
+    val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
+      title = "ScalHarmonies"
+    val controller: GameController = GameController(model, (_, _) => (), stage2)
     val calculator = ScoreCalculator()
     var b1 = PersonalBoard(SideA)
     b1 = b1.placeToken(Field, Coordinate(0, 0)).get

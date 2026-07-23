@@ -6,6 +6,7 @@ import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
 import scalafx.application.JFXApp3
+import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
 
 trait GameController:
