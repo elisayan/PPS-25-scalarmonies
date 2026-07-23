@@ -5,6 +5,7 @@ import it.unibo.model.token.TerrainToken
 import it.unibo.view.centralboard.CentralBoardView
 import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
+import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.ScrollPane
@@ -107,6 +108,10 @@ class GameView(controller: GameController) extends GridPane:
   def updatePlayersBoards(boards: List[PersonalBoardView]): Unit =
     playersContainer.children.clear()
     boards.foreach(board => playersContainer.children.add(board))
+
+  def updatePlayerAreas(areas: List[PlayerAreaView]): Unit =
+    playersContainer.children.clear()
+    areas.foreach(area => playersContainer.children.add(area))
 
   def updateCentralBoard(board: CentralBoardView): Unit = {
     commonMarketBar.children.clear()
