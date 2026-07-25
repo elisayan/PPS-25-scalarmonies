@@ -8,6 +8,7 @@ import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
+import scalafx.animation.PauseTransition
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Button, ScrollPane}
@@ -27,6 +28,9 @@ import scalafx.scene.text.FontWeight
 import scalafx.scene.text.Text
 
 class GameView(controller: GameController) extends GridPane:
+
+  private var currentErrorMessage: String = ""
+  private var errorTimer: Option[PauseTransition] = None
 
   private val systemMessageBar: HBox = new HBox():
     alignment = Pos.Center
@@ -85,10 +89,14 @@ class GameView(controller: GameController) extends GridPane:
       )
     )
 
-  private def updateSystemMessageBar(message: String): Unit =
+  private def updateSystemMessageBar(
+      message: String,
+      color: Color = Color.Black
+  ): Unit =
     systemMessageBar.children.clear()
     val msgTxt = new Text(message)
     msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
+    msgTxt.fill = color
     systemMessageBar.children.add(msgTxt)
 
   private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
@@ -103,12 +111,15 @@ class GameView(controller: GameController) extends GridPane:
     infoPanelLog.children.clear()
     infoPanelLog.children.add(panel.root)
 
-  private def updatePlayerAreas(areas: List[PlayerAreaView], currentPlayerName: String): Unit =
+  private def updatePlayerAreas(
+      areas: List[PlayerAreaView],
+      currentPlayerName: String
+  ): Unit =
     playersContainer.children.clear()
     areas.foreach { area =>
       area.setDisabledArea(area.name != currentPlayerName)
       playersContainer.children.add(area)
-  }
+    }
 
   private def updateCentralBoard(board: CentralBoardView): Unit =
     commonMarketBar.children.clear()
@@ -158,7 +169,13 @@ class GameView(controller: GameController) extends GridPane:
     val areas = model.getPlayers.map(p => createPlayerArea(p))
     updatePlayerAreas(areas, model.currentPlayer.name)
     updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
-    updateCentralBoard(CentralBoardView(model.centralBoard, controller.onTakeAnimalCard, controller.onTakeTokens))
+    updateCentralBoard(
+      CentralBoardView(
+        model.centralBoard,
+        controller.onTakeAnimalCard,
+        controller.onTakeTokens
+      )
+    )
     updateSystemMessageBar(model.availableActionsMessage)
 
   initLayout()
