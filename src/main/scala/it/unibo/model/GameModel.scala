@@ -1,5 +1,6 @@
 package it.unibo.model
 
+import it.unibo.model.TurnState.ActionDone
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.card.HabitatMatcher
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
@@ -22,6 +23,7 @@ trait GameModel:
   def cancelTurn(): GameModel
   def getPlayers: List[Player]
   def centralBoard: CentralBoard
+  def availableActionsMessage: String
 
 object GameModel:
   def apply(players: List[Player], deck: List[AnimalCard] = List()): GameModel =
@@ -198,6 +200,20 @@ object GameModel:
 
     override def getPlayers: List[Player] =
       players
+
+    override def availableActionsMessage: String =
+      val actions = List(
+        Option.when(turnState == TurnState.WaitingForAction)("scegli tokens"),
+        Option.when(turnState != TurnState.TurnComplete && currentPlayer.activeCards.size < MaxAnimalCards)("scegli una carta animale"),
+        Option.when(turnState != TurnState.TurnComplete && currentPlayer.activeCards.exists(c => c.placedCubes < c.maxCubes))("posiziona cubo animale"),
+        Option.when(turnState == ActionDone && tokensInHand.nonEmpty)("posiziona token")
+        //Option.when(turnState == TurnState.TurnComplete)("Nessuna azione possibile rimasta")
+      ).flatten
+
+      if actions.isEmpty then
+        s"${currentPlayer.name} non ha azioni disponibili (termina il turno)"
+      else
+        s"${currentPlayer.name} " + actions.mkString(" oppure ")
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>

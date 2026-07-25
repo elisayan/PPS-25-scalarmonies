@@ -155,6 +155,7 @@ class GameView(controller: GameController) extends GridPane:
     updatePlayerAreas(model.getPlayers.map(p => createPlayerArea(p)))
     updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
     updateCentralBoard(CentralBoardView(model.centralBoard, controller.onTakeAnimalCard, controller.onTakeTokens))
-  //non so come aggiornare info panel e system message bar
+    updateSystemMessageBar(model.availableActionsMessage)
+  //non so come aggiornare info panel
 
   initLayout()
