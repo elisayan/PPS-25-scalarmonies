@@ -30,20 +30,20 @@ class GameView(controller: GameController) extends GridPane:
 
   private val systemMessageBar: HBox = new HBox():
     alignment = Pos.Center
-    padding = Insets(10)
-    HBox.setHgrow(this, Priority.Always)
+    padding = Insets(5)
     background = new Background(
       Array(new BackgroundFill(Color.Beige, new CornerRadii(5), Insets.Empty))
     )
 
-
   private val endTurnButton: Button = new Button("Fine Turno"):
     font = Font.font("Arial", FontWeight.Bold, 14.0)
-    padding = Insets(8, 15, 8, 15)
+    padding = Insets(6, 12, 6, 12)
+    minWidth = 120
     onAction = _ => controller.onEndTurn()
 
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.Center
+    HBox.setHgrow(systemMessageBar, Priority.Always)
     children = Seq(systemMessageBar, endTurnButton)
 
   private val commonMarketBar: HBox = new HBox():
@@ -88,7 +88,7 @@ class GameView(controller: GameController) extends GridPane:
   private def updateSystemMessageBar(message: String): Unit =
     systemMessageBar.children.clear()
     val msgTxt = new Text(message)
-    msgTxt.font = Font.font("Arial", FontWeight.Bold, 18.0)
+    msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
     systemMessageBar.children.add(msgTxt)
 
   private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
@@ -134,11 +134,11 @@ class GameView(controller: GameController) extends GridPane:
     columnConstraints.addAll(colGameplay, colTokenHand, colInfoPanel)
 
     val rowSystemMessage = new RowConstraints():
-      percentHeight = 4.0
+      percentHeight = 5.0
     val rowCommonMarket = new RowConstraints():
       percentHeight = 31.0
     val rowPlayersZone = new RowConstraints():
-      percentHeight = 65.0
+      percentHeight = 64.0
     rowConstraints.addAll(rowSystemMessage, rowCommonMarket, rowPlayersZone)
 
     add(topBarContainer, 0, 0)
@@ -156,6 +156,5 @@ class GameView(controller: GameController) extends GridPane:
     updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
     updateCentralBoard(CentralBoardView(model.centralBoard, controller.onTakeAnimalCard, controller.onTakeTokens))
     updateSystemMessageBar(model.availableActionsMessage)
-  //non so come aggiornare info panel
 
   initLayout()
