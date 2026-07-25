@@ -16,7 +16,9 @@ object CentralBoardViewDemo extends JFXApp3:
   override def start(): Unit =
 
     val model = GameModel(List())
-    val controller = GameController(model, (_, message) => println(message))
+    val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
+      title = "ScalHarmonies"
+    val controller = GameController(model, (_, message) => println(message), stage2)
 
     val pouch = Pouch.initialPouch()
 

@@ -34,6 +34,7 @@ case class CentralBoardView(
         )
       cardView.onMouseClicked = _ => onCardClicked(slot)
       cardsContainer.children.add(cardView)
+      println(s"slot $slot" + card.toString)
 
   private val tokensContainer = new StackPane:
     prefWidth = 200
@@ -74,7 +75,7 @@ case class CentralBoardView(
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
-          val tokenView = TokenView(token)
+          val tokenView = TokenView(token, _=>())
           tokenView.setScaleX(0.65)
           tokenView.setScaleY(0.65)
 

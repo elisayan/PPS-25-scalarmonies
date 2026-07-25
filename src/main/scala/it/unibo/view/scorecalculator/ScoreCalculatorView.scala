@@ -94,7 +94,7 @@ case class ScoreCalculatorView(
 
         add(
           createTerrainBox(
-            TokenView(Forest),
+            TokenView(Forest, _ => ()),
             details.getOrElse("Forest", 0).toString
           ),
           0,
@@ -102,7 +102,7 @@ case class ScoreCalculatorView(
         )
         add(
           createTerrainBox(
-            TokenView(Mountain),
+            TokenView(Mountain, _ => ()),
             details.getOrElse("Mountain", 0).toString
           ),
           0,
@@ -110,7 +110,7 @@ case class ScoreCalculatorView(
         )
         add(
           createTerrainBox(
-            TokenView(Field),
+            TokenView(Field, _ => ()),
             details.getOrElse("Field", 0).toString
           ),
           0,
@@ -118,7 +118,7 @@ case class ScoreCalculatorView(
         )
         add(
           createTerrainBox(
-            TokenView(Water),
+            TokenView(Water, _ => ()),
             details.getOrElse("Water", 0).toString
           ),
           0,
@@ -126,7 +126,7 @@ case class ScoreCalculatorView(
         )
         add(
           createTerrainBox(
-            TokenView(Building),
+            TokenView(Building, _ => ()),
             details.getOrElse("Building", 0).toString
           ),
           0,

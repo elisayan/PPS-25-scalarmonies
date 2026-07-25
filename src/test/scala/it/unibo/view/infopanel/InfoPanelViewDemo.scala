@@ -33,17 +33,16 @@ object InfoPanelViewDemo extends JFXApp3:
     )
 
     var panel: InfoPanelView = null
+    val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
+      title = "ScalHarmonies"
 
-    val controller = GameController(
-      GameModel(players, deck = testDeck),
-      (newModel, msg) =>
-        if panel != null then
-          panel match
-            case p if msg.startsWith("HEADER:") =>
-              p.addTurnHeader(msg.stripPrefix("HEADER:"))
-            case p =>
-              p.addEntry(newModel.currentPlayer.name, msg)
-    )
+    val controller = GameController(GameModel(players, deck = testDeck), (newModel, msg) =>
+      if panel != null then
+        panel match
+          case p if msg.startsWith("HEADER:") =>
+            p.addTurnHeader(msg.stripPrefix("HEADER:"))
+          case p =>
+            p.addEntry(newModel.currentPlayer.name, msg), stage2)
 
     panel = InfoPanelView()
     panel.addTurnHeader("Player1")

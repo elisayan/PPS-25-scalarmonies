@@ -13,7 +13,9 @@ object PersonalBoardViewDemo extends JFXApp3:
   override def start(): Unit =
     val model: GameModel = GameModel(List())
     val player = Player(1, "Daniel", PersonalBoard(SideA), List(), List())
-    val controller: GameController = GameController(model,  (_, _) => ())
+    val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
+      title = "ScalHarmonies"
+    val controller: GameController = GameController(model, (_, _) => (), stage2)
     val view = GameView(controller)
     val root: Pane = PersonalBoardView(player, controller.onPlaceToken)
 

@@ -1,10 +1,14 @@
 package it.unibo.controller
 
-import it.unibo.model.GameModel
-import it.unibo.model.TurnState
+import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.card.AnimalCard
-import it.unibo.model.personalboard.Coordinate
+import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
+import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
+import it.unibo.view.homepage.HomeView
+import scalafx.application.JFXApp3
+import scalafx.application.JFXApp3.PrimaryStage
+import scalafx.scene.Scene
 
 trait GameController:
   def startGame(): Unit
@@ -12,24 +16,24 @@ trait GameController:
   def currentPlayerId: Int
   def currentTurnState: TurnState
   def onTakeTokens(slot: Int): Unit
+  def onSelectToken(token: TerrainToken): Unit
   def onPlaceToken(coordinate: Coordinate): Unit
   def onEndTurn(): Unit
   def onTakeAnimalCard(slot: Int): Unit
   def onPlaceAnimalCube(card: AnimalCard): Unit
   def onCancelTurn(): Unit
   def start(): Unit
+  def onStartGame(names: List[String], side: BoardSide): Unit
 
 object GameController:
 
-  def apply(
-      model: GameModel,
-      refresh: (GameModel, String) => Unit
-  ): GameController =
-    GameControllerImpl(model, refresh)
+  def apply(model: GameModel, refresh: (GameModel, String) => Unit, stage: JFXApp3.PrimaryStage): GameController =
+    GameControllerImpl(model, refresh, stage)
 
   private class GameControllerImpl(
       private var model: GameModel,
-      refresh: (GameModel, String) => Unit
+      refresh: (GameModel, String) => Unit,
+      stage: JFXApp3.PrimaryStage
   ) extends GameController:
 
     private val view = GameView(this)
@@ -54,6 +58,19 @@ object GameController:
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
 
+    override def onSelectToken(token: TerrainToken): Unit =
+      try
+        model = model.selectToken(token)
+        refresh(
+          model,
+          s"${model.currentPlayer.name} seleziona $token"
+        )
+        view.updateState(model)
+
+      catch
+        case e: IllegalStateException =>
+          refresh(model, s"Errore: ${e.getMessage}")
+
     override def onPlaceToken(coordinate: Coordinate): Unit =
       try
         val playerName = model.currentPlayer.name
@@ -65,6 +82,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
+          //view.showTemporaryError("Mossa illegale! Posizione non consona per il token.")
 
     override def onEndTurn(): Unit =
       try
@@ -89,6 +107,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
+          //view.showTemporaryError("Mossa illegale! Non puoi pescare un'altra carta.")
 
     override def onPlaceAnimalCube(card: AnimalCard): Unit =
       try
@@ -104,6 +123,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
+          //view.showTemporaryError("Mossa illegale! Impossibile posizionare il cubo.")
 
     override def onCancelTurn(): Unit =
       try
@@ -116,4 +136,18 @@ object GameController:
           refresh(model, s"Errore: ${e.getMessage}")
 
     override def start(): Unit =
+      val homeView = HomeView(onStartGame)
+      stage.scene = new Scene(homeView)
+      stage.fullScreen = true
+
+    override def onStartGame(names: List[String], side: BoardSide): Unit =
+      val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
+      model = GameModel(players)
       view.updateState(model)
+      stage.scene.value.setRoot(view)
+      stage.fullScreen = true
+
+
+
+
+

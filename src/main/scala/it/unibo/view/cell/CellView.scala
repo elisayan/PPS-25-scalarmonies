@@ -23,6 +23,8 @@ case class CellView(
   private val hexagon: Polygon = Polygon()
   private val label = new Text()
   children.addAll(hexagon, label)
+  pickOnBounds = true
+  onMouseClicked = (_: MouseEvent) => onCellClicked(coordinate)
 
   private def setHexagon(): Unit =
     hexagon.getPoints.addAll(
@@ -34,15 +36,15 @@ case class CellView(
     hexagon.rotate = 90.0
     hexagon.setScaleX(1.2)
     hexagon.setScaleY(1.2)
+
+    hexagon.mouseTransparent = true
+
     relocate(pos._1, pos._2)
     label.text = s""
     label.fill = Color.Black
     label.font = Font.font("Arial", 12)
     label.mouseTransparent = true
     placeTokenView()
-
-  hexagon.onMouseClicked = (event: MouseEvent) =>
-    onCellClicked(coordinate)
 
   def highlight(enabled: Boolean): Unit =
     if enabled then hexagon.fill = Color.LightGreen
@@ -64,10 +66,12 @@ case class CellView(
       token: TerrainToken,
       offsetY: Double
   ): TokenView =
-    val tv = TokenView(token)
+    val tv = TokenView(token, _ => ())
     tv.setScaleX(0.8)
     tv.setScaleY(0.8)
     tv.setTranslateY(offsetY)
+
+    tv.mouseTransparent = true
     tv
 
   setHexagon()
