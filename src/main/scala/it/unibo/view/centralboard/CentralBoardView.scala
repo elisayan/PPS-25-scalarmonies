@@ -68,7 +68,7 @@ case class CentralBoardView(
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
-          val tokenView = TokenView(token)
+          val tokenView = TokenView(token, _=>())
           tokenView.setScaleX(0.65)
           tokenView.setScaleY(0.65)
 

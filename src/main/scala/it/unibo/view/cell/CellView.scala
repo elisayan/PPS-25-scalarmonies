@@ -66,7 +66,7 @@ case class CellView(
       token: TerrainToken,
       offsetY: Double
   ): TokenView =
-    val tv = TokenView(token)
+    val tv = TokenView(token, _ => ())
     tv.setScaleX(0.8)
     tv.setScaleY(0.8)
     tv.setTranslateY(offsetY)

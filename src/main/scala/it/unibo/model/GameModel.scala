@@ -15,6 +15,8 @@ trait GameModel:
   def tokensInHand: List[TerrainToken]
   def isGameOver: Boolean
   def takeTokens(slot: Int): GameModel
+  def selectedToken: Option[TerrainToken]
+  def selectToken(token: TerrainToken): GameModel
   def takeAnimalCard(slot: Int): GameModel
   def placeToken(coordinate: Coordinate): GameModel
   def endTurn(): GameModel
@@ -61,6 +63,7 @@ object GameModel:
       turnSnapshot: Option[GameModelImpl] = None,
       override val turnState: TurnState,
       override val tokensInHand: List[TerrainToken] = List(),
+      override val selectedToken: Option[TerrainToken] = None,
       hasTakenCardThisTurn: Boolean = false
   ) extends GameModel:
 
@@ -85,6 +88,13 @@ object GameModel:
             turnState = TurnState.ActionDone,
             turnSnapshot = turnSnapshot.orElse(Some(this))
           )
+
+    override def selectToken(token: TerrainToken): GameModel =
+      if !tokensInHand.contains(token) then
+        throw IllegalStateException("Token not available")
+      this.copy(
+        selectedToken = Some(token)
+      )
 
     override def takeAnimalCard(slot: Int): GameModel =
       if turnState == TurnState.TurnComplete then
@@ -112,11 +122,15 @@ object GameModel:
       if turnState != TurnState.ActionDone then
         throw IllegalStateException("Cannot place token in current state")
 
-      val token = tokensInHand.head
+      val token = selectedToken.getOrElse(
+        throw IllegalStateException("Before this action choose a token")
+      )
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
       val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
       val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
-      val remainingTokens = tokensInHand.tail
+      val index = tokensInHand.indexOf(token)
+
+      val remainingTokens = tokensInHand.patch(index, Nil, 1)
 
       val newState =
         if remainingTokens.isEmpty then TurnState.TurnComplete
@@ -125,6 +139,7 @@ object GameModel:
       this.copy(
         players = updatedPlayers,
         tokensInHand = remainingTokens,
+        selectedToken = None,
         turnState = newState
       )
 

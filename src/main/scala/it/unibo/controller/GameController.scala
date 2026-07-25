@@ -3,6 +3,7 @@ package it.unibo.controller
 import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
+import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
 import scalafx.application.JFXApp3
@@ -15,6 +16,7 @@ trait GameController:
   def currentPlayerId: Int
   def currentTurnState: TurnState
   def onTakeTokens(slot: Int): Unit
+  def onSelectToken(token: TerrainToken): Unit
   def onPlaceToken(coordinate: Coordinate): Unit
   def onEndTurn(): Unit
   def onTakeAnimalCard(slot: Int): Unit
@@ -52,6 +54,19 @@ object GameController:
         val tokenNames = model.tokensInHand.map(_.toString).mkString(", ")
         refresh(model, s"$playerName prende $tokenNames")
         view.updateState(model)
+      catch
+        case e: IllegalStateException =>
+          refresh(model, s"Errore: ${e.getMessage}")
+
+    override def onSelectToken(token: TerrainToken): Unit =
+      try
+        model = model.selectToken(token)
+        refresh(
+          model,
+          s"${model.currentPlayer.name} seleziona ${token}"
+        )
+        view.updateState(model)
+
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")

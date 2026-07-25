@@ -11,12 +11,12 @@ object TokenViewDemo extends JFXApp3:
   override def start(): Unit =
 
     val tokens = Seq(
-      TokenView(TerrainToken.Water),
-      TokenView(TerrainToken.Field),
-      TokenView(TerrainToken.Mountain),
-      TokenView(TerrainToken.Ground),
-      TokenView(TerrainToken.Forest),
-      TokenView(TerrainToken.Building)
+      TokenView(TerrainToken.Water, _ => ()),
+      TokenView(TerrainToken.Field, _ => ()),
+      TokenView(TerrainToken.Mountain, _ => ()),
+      TokenView(TerrainToken.Ground, _ => ()),
+      TokenView(TerrainToken.Forest, _ => ()),
+      TokenView(TerrainToken.Building, _ => ())
     )
 
     val container = new HBox(10): // spacing 10px tra i token

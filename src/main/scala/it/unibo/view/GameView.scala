@@ -168,7 +168,7 @@ class GameView(controller: GameController) extends GridPane:
   def updateState(model: GameModel): Unit =
     val areas = model.getPlayers.map(p => createPlayerArea(p))
     updatePlayerAreas(areas, model.currentPlayer.name)
-    updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
+    updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t, controller.onSelectToken)))
     updateCentralBoard(
       CentralBoardView(
         model.centralBoard,
