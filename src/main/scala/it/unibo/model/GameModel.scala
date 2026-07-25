@@ -60,7 +60,8 @@ object GameModel:
       deck: List[AnimalCard],
       turnSnapshot: Option[GameModelImpl] = None,
       override val turnState: TurnState,
-      override val tokensInHand: List[TerrainToken] = List()
+      override val tokensInHand: List[TerrainToken] = List(),
+      hasTakenCardThisTurn: Boolean = false
   ) extends GameModel:
 
     private val MaxAnimalCards = 4
@@ -88,6 +89,8 @@ object GameModel:
     override def takeAnimalCard(slot: Int): GameModel =
       if turnState == TurnState.TurnComplete then
         throw IllegalStateException("Cannot take card after turn is complete")
+      if hasTakenCardThisTurn then
+        throw IllegalStateException("Player has already taken an animal card this turn")
       if currentPlayer.activeCards.size >= MaxAnimalCards then
         throw IllegalStateException("Player already has maximum animal cards")
 
@@ -101,7 +104,8 @@ object GameModel:
           this.copy(
             centralBoard = updatedBoard,
             players = players.updated(currentPlayerIndex, updatedPlayer),
-            turnSnapshot = turnSnapshot.orElse(Some(this))
+            turnSnapshot = turnSnapshot.orElse(Some(this)),
+            hasTakenCardThisTurn = true,
           )
 
     override def placeToken(coordinate: Coordinate): GameModel =
@@ -139,7 +143,8 @@ object GameModel:
         deck = updatedDeck,
         tokensInHand = List(),
         turnState = TurnState.WaitingForAction,
-        turnSnapshot = None
+        turnSnapshot = None,
+        hasTakenCardThisTurn = false
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
@@ -204,10 +209,10 @@ object GameModel:
     override def availableActionsMessage: String =
       val actions = List(
         Option.when(turnState == TurnState.WaitingForAction)("scegli tokens"),
-        Option.when(turnState != TurnState.TurnComplete && currentPlayer.activeCards.size < MaxAnimalCards)("scegli una carta animale"),
+        Option.when( !hasTakenCardThisTurn && currentPlayer.activeCards.size < MaxAnimalCards)("scegli una carta animale"),
         Option.when(turnState != TurnState.TurnComplete && currentPlayer.activeCards.exists(c => c.placedCubes < c.maxCubes))("posiziona cubo animale"),
-        Option.when(turnState == ActionDone && tokensInHand.nonEmpty)("posiziona token")
-        //Option.when(turnState == TurnState.TurnComplete)("Nessuna azione possibile rimasta")
+        Option.when(turnState == ActionDone && tokensInHand.nonEmpty)("posiziona token"),
+        Option.when(turnState == TurnState.TurnComplete && hasTakenCardThisTurn)("Nessuna azione possibile rimasta")
       ).flatten
 
       if actions.isEmpty then
