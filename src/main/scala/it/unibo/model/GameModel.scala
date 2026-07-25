@@ -125,6 +125,10 @@ object GameModel:
       val token = selectedToken.getOrElse(
         throw IllegalStateException("Before this action choose a token")
       )
+
+      if !highlightedCells(token).contains(coordinate) then
+        throw IllegalStateException("Invalid token placement")
+        
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
       val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
       val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
