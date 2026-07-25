@@ -5,7 +5,8 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
-import scalafx.scene.layout._
+import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 
 class PlayerAreaView(
@@ -46,6 +47,10 @@ class PlayerAreaView(
     alignment = Pos.Center
     completedCards.foreach(card => children.add(card))
 
+  private val disabledEffect = new ColorAdjust:
+    brightness = -0.4
+    saturation = -0.6
+
   prefWidth = 500
   padding = Insets(12)
   spacing = 8
@@ -62,3 +67,12 @@ class PlayerAreaView(
     nameLabel,
     completedCardsContainer
   )
+
+  def name: String = playerName
+
+  def setDisabledArea(disabled: Boolean): Unit =
+    this.disable = disabled
+    if disabled then
+      this.effect = disabledEffect
+    else
+      this.effect = null

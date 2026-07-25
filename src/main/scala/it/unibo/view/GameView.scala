@@ -103,9 +103,12 @@ class GameView(controller: GameController) extends GridPane:
     infoPanelLog.children.clear()
     infoPanelLog.children.add(panel.root)
 
-  private def updatePlayerAreas(areas: List[PlayerAreaView]): Unit =
+  private def updatePlayerAreas(areas: List[PlayerAreaView], currentPlayerName: String): Unit =
     playersContainer.children.clear()
-    areas.foreach { area => playersContainer.children.add(area) }
+    areas.foreach { area =>
+      area.setDisabledArea(area.name != currentPlayerName)
+      playersContainer.children.add(area)
+  }
 
   private def updateCentralBoard(board: CentralBoardView): Unit =
     commonMarketBar.children.clear()
@@ -152,7 +155,8 @@ class GameView(controller: GameController) extends GridPane:
     add(infoPanelLog, 2, 0)
 
   def updateState(model: GameModel): Unit =
-    updatePlayerAreas(model.getPlayers.map(p => createPlayerArea(p)))
+    val areas = model.getPlayers.map(p => createPlayerArea(p))
+    updatePlayerAreas(areas, model.currentPlayer.name)
     updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t)))
     updateCentralBoard(CentralBoardView(model.centralBoard, controller.onTakeAnimalCard, controller.onTakeTokens))
     updateSystemMessageBar(model.availableActionsMessage)
