@@ -13,10 +13,6 @@ import scalafx.scene.layout.{Pane, StackPane}
 object ScoreCalculatorViewDemo extends JFXApp3:
 
   override def start(): Unit =
-    val model: GameModel = GameModel(List())
-    val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
-      title = "ScalHarmonies"
-    val controller: GameController = GameController(model, (_, _) => (), stage2)
     val calculator = ScoreCalculator()
     var b1 = PersonalBoard(SideA)
     b1 = b1.placeToken(Field, Coordinate(0, 0)).get
@@ -30,7 +26,7 @@ object ScoreCalculatorViewDemo extends JFXApp3:
     val list = List(p1, p2)
 
     val root: Pane =
-      ScoreCalculatorView(list, (0.0, 0.0), calculator, controller)
+      ScoreCalculatorView(list, calculator, (0.0, 0.0))
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Hexagon"
       scene = new scene(root, 800, 600)

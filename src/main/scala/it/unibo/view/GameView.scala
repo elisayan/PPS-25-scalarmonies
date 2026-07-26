@@ -26,6 +26,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
 import scalafx.scene.text.FontWeight
 import scalafx.scene.text.Text
+import scalafx.util.Duration
 
 class GameView(controller: GameController) extends GridPane:
 
@@ -91,13 +92,17 @@ class GameView(controller: GameController) extends GridPane:
 
   private def updateSystemMessageBar(
       message: String,
-      color: Color = Color.Black
+      color: Color = Color.Beige
   ): Unit =
+    systemMessageBar.background = new Background(
+      Array(new BackgroundFill(color, new CornerRadii(5), Insets.Empty))
+    )
     systemMessageBar.children.clear()
     val msgTxt = new Text(message)
     msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
-    msgTxt.fill = color
+    msgTxt.fill = Color.Black
     systemMessageBar.children.add(msgTxt)
+
 
   private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
     personalTokenSidebar.children.clear()
@@ -168,7 +173,9 @@ class GameView(controller: GameController) extends GridPane:
   def updateState(model: GameModel): Unit =
     val areas = model.getPlayers.map(p => createPlayerArea(p))
     updatePlayerAreas(areas, model.currentPlayer.name)
-    updatePersonalTokenSidebar(model.tokensInHand.map(t => TokenView(t, controller.onSelectToken)))
+    updatePersonalTokenSidebar(
+      model.tokensInHand.map(t => TokenView(t, controller.onSelectToken))
+    )
     updateCentralBoard(
       CentralBoardView(
         model.centralBoard,
@@ -177,5 +184,19 @@ class GameView(controller: GameController) extends GridPane:
       )
     )
     updateSystemMessageBar(model.availableActionsMessage)
+
+  def showTemporaryError(
+      errorMessage: String = "Mossa illegale! Controllare le regole",
+      durationSeconds: Int = 3
+  ): Unit =
+    errorTimer.foreach(_.stop())
+    updateSystemMessageBar(errorMessage, Color.Red)
+    val pause = new PauseTransition(Duration(durationSeconds * 1000.0))
+    pause.onFinished = _ =>
+      updateSystemMessageBar(controller.currentModel.availableActionsMessage)
+      errorTimer = None
+
+    errorTimer = Some(pause)
+    pause.play()
 
   initLayout()

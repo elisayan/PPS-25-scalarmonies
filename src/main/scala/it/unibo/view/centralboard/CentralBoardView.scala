@@ -34,11 +34,11 @@ case class CentralBoardView(
         )
       cardView.onMouseClicked = _ => onCardClicked(slot)
       cardsContainer.children.add(cardView)
-      println(s"slot $slot" + card.toString)
 
   private val tokensContainer = new StackPane:
     prefWidth = 200
     prefHeight = 200
+    pickOnBounds = false
 
   private val boardImage =
     new ImageView(
@@ -53,44 +53,50 @@ case class CentralBoardView(
 
   private val tokenPositions =
     Map(
-      1 -> (80.0, 45.0),
-      2 -> (155.0, 45.0),
-      3 -> (53.0, 115.0),
-      4 -> (178.0, 115.0),
-      5 -> (115.0, 155.0)
+      1 -> (62.0, 45.0),
+      2 -> (140.0, 45.0),
+      3 -> (38.0, 117.0),
+      4 -> (164.0, 117.0),
+      5 -> (105.0, 160.0)
     )
+
+  private val triangleOffsets = List(
+    (0.0, -10.0),
+    (-12.0, 8.0),
+    (12.0, 8.0)
+  )
 
   board.availableTokens.foreach:
     case (slot, tokens) =>
       val tokenStack = new StackPane:
-        prefWidth = 60
-        prefHeight = 60
-
-      val trianglePositions =
-        List(
-          (20.0, 15.0), // alto sinistra
-          (42.0, 15.0), // alto destra
-          (31.0, 35.0)  // basso centro
-        )
+        prefWidth = 40
+        prefHeight = 40
+        maxWidth = 40
+        maxHeight = 40
+        pickOnBounds = true
+        onMouseClicked = _ => onTokenClicked(slot)
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
-          val tokenView = TokenView(token, _=>())
-          tokenView.setScaleX(0.65)
-          tokenView.setScaleY(0.65)
+          val tokenView = TokenView(token, _ => ())
+          tokenView.setScaleX(0.55)
+          tokenView.setScaleY(0.55)
 
-          val (x, y) = trianglePositions(index)
-          tokenView.translateX = x
-          tokenView.translateY = y
-          tokenView.onMouseClicked = _ => onTokenClicked(slot)
+          val (offsetX, offsetY) =
+            triangleOffsets.lift(index).getOrElse((0.0, 0.0))
+          tokenView.translateX = offsetX
+          tokenView.translateY = offsetY
+
+          tokenView.mouseTransparent = true
+
           tokenStack.children.add(tokenView)
 
       tokenPositions
         .get(slot)
         .foreach:
           case (x, y) =>
-            tokenStack.translateX = x - 145
-            tokenStack.translateY = y - 120
+            tokenStack.translateX = x - 100
+            tokenStack.translateY = y - 100
 
       tokensContainer.children.add(tokenStack)
 

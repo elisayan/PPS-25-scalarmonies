@@ -64,7 +64,8 @@ object GameModel:
       override val turnState: TurnState,
       override val tokensInHand: List[TerrainToken] = List(),
       override val selectedToken: Option[TerrainToken] = None,
-      hasTakenCardThisTurn: Boolean = false
+      hasTakenCardThisTurn: Boolean = false,
+      isLastRound: Boolean = false
   ) extends GameModel:
 
     private val MaxAnimalCards = 4
@@ -72,15 +73,15 @@ object GameModel:
     override def currentPlayer: Player = players(currentPlayerIndex)
 
     override def isGameOver: Boolean =
-      pouch.isEmpty || hasPlayerAlmostFullBoard
+      isLastRound && currentPlayerIndex == 0
 
     override def takeTokens(slot: Int): GameModel =
       if turnState != TurnState.WaitingForAction then
-        throw IllegalStateException("Cannot take tokens in current state")
+        throw IllegalStateException("Non puoi scegliere i tokens nello stato corrente")
 
       centralBoard.takeTokens(slot) match
         case None =>
-          throw IllegalStateException(s"Slot $slot is empty or invalid")
+          throw IllegalStateException(s"Slot $slot è vuoto o invalido")
         case Some((tokens, updatedBoard)) =>
           this.copy(
             centralBoard = updatedBoard,
@@ -91,22 +92,22 @@ object GameModel:
 
     override def selectToken(token: TerrainToken): GameModel =
       if !tokensInHand.contains(token) then
-        throw IllegalStateException("Token not available")
+        throw IllegalStateException("Token non disponibile")
       this.copy(
         selectedToken = Some(token)
       )
 
     override def takeAnimalCard(slot: Int): GameModel =
       if turnState == TurnState.TurnComplete then
-        throw IllegalStateException("Cannot take card after turn is complete")
+        throw IllegalStateException("Non puoi scegliere una carta dopo aver completato il turno")
       if hasTakenCardThisTurn then
-        throw IllegalStateException("Player has already taken an animal card this turn")
+        throw IllegalStateException("Player ha gia scelto una carta Animale questo turno")
       if currentPlayer.activeCards.size >= MaxAnimalCards then
-        throw IllegalStateException("Player already has maximum animal cards")
+        throw IllegalStateException("Player ha già il numero di carte Animale massimo")
 
       centralBoard.takeCard(slot) match
         case None =>
-          throw IllegalStateException(s"Card slot $slot is empty or invalid")
+          throw IllegalStateException(s"Slot $slot della carta è vuoto o invalido")
         case Some((card, updatedBoard)) =>
           val updatedPlayer = currentPlayer.copy(
             activeCards = currentPlayer.activeCards :+ card
@@ -120,14 +121,14 @@ object GameModel:
 
     override def placeToken(coordinate: Coordinate): GameModel =
       if turnState != TurnState.ActionDone then
-        throw IllegalStateException("Cannot place token in current state")
+        throw IllegalStateException("Non puoi posizionare token nello stato corrente")
 
       val token = selectedToken.getOrElse(
-        throw IllegalStateException("Before this action choose a token")
+        throw IllegalStateException("Prima di questa azione scegliere un token")
       )
 
       if !highlightedCells(token).contains(coordinate) then
-        throw IllegalStateException("Invalid token placement")
+        throw IllegalStateException("Piazzamento token invalido")
         
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
       val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
@@ -149,11 +150,14 @@ object GameModel:
 
     override def endTurn(): GameModel =
       if turnState != TurnState.TurnComplete then
-        throw IllegalStateException("Cannot end turn before placing all tokens")
+        throw IllegalStateException("Non puoi terminare il turno prima di aver piazzato tutti i tokens")
 
       val nextIndex = (currentPlayerIndex + 1) % players.size
       val (refilledBoard, updatedPouch, updatedDeck) =
         centralBoard.fill(pouch, deck)
+
+      val endConditionTriggered = updatedPouch.isEmpty || hasPlayerAlmostFullBoard
+      val nextIsLastRound = isLastRound || endConditionTriggered
 
       this.copy(
         currentPlayerIndex = nextIndex,
@@ -163,7 +167,8 @@ object GameModel:
         tokensInHand = List(),
         turnState = TurnState.WaitingForAction,
         turnSnapshot = None,
-        hasTakenCardThisTurn = false
+        hasTakenCardThisTurn = false,
+        isLastRound = nextIsLastRound
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
@@ -183,16 +188,16 @@ object GameModel:
     override def placeAnimalCube(card: AnimalCard): GameModel =
       if turnState == TurnState.TurnComplete then
         throw IllegalStateException(
-          "Cannot place animal cube after turn is complete"
+          "Non puoi piazzare un cubo Animale dopo che il turno è stato completato"
         )
 
       val cardIndex = currentPlayer.activeCards.indexOf(card)
       if cardIndex == -1 then
-        throw IllegalStateException("Card not found in player's active cards")
+        throw IllegalStateException("Carta non trovata tra le carte attive del giocatore")
 
       card.placeCube match
         case None =>
-          throw IllegalStateException("No cubes remaining on this card")
+          throw IllegalStateException("Nessun cubo rimasto in questa carta")
 
         case Some(updatedCard) =>
           val (newActiveCards, newCompletedCards) =
