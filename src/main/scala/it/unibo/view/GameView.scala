@@ -30,7 +30,6 @@ import scalafx.util.Duration
 
 class GameView(controller: GameController) extends GridPane:
 
-  private var currentErrorMessage: String = ""
   private var errorTimer: Option[PauseTransition] = None
 
   private val systemMessageBar: HBox = new HBox():
@@ -49,6 +48,17 @@ class GameView(controller: GameController) extends GridPane:
       Array(new BackgroundFill(Color.Red, new CornerRadii(5), Insets.Empty))
     )
     onAction = _ => controller.onCancelTurn()
+    hover.onChange((_, _, isHovered) =>
+      background = new Background(
+        Array(
+          new BackgroundFill(
+            if isHovered then Color.DarkRed else Color.Red,
+            new CornerRadii(5),
+            Insets.Empty
+          )
+        )
+      )
+    )
 
   private val endTurnButton: Button = new Button("Fine Turno"):
     font = Font.font("Arial", FontWeight.Bold, 10.0)
@@ -59,6 +69,17 @@ class GameView(controller: GameController) extends GridPane:
       Array(new BackgroundFill(Color.Green, new CornerRadii(5), Insets.Empty))
     )
     onAction = _ => controller.onEndTurn()
+    hover.onChange((_, _, isHovered) =>
+      background = new Background(
+        Array(
+          new BackgroundFill(
+            if isHovered then Color.DarkGreen else Color.Green,
+            new CornerRadii(5),
+            Insets.Empty
+          )
+        )
+      )
+    )
 
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.Center
