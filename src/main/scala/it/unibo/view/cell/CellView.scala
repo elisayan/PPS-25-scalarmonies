@@ -17,7 +17,8 @@ case class CellView(
     coordinate: Coordinate,
     var cell: Cell,
     pos: (Double, Double) = (0.0, 0.0),
-    onCellClicked: Coordinate => Unit
+    onCellClicked: Coordinate => Unit,
+    highlighted: Boolean
 ) extends StackPane:
 
   private val hexagon: Polygon = Polygon()
@@ -46,7 +47,7 @@ case class CellView(
     label.mouseTransparent = true
     placeTokenView()
 
-  def highlight(enabled: Boolean): Unit =
+  private def highlight(enabled: Boolean): Unit =
     if enabled then hexagon.fill = Color.LightGreen
     else hexagon.fill = Color.LightGrey
 
@@ -75,3 +76,4 @@ case class CellView(
     tv
 
   setHexagon()
+  highlight(highlighted)

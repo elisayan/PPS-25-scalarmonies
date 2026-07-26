@@ -1,6 +1,7 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
+import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.{GameModel, Player}
 import it.unibo.view.card.AnimalCardView
 import it.unibo.view.centralboard.CentralBoardView
@@ -132,8 +133,8 @@ class GameView(controller: GameController) extends GridPane:
 
   def refresh(playerName: String, logMessage: String): Unit = ???
 
-  private def createPlayerArea(player: Player): PlayerAreaView =
-    val boardView = PersonalBoardView(player, controller.onPlaceToken)
+  private def createPlayerArea(player: Player, highlightedCells: List[Coordinate]): PlayerAreaView =
+    val boardView = PersonalBoardView(player, controller.onPlaceToken, highlightedCells)
     val cards = player.activeCards.map(c => AnimalCardView(c))
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
     val area = PlayerAreaView(boardView, cards, completedCards, player.name)
@@ -171,7 +172,17 @@ class GameView(controller: GameController) extends GridPane:
     add(infoPanelLog, 2, 0)
 
   def updateState(model: GameModel): Unit =
-    val areas = model.getPlayers.map(p => createPlayerArea(p))
+    val highlighted = model.selectedToken match {
+      case Some(token) => model.highlightedCells(token)
+      case None => List()
+    }
+    val areas = model.getPlayers.map(p =>
+      val playerHighlightedCells =
+        if p == model.currentPlayer then
+          highlighted
+        else
+          List()
+      createPlayerArea(p, playerHighlightedCells))
     updatePlayerAreas(areas, model.currentPlayer.name)
     updatePersonalTokenSidebar(
       model.tokensInHand.map(t => TokenView(t, controller.onSelectToken))
