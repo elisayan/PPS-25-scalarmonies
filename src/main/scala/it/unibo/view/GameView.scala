@@ -187,7 +187,7 @@ class GameView(controller: GameController) extends GridPane:
 
   def showTemporaryError(
       errorMessage: String = "Mossa illegale! Controllare le regole",
-      durationSeconds: Int = 5
+      durationSeconds: Int = 3
   ): Unit =
     errorTimer.foreach(_.stop())
     updateSystemMessageBar(errorMessage, Color.Red)

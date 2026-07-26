@@ -38,6 +38,10 @@ object GameController:
 
     private val view = GameView(this)
 
+    private def handleError(e: IllegalStateException): Unit =
+      refresh(model, s"Errore: ${e.getMessage}")
+      view.showTemporaryError(s"Mossa illegale: ${e.getMessage}")
+
     override def startGame(): Unit =
       refresh(model, s"HEADER:${model.currentPlayer.name}")
 
@@ -55,21 +59,19 @@ object GameController:
         refresh(model, s"$playerName prende $tokenNames")
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
+        case e: IllegalStateException => handleError(e)
 
     override def onSelectToken(token: TerrainToken): Unit =
       try
         model = model.selectToken(token)
         refresh(
           model,
-          s"${model.currentPlayer.name} seleziona ${token}"
+          s"${model.currentPlayer.name} seleziona $token"
         )
         view.updateState(model)
 
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
+        case e: IllegalStateException => handleError(e)
 
     override def onPlaceToken(coordinate: Coordinate): Unit =
       try
@@ -80,9 +82,7 @@ object GameController:
         refresh(model, s"$playerName posiziona $name al livello $level")
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
-          view.showTemporaryError("Mossa illegale! Posizione non consona per il token.")
+        case e: IllegalStateException => handleError(e)
 
     override def onEndTurn(): Unit =
       try
@@ -90,8 +90,7 @@ object GameController:
         refresh(model, s"HEADER:${model.currentPlayer.name}")
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
+        case e: IllegalStateException => handleError(e)
 
     override def onTakeAnimalCard(slot: Int): Unit =
       try
@@ -105,9 +104,7 @@ object GameController:
         )
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
-          view.showTemporaryError("Mossa illegale! Non puoi pescare un'altra carta.")
+        case e: IllegalStateException => handleError(e)
 
     override def onPlaceAnimalCube(card: AnimalCard): Unit =
       try
@@ -121,9 +118,7 @@ object GameController:
         else refresh(model, s"$playerName posiziona un cubo")
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
-          view.showTemporaryError("Mossa illegale! Impossibile posizionare il cubo.")
+        case e: IllegalStateException => handleError(e)
 
     override def onCancelTurn(): Unit =
       try
@@ -132,8 +127,7 @@ object GameController:
         refresh(model, s"$playerName annulla il turno")
         view.updateState(model)
       catch
-        case e: IllegalStateException =>
-          refresh(model, s"Errore: ${e.getMessage}")
+        case e: IllegalStateException => handleError(e)
 
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
