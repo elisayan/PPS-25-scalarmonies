@@ -40,8 +40,8 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private val cancelTurnButton: Button = new Button("Cancella Turno"):
-    font = Font.font("Arial", FontWeight.Bold, 10.0)
-    padding = Insets(6, 12, 6, 12)
+    font = Font.font("Arial", FontWeight.Bold, 14.0)
+    padding = Insets(3, 8, 3, 8)
     minWidth = 80
     textFill = Color.White
     background = new Background(
@@ -61,8 +61,8 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private val endTurnButton: Button = new Button("Fine Turno"):
-    font = Font.font("Arial", FontWeight.Bold, 10.0)
-    padding = Insets(6, 12, 6, 12)
+    font = Font.font("Arial", FontWeight.Bold, 14.0)
+    padding = Insets(3, 8, 3, 8)
     minWidth = 80
     textFill = Color.White
     background = new Background(
