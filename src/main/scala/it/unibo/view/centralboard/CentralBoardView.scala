@@ -95,7 +95,6 @@ case class CentralBoardView(
         .get(slot)
         .foreach:
           case (x, y) =>
-            // Posiziona il centro dello tokenStack sulle coordinate dello slot
             tokenStack.translateX = x - 100
             tokenStack.translateY = y - 100
 
