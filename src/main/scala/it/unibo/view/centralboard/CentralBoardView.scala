@@ -34,11 +34,11 @@ case class CentralBoardView(
         )
       cardView.onMouseClicked = _ => onCardClicked(slot)
       cardsContainer.children.add(cardView)
-      println(s"slot $slot" + card.toString)
 
   private val tokensContainer = new StackPane:
     prefWidth = 200
     prefHeight = 200
+    pickOnBounds = false
 
   private val boardImage =
     new ImageView(
@@ -60,29 +60,41 @@ case class CentralBoardView(
       5 -> (120.0, 160.0)
     )
 
+  private val triangleOffsets = List(
+    (-15.0, -10.0),
+    (-26.0, 8.0),
+    (-4.0, 8.0)
+  )
+
   board.availableTokens.foreach:
     case (slot, tokens) =>
       val tokenStack = new StackPane:
-        prefWidth = 70
-        prefHeight = 70
+        prefWidth = 50
+        prefHeight = 50
+        pickOnBounds = true
+        onMouseClicked = _ => onTokenClicked(slot)
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
-          val tokenView = TokenView(token, _=>())
-          tokenView.setScaleX(0.65)
-          tokenView.setScaleY(0.65)
+          val tokenView = TokenView(token, _ => ())
+          tokenView.setScaleX(0.55)
+          tokenView.setScaleY(0.55)
 
-          tokenView.translateX = index * 6
-          tokenView.translateY = -index * 4
+          val (offsetX, offsetY) =
+            triangleOffsets.lift(index).getOrElse((0.0, 0.0))
+          tokenView.translateX = offsetX
+          tokenView.translateY = offsetY
 
-          tokenView.onMouseClicked = _ => onTokenClicked(slot)
+          tokenView.mouseTransparent = true
+
           tokenStack.children.add(tokenView)
 
       tokenPositions
         .get(slot)
         .foreach:
           case (x, y) =>
-            tokenStack.translateX = x - 120
+            // Posiziona il centro dello tokenStack sulle coordinate dello slot
+            tokenStack.translateX = x - 100
             tokenStack.translateY = y - 100
 
       tokensContainer.children.add(tokenStack)
