@@ -82,7 +82,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
-          //view.showTemporaryError("Mossa illegale! Posizione non consona per il token.")
+          view.showTemporaryError("Mossa illegale! Posizione non consona per il token.")
 
     override def onEndTurn(): Unit =
       try
@@ -107,7 +107,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
-          //view.showTemporaryError("Mossa illegale! Non puoi pescare un'altra carta.")
+          view.showTemporaryError("Mossa illegale! Non puoi pescare un'altra carta.")
 
     override def onPlaceAnimalCube(card: AnimalCard): Unit =
       try
@@ -123,7 +123,7 @@ object GameController:
       catch
         case e: IllegalStateException =>
           refresh(model, s"Errore: ${e.getMessage}")
-          //view.showTemporaryError("Mossa illegale! Impossibile posizionare il cubo.")
+          view.showTemporaryError("Mossa illegale! Impossibile posizionare il cubo.")
 
     override def onCancelTurn(): Unit =
       try
