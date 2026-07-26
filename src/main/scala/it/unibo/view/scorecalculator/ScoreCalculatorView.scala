@@ -19,13 +19,18 @@ import scalafx.scene.layout.BorderWidths
 import scalafx.scene.layout.CornerRadii
 import scalafx.scene.layout.GridPane
 import scalafx.scene.layout.HBox
+import scalafx.scene.layout.Priority
 import scalafx.scene.layout.VBox
 import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
 import scalafx.scene.text.FontWeight
 import scalafx.scene.text.Text
 
-case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalculator, pos: (Double, Double) = (0.0, 0.0)) extends HBox:
+case class ScoreCalculatorView(
+    playerBoards: List[Player],
+    calculator: ScoreCalculator,
+    pos: (Double, Double) = (0.0, 0.0)
+) extends HBox:
 
   private val MaxPlayers = 4
 
@@ -33,6 +38,7 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
     spacing = 25.0
     padding = Insets(30.0)
     alignment = Pos.Center
+    maxHeight = Double.MaxValue
     relocate(pos._1, pos._2)
 
     background = new Background(
@@ -60,6 +66,8 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
       padding = Insets(20.0)
       alignment = Pos.TopCenter
       minWidth = 180.0
+      maxHeight = Double.MaxValue
+      vgrow = Priority.Always
 
       background = new Background(
         Array(
@@ -78,7 +86,7 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
 
       effect = new DropShadow(8.0, 0.0, 4.0, Color.gray(0.0, 0.15))
 
-      val nameText = new Text("pippo".toUpperCase)
+      val nameText = new Text(player.name.toUpperCase)
       nameText.font = Font.font("Arial", FontWeight.Bold, 16)
       nameText.fill = Color.Black
 
@@ -87,9 +95,13 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
         vgap = 12.0
         alignment = Pos.Center
 
+        // Affiancati i token Forest e Ground nella prima riga
         add(
           createTerrainBox(
-            TokenView(Forest, _ => ()),
+            Seq(
+              TokenView(Forest, _ => ()),
+              TokenView(Ground, _ => ())
+            ),
             details.getOrElse("Forest", 0).toString
           ),
           0,
@@ -140,6 +152,9 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
         GridPane.setColumnSpan(animalBox, 2)
         add(animalBox, 0, 5)
 
+      // Permette alla griglia di espandersi verticalmente quando la finestra è massimizzata
+      VBox.setVgrow(scoresGrid, Priority.Always)
+
       val totalBox: VBox = new VBox():
         alignment = Pos.Center
         padding = Insets(15, 0, 0, 0)
@@ -165,19 +180,25 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
 
       children.addAll(nameText, scoresGrid, totalBox)
 
-  private def createTerrainBox(tokenView: TokenView, score: String): HBox =
+  private def createTerrainBox(tokens: Seq[TokenView], score: String): HBox =
     new HBox():
-      spacing = 8.0
+      spacing = 4.0
       alignment = Pos.CenterLeft
 
-      tokenView.setScaleX(0.65)
-      tokenView.setScaleY(0.65)
+      tokens.foreach { tv =>
+        tv.setScaleX(0.65)
+        tv.setScaleY(0.65)
+        children.add(tv)
+      }
 
       val scoreText = new Text(score)
       scoreText.font = Font.font("Arial", FontWeight.Bold, 14)
       scoreText.fill = Color.DarkSlateGray
 
-      children.addAll(tokenView, scoreText)
+      children.add(scoreText)
+
+  private def createTerrainBox(tokenView: TokenView, score: String): HBox =
+    createTerrainBox(Seq(tokenView), score)
 
   private def createEmptyLane(): VBox =
     new VBox():
@@ -185,6 +206,8 @@ case class ScoreCalculatorView(playerBoards: List[Player], calculator: ScoreCalc
       padding = Insets(20.0)
       alignment = Pos.Center
       minWidth = 180.0
+      maxHeight = Double.MaxValue
+      vgrow = Priority.Always
       opacity = 0.5
 
       background = new Background(
