@@ -69,8 +69,10 @@ case class CentralBoardView(
   board.availableTokens.foreach:
     case (slot, tokens) =>
       val tokenStack = new StackPane:
-        prefWidth = 50
-        prefHeight = 50
+        prefWidth = 40
+        prefHeight = 40
+        maxWidth = 40
+        maxHeight = 40
         pickOnBounds = true
         onMouseClicked = _ => onTokenClicked(slot)
 
