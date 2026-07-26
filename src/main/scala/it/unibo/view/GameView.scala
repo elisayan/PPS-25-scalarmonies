@@ -40,16 +40,30 @@ class GameView(controller: GameController) extends GridPane:
       Array(new BackgroundFill(Color.Beige, new CornerRadii(5), Insets.Empty))
     )
 
-  private val endTurnButton: Button = new Button("Fine Turno"):
-    font = Font.font("Arial", FontWeight.Bold, 14.0)
+  private val cancelTurnButton: Button = new Button("Cancella Turno"):
+    font = Font.font("Arial", FontWeight.Bold, 10.0)
     padding = Insets(6, 12, 6, 12)
-    minWidth = 120
+    minWidth = 80
+    textFill = Color.White
+    background = new Background(
+      Array(new BackgroundFill(Color.Red, new CornerRadii(5), Insets.Empty))
+    )
+    onAction = _ => controller.onCancelTurn()
+
+  private val endTurnButton: Button = new Button("Fine Turno"):
+    font = Font.font("Arial", FontWeight.Bold, 10.0)
+    padding = Insets(6, 12, 6, 12)
+    minWidth = 80
+    textFill = Color.White
+    background = new Background(
+      Array(new BackgroundFill(Color.Green, new CornerRadii(5), Insets.Empty))
+    )
     onAction = _ => controller.onEndTurn()
 
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.Center
     HBox.setHgrow(systemMessageBar, Priority.Always)
-    children = Seq(systemMessageBar, endTurnButton)
+    children = Seq(systemMessageBar, cancelTurnButton, endTurnButton)
 
   private val commonMarketBar: HBox = new HBox():
     alignment = Pos.Center
@@ -102,7 +116,6 @@ class GameView(controller: GameController) extends GridPane:
     msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
     msgTxt.fill = Color.Black
     systemMessageBar.children.add(msgTxt)
-
 
   private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
     personalTokenSidebar.children.clear()
