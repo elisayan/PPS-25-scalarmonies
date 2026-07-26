@@ -64,7 +64,8 @@ object GameModel:
       override val turnState: TurnState,
       override val tokensInHand: List[TerrainToken] = List(),
       override val selectedToken: Option[TerrainToken] = None,
-      hasTakenCardThisTurn: Boolean = false
+      hasTakenCardThisTurn: Boolean = false,
+      isLastRound: Boolean = false
   ) extends GameModel:
 
     private val MaxAnimalCards = 4
@@ -72,7 +73,7 @@ object GameModel:
     override def currentPlayer: Player = players(currentPlayerIndex)
 
     override def isGameOver: Boolean =
-      pouch.isEmpty || hasPlayerAlmostFullBoard
+      isLastRound && currentPlayerIndex == 0
 
     override def takeTokens(slot: Int): GameModel =
       if turnState != TurnState.WaitingForAction then
@@ -155,6 +156,9 @@ object GameModel:
       val (refilledBoard, updatedPouch, updatedDeck) =
         centralBoard.fill(pouch, deck)
 
+      val endConditionTriggered = updatedPouch.isEmpty || hasPlayerAlmostFullBoard
+      val nextIsLastRound = isLastRound || endConditionTriggered
+
       this.copy(
         currentPlayerIndex = nextIndex,
         centralBoard = refilledBoard,
@@ -163,7 +167,8 @@ object GameModel:
         tokensInHand = List(),
         turnState = TurnState.WaitingForAction,
         turnSnapshot = None,
-        hasTakenCardThisTurn = false
+        hasTakenCardThisTurn = false,
+        isLastRound = nextIsLastRound
       )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =

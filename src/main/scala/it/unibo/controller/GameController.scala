@@ -3,9 +3,11 @@ package it.unibo.controller
 import it.unibo.model.{GameModel, Player, TurnState}
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
+import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
+import it.unibo.view.scorecalculator.ScoreCalculatorView
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
@@ -24,6 +26,7 @@ trait GameController:
   def onCancelTurn(): Unit
   def start(): Unit
   def onStartGame(names: List[String], side: BoardSide): Unit
+  def onEndGame(players: List[Player]): Unit
 
 object GameController:
 
@@ -87,8 +90,11 @@ object GameController:
     override def onEndTurn(): Unit =
       try
         model = model.endTurn()
-        refresh(model, s"HEADER:${model.currentPlayer.name}")
-        view.updateState(model)
+        if model.isGameOver then
+          onEndGame(model.getPlayers)
+        else
+          refresh(model, s"HEADER:${model.currentPlayer.name}")
+          view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
 
@@ -139,6 +145,12 @@ object GameController:
       model = GameModel(players)
       view.updateState(model)
       stage.scene.value.setRoot(view)
+      stage.fullScreen = true
+
+    override def onEndGame(players: List[Player]): Unit =
+      val calculator = ScoreCalculator()
+      val endGameView = ScoreCalculatorView(players, calculator)
+      stage.scene.value.setRoot(endGameView)
       stage.fullScreen = true
 
 
