@@ -20,7 +20,7 @@ private object CardTheme:
   val DeltaX     = 0.23
   val ConScale   = 0.22
   val HabOffsetX = 0.05
-  val HabOffsetY = -0.05
+  val HabOffsetY = -0.03
 
   def tokenColor(t: TerrainToken): String = t match
     case TerrainToken.Water    => "#aaddff"
