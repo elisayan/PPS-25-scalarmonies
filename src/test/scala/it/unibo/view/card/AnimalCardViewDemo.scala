@@ -24,7 +24,6 @@ object AnimalCardViewDemo extends JFXApp3:
       name = "Orso Bruno",
       habitat = mockHabitat,
       points = List(4, 7, 12, 16, 22),
-      imageId = "default.png"
     )
     def fakeFun(slot: Int): Unit =
       println("ciao")

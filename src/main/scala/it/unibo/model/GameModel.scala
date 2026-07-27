@@ -1,8 +1,7 @@
 package it.unibo.model
 
 import it.unibo.model.TurnState.ActionDone
-import it.unibo.model.card.AnimalCard
-import it.unibo.model.card.HabitatMatcher
+import it.unibo.model.card.{AnimalCard, AnimalDeckFactory, HabitatMatcher}
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.pouch.Pouches.Pouch
@@ -28,7 +27,7 @@ trait GameModel:
   def availableActionsMessage: String
 
 object GameModel:
-  def apply(players: List[Player], deck: List[AnimalCard] = List()): GameModel =
+  def apply(players: List[Player], deck: List[AnimalCard] = AnimalDeckFactory.createShuffledDeck()): GameModel =
     val pouch = Pouch.initialPouch()
     val (board, updatedPouch, updatedDeck) =
       CentralBoard.empty.fill(pouch, deck)
