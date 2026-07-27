@@ -14,7 +14,7 @@ object AnimalDeckFactory:
       name = "Coccodrillo",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-4, 2), Forest, 2),
+          CellRequirement(Coordinate(-4, 2), Forest, 3),
           CellRequirement(Coordinate(-2, 1), Water, 1),
           CellRequirement(Coordinate(0, 0), Water, 1)
         )
@@ -38,7 +38,7 @@ object AnimalDeckFactory:
       name = "Salmone",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Mountain, 2),
+          CellRequirement(Coordinate(-2, 1), Mountain, 3),
           CellRequirement(Coordinate(0, 0), Water, 1)
         )
       ),
@@ -72,7 +72,7 @@ object AnimalDeckFactory:
       name = "Oca",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Building, 1),
+          CellRequirement(Coordinate(-2, 1), Building, 2),
           CellRequirement(Coordinate(0, 0), Water, 1)
         )
       ),
@@ -95,7 +95,7 @@ object AnimalDeckFactory:
       name = "Martin Pescatore",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Forest, 2),
+          CellRequirement(Coordinate(-2, 1), Forest, 3),
           CellRequirement(Coordinate(2, -1), Water, 1),
           CellRequirement(Coordinate(0, 0), Water, 1)
         )
@@ -109,7 +109,7 @@ object AnimalDeckFactory:
         List(
           CellRequirement(Coordinate(-2, 1), Forest, 2),
           CellRequirement(Coordinate(2, -1), Forest, 2),
-          CellRequirement(Coordinate(0, 0), Water, 1)
+          CellRequirement(Coordinate(0, 0), Field, 1)
         )
       ),
       points = List(5, 10, 17),
@@ -119,10 +119,10 @@ object AnimalDeckFactory:
       name = "Procione",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Water, 1),
+          CellRequirement(Coordinate(-2, -1), Water, 1),
           CellRequirement(Coordinate(2, -1), Water, 1),
-          CellRequirement(Coordinate(0, 2), Field, 1),
-          CellRequirement(Coordinate(0, 0), Water, 1)
+          CellRequirement(Coordinate(0, 0), Field, 1),
+          CellRequirement(Coordinate(0, -2), Water, 1)
         )
       ),
       points = List(6, 12),
@@ -134,7 +134,7 @@ object AnimalDeckFactory:
         List(
           CellRequirement(Coordinate(-4, 2), Field, 1),
           CellRequirement(Coordinate(-2, 1), Field, 1),
-          CellRequirement(Coordinate(0, 0), Building, 1)
+          CellRequirement(Coordinate(0, 0), Building, 2)
         )
       ),
       points = List(5, 10, 16),
@@ -144,9 +144,9 @@ object AnimalDeckFactory:
       name = "Topo",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Field, 1),
+          CellRequirement(Coordinate(-2, -1), Field, 1),
           CellRequirement(Coordinate(2, -1), Field, 1),
-          CellRequirement(Coordinate(0, 0), Building, 1)
+          CellRequirement(Coordinate(0, 0), Building, 2)
         )
       ),
       points = List(5, 10, 17),
@@ -156,7 +156,7 @@ object AnimalDeckFactory:
       name = "Pavone",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Water, 1),
+          CellRequirement(Coordinate(-2, -1), Water, 1),
           CellRequirement(Coordinate(2, -1), Water, 1),
           CellRequirement(Coordinate(0, 0), Building, 2)
         )
@@ -168,7 +168,7 @@ object AnimalDeckFactory:
       name = "Scoiattolo",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Forest, 2),
+          CellRequirement(Coordinate(-2, 1), Forest, 3),
           CellRequirement(Coordinate(0, 0), Building, 2)
         )
       ),
@@ -180,8 +180,8 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Forest, 2),
-          CellRequirement(Coordinate(2, -1), Forest, 2),
-          CellRequirement(Coordinate(0, 0), Building, 1)
+          CellRequirement(Coordinate(-2, -1), Forest, 2),
+          CellRequirement(Coordinate(0, 0), Building, 2)
         )
       ),
       points = List(5, 12),
@@ -191,10 +191,10 @@ object AnimalDeckFactory:
       name = "Ape",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Field, 1),
+          CellRequirement(Coordinate(-2, -1), Field, 1),
           CellRequirement(Coordinate(2, -1), Field, 1),
-          CellRequirement(Coordinate(0, 2), Forest, 2),
-          CellRequirement(Coordinate(0, 0), Field, 1)
+          CellRequirement(Coordinate(0, 0), Forest, 2),
+          CellRequirement(Coordinate(0, -2), Field, 1)
         )
       ),
       points = List(8, 18),
@@ -204,9 +204,9 @@ object AnimalDeckFactory:
       name = "Coniglio",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Building, 1),
-          CellRequirement(Coordinate(2, -1), Forest, 1),
-          CellRequirement(Coordinate(0, 0), Field, 1)
+          CellRequirement(Coordinate(-4, 2), Building, 2),
+          CellRequirement(Coordinate(-2, 1), Forest, 1),
+          CellRequirement(Coordinate(0, 0), Forest, 1)
         )
       ),
       points = List(5, 10, 17),
@@ -216,9 +216,9 @@ object AnimalDeckFactory:
       name = "Volpe",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Field, 1),
-          CellRequirement(Coordinate(2, -1), Mountain, 1),
-          CellRequirement(Coordinate(0, 0), Field, 1)
+          CellRequirement(Coordinate(-4, 2), Field, 1),
+          CellRequirement(Coordinate(-2, 1), Mountain, 1),
+          CellRequirement(Coordinate(0, 0), Mountain, 1)
         )
       ),
       points = List(4, 9, 16),
@@ -228,8 +228,8 @@ object AnimalDeckFactory:
       name = "Corvo",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Building, 1),
-          CellRequirement(Coordinate(2, -1), Building, 1),
+          CellRequirement(Coordinate(-2, -1), Building, 2),
+          CellRequirement(Coordinate(2, -1), Building, 2),
           CellRequirement(Coordinate(0, 0), Field, 1)
         )
       ),
@@ -240,8 +240,8 @@ object AnimalDeckFactory:
       name = "Lama",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Mountain, 2),
-          CellRequirement(Coordinate(2, -1), Field, 1),
+          CellRequirement(Coordinate(-4, 2), Mountain, 2),
+          CellRequirement(Coordinate(-2, 1), Field, 1),
           CellRequirement(Coordinate(0, 0), Field, 1)
         )
       ),
@@ -253,8 +253,6 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Forest, 1),
-          CellRequirement(Coordinate(2, -1), Field, 1),
-          CellRequirement(Coordinate(0, 2), Forest, 1),
           CellRequirement(Coordinate(0, 0), Field, 1)
         )
       ),
@@ -266,8 +264,8 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Mountain, 2),
-          CellRequirement(Coordinate(2, -1), Forest, 1),
-          CellRequirement(Coordinate(0, 0), Mountain, 1)
+          CellRequirement(Coordinate(0, 0), Forest, 1),
+          CellRequirement(Coordinate(-2, -1), Mountain, 2)
         )
       ),
       points = List(5, 11),
@@ -277,7 +275,7 @@ object AnimalDeckFactory:
       name = "Pinguino",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Water, 1),
+          CellRequirement(Coordinate(-2, -1), Water, 1),
           CellRequirement(Coordinate(2, -1), Water, 1),
           CellRequirement(Coordinate(0, 0), Mountain, 1)
         )
@@ -289,8 +287,8 @@ object AnimalDeckFactory:
       name = "Pipistrello",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Forest, 2),
-          CellRequirement(Coordinate(0, 0), Mountain, 2)
+          CellRequirement(Coordinate(-2, 1), Forest, 3),
+          CellRequirement(Coordinate(0, 0), Mountain, 1)
         )
       ),
       points = List(3, 6, 10, 15),
@@ -301,7 +299,7 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Water, 1),
-          CellRequirement(Coordinate(2, -1), Water, 1),
+          CellRequirement(Coordinate(-2, -1), Water, 1),
           CellRequirement(Coordinate(0, 0), Mountain, 2)
         )
       ),
@@ -313,7 +311,7 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Field, 1),
-          CellRequirement(Coordinate(0, 0), Mountain, 2)
+          CellRequirement(Coordinate(0, 0), Mountain, 3)
         )
       ),
       points = List(5, 11),
@@ -324,7 +322,6 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Field, 1),
-          CellRequirement(Coordinate(2, -1), Field, 1),
           CellRequirement(Coordinate(0, 0), Mountain, 2)
         )
       ),
@@ -336,7 +333,7 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Water, 1),
-          CellRequirement(Coordinate(2, -1), Water, 1),
+          CellRequirement(Coordinate(-2, -1), Water, 1),
           CellRequirement(Coordinate(0, 0), Forest, 2)
         )
       ),
@@ -347,7 +344,7 @@ object AnimalDeckFactory:
       name = "Cinghiale",
       habitat = Habitat(
         List(
-          CellRequirement(Coordinate(-2, 1), Building, 1),
+          CellRequirement(Coordinate(-2, 1), Building, 2),
           CellRequirement(Coordinate(0, 0), Forest, 2)
         )
       ),
@@ -359,8 +356,7 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Forest, 1),
-          CellRequirement(Coordinate(2, -1), Forest, 1),
-          CellRequirement(Coordinate(0, 0), Forest, 1)
+          CellRequirement(Coordinate(0, 0), Forest, 2)
         )
       ),
       points = List(3, 6, 10, 15),
@@ -371,8 +367,8 @@ object AnimalDeckFactory:
       habitat = Habitat(
         List(
           CellRequirement(Coordinate(-2, 1), Field, 1),
-          CellRequirement(Coordinate(2, -1), Field, 1),
-          CellRequirement(Coordinate(0, 0), Forest, 2)
+          CellRequirement(Coordinate(-2, -1), Field, 1),
+          CellRequirement(Coordinate(0, 0), Forest, 3)
         )
       ),
       points = List(4, 10, 16),
@@ -382,9 +378,9 @@ object AnimalDeckFactory:
       name = "Pantera",
       habitat = Habitat(
         List(
+          CellRequirement(Coordinate(-4, 2), Forest, 2),
           CellRequirement(Coordinate(-2, 1), Forest, 2),
-          CellRequirement(Coordinate(2, -1), Field, 1),
-          CellRequirement(Coordinate(0, 0), Forest, 1)
+          CellRequirement(Coordinate(0, 0), Field, 1)
         )
       ),
       points = List(5, 11),
