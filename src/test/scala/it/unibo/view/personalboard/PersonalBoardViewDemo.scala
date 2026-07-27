@@ -17,7 +17,11 @@ object PersonalBoardViewDemo extends JFXApp3:
       title = "ScalHarmonies"
     val controller: GameController = GameController(model, stage2)
     val view = GameView(controller)
-    val root: Pane = PersonalBoardView(player, controller.onPlaceToken, highlightedCells = List())
+    val root: Pane = PersonalBoardView(
+      player,
+      controller.onPlaceToken,
+      highlightedCells = List()
+    )
 
     stage = new JFXApp3.PrimaryStage:
       title = "Simple Personal Board"

@@ -6,7 +6,7 @@ import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
 import scalafx.scene.effect.ColorAdjust
-import scalafx.scene.layout.*
+import scalafx.scene.layout._
 import scalafx.scene.paint.Color
 
 class PlayerAreaView(
@@ -72,7 +72,5 @@ class PlayerAreaView(
 
   def setDisabledArea(disabled: Boolean): Unit =
     this.disable = disabled
-    if disabled then
-      this.effect = disabledEffect
-    else
-      this.effect = null
+    if disabled then this.effect = disabledEffect
+    else this.effect = null

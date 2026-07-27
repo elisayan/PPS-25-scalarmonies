@@ -1,8 +1,9 @@
 package it.unibo.view
 
 import it.unibo.controller.GameController
+import it.unibo.model.GameModel
+import it.unibo.model.Player
 import it.unibo.model.personalboard.Coordinate
-import it.unibo.model.{GameModel, Player}
 import it.unibo.view.card.AnimalCardView
 import it.unibo.view.centralboard.CentralBoardView
 import it.unibo.view.infopanel.InfoPanelView
@@ -12,7 +13,8 @@ import it.unibo.view.token.TokenView
 import scalafx.animation.PauseTransition
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
-import scalafx.scene.control.{Button, ScrollPane}
+import scalafx.scene.control.Button
+import scalafx.scene.control.ScrollPane
 import scalafx.scene.layout.Background
 import scalafx.scene.layout.BackgroundFill
 import scalafx.scene.layout.ColumnConstraints
@@ -166,13 +168,16 @@ class GameView(controller: GameController) extends GridPane:
     commonMarketBar.children.clear()
     commonMarketBar.children.add(board)
 
-  def refresh(model: GameModel, logMessage: String): Unit = {
+  def refresh(model: GameModel, logMessage: String): Unit =
     updateState(model)
     updateInfoPanel(logMessage)
-  }
 
-  private def createPlayerArea(player: Player, highlightedCells: List[Coordinate]): PlayerAreaView =
-    val boardView = PersonalBoardView(player, controller.onPlaceToken, highlightedCells)
+  private def createPlayerArea(
+      player: Player,
+      highlightedCells: List[Coordinate]
+  ): PlayerAreaView =
+    val boardView =
+      PersonalBoardView(player, controller.onPlaceToken, highlightedCells)
     val cards = player.activeCards.map(c => AnimalCardView(c))
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
     val area = PlayerAreaView(boardView, cards, completedCards, player.name)
@@ -210,17 +215,15 @@ class GameView(controller: GameController) extends GridPane:
     add(infoPanelView.root, 2, 0)
 
   def updateState(model: GameModel): Unit =
-    val highlighted = model.selectedToken match {
+    val highlighted = model.selectedToken match
       case Some(token) => model.highlightedCells(token)
-      case None => List()
-    }
+      case None        => List()
     val areas = model.getPlayers.map(p =>
       val playerHighlightedCells =
-        if p == model.currentPlayer then
-          highlighted
-        else
-          List()
-      createPlayerArea(p, playerHighlightedCells))
+        if p == model.currentPlayer then highlighted
+        else List()
+      createPlayerArea(p, playerHighlightedCells)
+    )
     updatePlayerAreas(areas, model.currentPlayer.name)
     updatePersonalTokenSidebar(
       model.tokensInHand.map(t => TokenView(t, controller.onSelectToken))

@@ -1,9 +1,9 @@
 package it.unibo.view.infopanel
 
+import it.unibo.model.token.TerrainToken
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.layout.StackPane
-
 
 object InfoPanelViewDemo extends JFXApp3:
 
@@ -20,23 +20,13 @@ object InfoPanelViewDemo extends JFXApp3:
 
     panel.addEntry(
       "Player1",
-      "prende",
-      List(
-        TerrainToken.Forest,
-        TerrainToken.Water,
-        TerrainToken.Mountain
-      )
+      "prende Forest, Water, Mountain"
     )
-
 
     panel.addEntry(
       "Player1",
-      "seleziona",
-      List(
-        TerrainToken.Forest
-      )
+      "seleziona Forest"
     )
-
 
     panel.addEntry(
       "Player1",
@@ -93,7 +83,6 @@ object InfoPanelViewDemo extends JFXApp3:
       "Player1",
       "ottiene 5 punti"
     )
-
 
     stage = new JFXApp3.PrimaryStage:
       title = "Info Panel Demo"

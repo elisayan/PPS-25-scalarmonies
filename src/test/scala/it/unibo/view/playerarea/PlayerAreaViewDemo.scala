@@ -15,9 +15,19 @@ object PlayerAreaViewDemo extends JFXApp3:
   override def start(): Unit =
     val board = PersonalBoard(SideA)
 
-    val player = Player(id = 1, name = "Player 1", board = board, activeCards = List(), completedCards = List())
+    val player = Player(
+      id = 1,
+      name = "Player 1",
+      board = board,
+      activeCards = List(),
+      completedCards = List()
+    )
 
-    val boardView = PersonalBoardView(player, coordinate => println(s"Clicked: $coordinate"), highlightedCells = List())
+    val boardView = PersonalBoardView(
+      player,
+      coordinate => println(s"Clicked: $coordinate"),
+      highlightedCells = List()
+    )
 
     val forestHabitat = Habitat(
       List(

@@ -33,11 +33,36 @@ object GameViewDemo extends JFXApp3:
       )
 
       val animalCards: List[AnimalCard] = List(
-        AnimalCard("Orso", forestHabitat, List(4, 7, 12, 16), imageId = "default.png"),
-        AnimalCard("Lontra", waterHabitat, List(3, 6, 10, 15), imageId = "default.png"),
-        AnimalCard("Cervo", forestHabitat, List(3, 7, 11, 16), imageId = "default.png"),
-        AnimalCard("Volpe", forestHabitat, List(5, 8, 12, 18), imageId = "default.png"),
-        AnimalCard("Gufo", waterHabitat, List(4, 9, 14, 20), imageId = "default.png")
+        AnimalCard(
+          "Orso",
+          forestHabitat,
+          List(4, 7, 12, 16),
+          imageId = "default.png"
+        ),
+        AnimalCard(
+          "Lontra",
+          waterHabitat,
+          List(3, 6, 10, 15),
+          imageId = "default.png"
+        ),
+        AnimalCard(
+          "Cervo",
+          forestHabitat,
+          List(3, 7, 11, 16),
+          imageId = "default.png"
+        ),
+        AnimalCard(
+          "Volpe",
+          forestHabitat,
+          List(5, 8, 12, 18),
+          imageId = "default.png"
+        ),
+        AnimalCard(
+          "Gufo",
+          waterHabitat,
+          List(4, 9, 14, 20),
+          imageId = "default.png"
+        )
       )
 
       // 2. GIOCATORI
@@ -57,7 +82,8 @@ object GameViewDemo extends JFXApp3:
       )
 
       val pouch: Pouch = Pouch.initialPouch()
-      val (centralBoard, _, _) = CentralBoard.empty.fill(pouch = pouch, deck = animalCards)
+      val (centralBoard, _, _) =
+        CentralBoard.empty.fill(pouch = pouch, deck = animalCards)
 
       val model: GameModel = GameModel(
         players = List(player1, player2),

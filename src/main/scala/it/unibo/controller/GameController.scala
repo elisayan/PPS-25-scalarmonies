@@ -1,8 +1,12 @@
 package it.unibo.controller
 
-import it.unibo.model.{GameModel, Player, TurnState}
+import it.unibo.model.GameModel
+import it.unibo.model.Player
+import it.unibo.model.TurnState
 import it.unibo.model.card.AnimalCard
-import it.unibo.model.personalboard.{BoardSide, Coordinate, PersonalBoard}
+import it.unibo.model.personalboard.BoardSide
+import it.unibo.model.personalboard.Coordinate
+import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
@@ -63,8 +67,7 @@ object GameController:
         val tokenNames = model.tokensInHand.map(_.toString).mkString(", ")
         refreshView(s"$playerName prende $tokenNames")
         view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onSelectToken(token: TerrainToken): Unit =
       try
@@ -72,8 +75,7 @@ object GameController:
         refreshView(s"${model.currentPlayer.name} seleziona $token")
         view.updateState(model)
 
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onPlaceToken(coordinate: Coordinate): Unit =
       try
@@ -83,19 +85,16 @@ object GameController:
         val level = model.currentPlayer.board.cells(coordinate).getTokens.size
         refreshView(s"$playerName posiziona $name al livello $level")
         view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onEndTurn(): Unit =
       try
         model = model.endTurn()
-        if model.isGameOver then
-          onEndGame(model.getPlayers)
+        if model.isGameOver then onEndGame(model.getPlayers)
         else
           refreshView(s"HEADER:${model.currentPlayer.name}")
           view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onTakeAnimalCard(slot: Int): Unit =
       try
@@ -103,10 +102,11 @@ object GameController:
         val cardPosition = model.currentPlayer.activeCards.size + 1
         model = model.takeAnimalCard(slot)
         val cardName = model.currentPlayer.activeCards.last.name
-        refreshView(s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition")
+        refreshView(
+          s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition"
+        )
         view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onPlaceAnimalCube(card: AnimalCard): Unit =
       try
@@ -119,8 +119,7 @@ object GameController:
           refreshView(s"$playerName posiziona un cubo")
         else refreshView(s"$playerName posiziona un cubo")
         view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def onCancelTurn(): Unit =
       try
@@ -128,8 +127,7 @@ object GameController:
         model = model.cancelTurn()
         refreshView(s"$playerName annulla il turno")
         view.updateState(model)
-      catch
-        case e: IllegalStateException => handleError(e)
+      catch case e: IllegalStateException => handleError(e)
 
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
@@ -137,7 +135,9 @@ object GameController:
       stage.maximized = true
 
     override def onStartGame(names: List[String], side: BoardSide): Unit =
-      val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
+      val players = names.zipWithIndex.map((name, index) =>
+        Player(index, name, PersonalBoard(side))
+      )
       model = GameModel(players)
       view.updateState(model)
       stage.scene.value.setRoot(view)
@@ -148,8 +148,3 @@ object GameController:
       val endGameView = ScoreCalculatorView(players, calculator)
       stage.scene.value.setRoot(endGameView)
       stage.maximized = true
-
-
-
-
-

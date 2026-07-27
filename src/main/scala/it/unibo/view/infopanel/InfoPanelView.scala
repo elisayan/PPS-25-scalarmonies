@@ -1,16 +1,20 @@
 package it.unibo.view.infopanel
 
+import it.unibo.model.token.TerrainToken
 import scalafx.geometry.Insets
-import scalafx.scene.control.{Label, ScrollPane}
+import scalafx.scene.control.Label
+import scalafx.scene.control.ScrollPane
 import scalafx.scene.layout.VBox
-import scalafx.scene.text.{Font, FontWeight, Text, TextFlow}
+import scalafx.scene.text.Font
+import scalafx.scene.text.FontWeight
+import scalafx.scene.text.Text
+import scalafx.scene.text.TextFlow
 
 class InfoPanelView:
 
   private val logBox = new VBox(4):
     padding = Insets(8)
-    style =
-      """
+    style = """
       -fx-background-color: transparent;
       """
 
@@ -29,39 +33,36 @@ class InfoPanelView:
     hbarPolicy = ScrollPane.ScrollBarPolicy.Never
     vbarPolicy = ScrollPane.ScrollBarPolicy.AsNeeded
 
-    style =
-      """
+    style = """
       -fx-background-color: transparent;
       -fx-background-insets: 0;
       """
 
-  def addEntry(playerName:String, message:String):Unit =
+  def addEntry(playerName: String, message: String): Unit =
     val color =
-      playerColors.getOrElse(playerName,"#333333")
+      playerColors.getOrElse(playerName, "#333333")
     val nameText = new Text(s"$playerName "):
       font = Font.font(
-          "System",
-          FontWeight.Bold,
-          13
-        )
+        "System",
+        FontWeight.Bold,
+        13
+      )
       style = s"-fx-fill:$color;"
     val messageText = new Text(message):
-      font =
-        Font.font(
-          "System",
-          13
-        )
+      font = Font.font(
+        "System",
+        13
+      )
       style = "-fx-fill:#222222;"
 
     val eventBox = new TextFlow:
-      padding = Insets(6,10,6,10)
+      padding = Insets(6, 10, 6, 10)
       children.addAll(
         nameText,
         messageText
       )
 
-      style =
-        """
+      style = """
         -fx-background-color:white;
         -fx-background-radius:2;
         -fx-border-radius:2;
@@ -76,16 +77,14 @@ class InfoPanelView:
       eventBox
     )
 
-  def addTurnHeader(playerName:String):Unit =
+  def addTurnHeader(playerName: String): Unit =
     val header = new Label(s"▶ Inizio del turno di $playerName"):
-      font =
-        Font.font(
-          "System",
-          FontWeight.Bold,
-          13
-        )
-      style =
-        """
+      font = Font.font(
+        "System",
+        FontWeight.Bold,
+        13
+      )
+      style = """
         -fx-background-color:#eadfce;
         -fx-text-fill:#333333;
         -fx-padding:6 10 6 10;

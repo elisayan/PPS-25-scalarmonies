@@ -1,10 +1,12 @@
 package it.unibo.view.homepage
 
-import scalafx.scene.{Node, Parent}
-import scalafx.scene.layout.*
-import scalafx.scene.control.*
-import scalafx.geometry.{Insets, Pos}
 import it.unibo.model.personalboard.BoardSide
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
+import scalafx.scene.Node
+import scalafx.scene.Parent
+import scalafx.scene.control._
+import scalafx.scene.layout._
 
 object HomeView:
 
@@ -15,12 +17,14 @@ object HomeView:
       alignment = Pos.Center
 
     def updatePlayerFields(numPlayers: Int): Unit =
-      playerTextFields = (1 to numPlayers).map: i =>
-        new TextField:
-          promptText = s"Nome Giocatore $i"
-          maxWidth = 200
-          style = "-fx-font-size: 14px; -fx-padding: 8px; -fx-background-radius: 5px;"
-      .toList
+      playerTextFields = (1 to numPlayers)
+        .map: i =>
+          new TextField:
+            promptText = s"Nome Giocatore $i"
+            maxWidth = 200
+            style =
+              "-fx-font-size: 14px; -fx-padding: 8px; -fx-background-radius: 5px;"
+        .toList
       playerNamesBox.children = playerTextFields
     val numPlayersCombo = new ComboBox[Int](Seq(2, 3, 4)):
       value = 2
@@ -44,12 +48,14 @@ object HomeView:
       children = Seq(sideA, sideB)
 
     val startButton = new Button("Inizia Partita"):
-      style = "-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 5px;"
+      style =
+        "-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 5px;"
       onAction = _ =>
         val rawNames = playerTextFields.map(_.text.value)
         val finalNames = rawNames.zipWithIndex.map: (name, idx) =>
           if name.trim.isEmpty then s"Player ${idx + 1}" else name.trim
-        val selectedSide = if sideA.selected.value then BoardSide.SideA else BoardSide.SideB
+        val selectedSide =
+          if sideA.selected.value then BoardSide.SideA else BoardSide.SideB
         onGameStart(finalNames, selectedSide)
 
     new VBox:
@@ -59,10 +65,35 @@ object HomeView:
       style = "-fx-background-color: #ecf0f1;"
       children = Seq(
         new Label("SCALARMONIES"):
-          style = "-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+          style =
+            "-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
         ,
-        new VBox { alignment = Pos.Center; spacing = 10; children = Seq(new Label("Numero di Giocatori:") { style = "-fx-font-size: 16px; -fx-font-weight: bold;" }, numPlayersCombo) },
-        new VBox { alignment = Pos.Center; spacing = 10; children = Seq(new Label("Nomi Giocatori:") { style = "-fx-font-size: 16px; -fx-font-weight: bold;" }, playerNamesBox) },
-        new VBox { alignment = Pos.Center; spacing = 10; children = Seq(new Label("Scegli la Plancia:") { style = "-fx-font-size: 16px; -fx-font-weight: bold;" }, sidesBox) },
+        new VBox:
+          alignment = Pos.Center; spacing = 10;
+          children = Seq(
+            new Label("Numero di Giocatori:"):
+              style = "-fx-font-size: 16px; -fx-font-weight: bold;"
+            ,
+            numPlayersCombo
+          )
+        ,
+        new VBox:
+          alignment = Pos.Center; spacing = 10;
+          children = Seq(
+            new Label("Nomi Giocatori:"):
+              style = "-fx-font-size: 16px; -fx-font-weight: bold;"
+            ,
+            playerNamesBox
+          )
+        ,
+        new VBox:
+          alignment = Pos.Center; spacing = 10;
+          children = Seq(
+            new Label("Scegli la Plancia:"):
+              style = "-fx-font-size: 16px; -fx-font-weight: bold;"
+            ,
+            sidesBox
+          )
+        ,
         startButton
       )
