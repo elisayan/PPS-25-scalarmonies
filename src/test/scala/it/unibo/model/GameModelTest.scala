@@ -223,15 +223,15 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
     noException should be thrownBy afterTake.takeAnimalCard(CardSlot)
 
-  it should "reject taking animal card when turn is complete" in:
+  it should "allow taking animal card after placing all tokens" in:
     val model = modelWithCards(List(testCard))
     val afterTake = modelAfterTake(model)
 
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
       placeSelectedToken(m, token)
-    } // TurnComplete
+    }
 
-    assertThrows[IllegalStateException] {
+    noException should be thrownBy {
       afterPlace.takeAnimalCard(CardSlot)
     }
 
