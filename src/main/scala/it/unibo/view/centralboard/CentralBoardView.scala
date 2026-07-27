@@ -26,12 +26,7 @@ case class CentralBoardView(
 
   board.availableCards.foreach:
     case (slot, card) =>
-      val cardView =
-        AnimalCardView(
-          card,
-          cardWidth = 90,
-          cardHeight = 140
-        )
+      val cardView = AnimalCardView(card)
       cardView.onMouseClicked = _ => onCardClicked(slot)
       cardsContainer.children.add(cardView)
 

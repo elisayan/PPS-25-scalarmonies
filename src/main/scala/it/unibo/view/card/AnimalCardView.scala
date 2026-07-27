@@ -114,7 +114,7 @@ private object CardComponents:
           children = tokens ++ animal
 
 object AnimalCardView:
-  def apply(card: AnimalCard, cardWidth: Double = 180.0, cardHeight: Double = 270.0): Node =
+  def apply(card: AnimalCard, cardWidth: Double = 120.0, cardHeight: Double = 160.0): Node =
     val pad     = cardWidth * CardTheme.PadRatio
     val usableW = cardWidth - (pad * 2)
     val usableH = cardHeight - (pad * 2)
