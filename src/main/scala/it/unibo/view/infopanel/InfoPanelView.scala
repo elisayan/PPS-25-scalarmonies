@@ -17,11 +17,11 @@ class InfoPanelView:
       -fx-background-color: transparent;
       """
 
-  private val playerColors = Map(
-    "Player1" -> "#2d7a2d",
-    "Player2" -> "#c0392b",
-    "Player3" -> "#2471a3",
-    "Player4" -> "#d4ac0d"
+  private val colors = List(
+    "#2d7a2d",
+    "#c0392b",
+    "#2471a3",
+    "#d4ac0d"
   )
 
   val root: ScrollPane = new ScrollPane:
@@ -37,9 +37,8 @@ class InfoPanelView:
       -fx-background-insets: 0;
       """
 
-  def addEntry(playerName: String, message: String): Unit =
-    val color =
-      playerColors.getOrElse(playerName, "#333333")
+  def addEntry(playerName: String, message: String, playerId: Int): Unit =
+    val color = colors(playerId % colors.size)
     val nameText = new Text(s"$playerName "):
       font = Font.font(
         "System",
