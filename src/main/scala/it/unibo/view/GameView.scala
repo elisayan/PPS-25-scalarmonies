@@ -147,7 +147,8 @@ class GameView(controller: GameController) extends GridPane:
         message.stripPrefix("HEADER:")
       )
     else
-      val player = controller.currentModel.getPlayers.find(p => message.startsWith(p.name))
+      val player =
+        controller.currentModel.getPlayers.find(p => message.startsWith(p.name))
       player.foreach { p =>
         val text = message.stripPrefix(p.name).trim
         infoPanelView.addEntry(

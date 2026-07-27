@@ -23,7 +23,7 @@ object AnimalCardViewDemo extends JFXApp3:
     val emptyCard = AnimalCard(
       name = "Orso Bruno",
       habitat = mockHabitat,
-      points = List(4, 7, 12, 16, 22),
+      points = List(4, 7, 12, 16, 22)
     )
     def fakeFun(slot: Int): Unit =
       println("ciao")
