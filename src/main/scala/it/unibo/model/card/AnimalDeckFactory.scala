@@ -259,7 +259,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(2, 5, 8, 12, 17),
-      imageId = "card_ladybug.png"
+      imageId = "card_ladybug.jpg"
     ),
     AnimalCard(
       name = "Orso",
