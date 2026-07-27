@@ -1,6 +1,5 @@
 package it.unibo.view.infopanel
 
-import it.unibo.model.token.TerrainToken
 import scalafx.geometry.Insets
 import scalafx.scene.control.Label
 import scalafx.scene.control.ScrollPane
