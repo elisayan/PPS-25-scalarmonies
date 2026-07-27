@@ -13,5 +13,7 @@ object HomeViewDemo extends JFXApp3:
       scene = new Scene:
         root = HomeView: (playerNames, selectedSide) =>
           println(s"Game Started!")
-          println(s"Players (${playerNames.size}): ${playerNames.mkString(", ")}")
+          println(
+            s"Players (${playerNames.size}): ${playerNames.mkString(", ")}"
+          )
           println(s"Chosen Side: $selectedSide")

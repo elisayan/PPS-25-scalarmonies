@@ -1,18 +1,18 @@
 package it.unibo.view.personalboard
-
-import it.unibo.controller.GameController
 import it.unibo.model.Player
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.BoardSide.SideB
 import it.unibo.model.personalboard.Coordinate
-import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.view.cell.CellView
 import scalafx.scene.layout.Pane
 import scalafx.scene.layout.StackPane
 
-case class PersonalBoardView(player: Player, onCellClicked: Coordinate => Unit, highlightedCells: List[Coordinate])
-    extends Pane:
+case class PersonalBoardView(
+    player: Player,
+    onCellClicked: Coordinate => Unit,
+    highlightedCells: List[Coordinate]
+) extends Pane:
 
   private val modelCells: List[(Coordinate, Cell)] = player.board.cells.toList
 
@@ -58,7 +58,13 @@ case class PersonalBoardView(player: Player, onCellClicked: Coordinate => Unit, 
   private val cells: List[CellView] =
     flattenedOrderedCells.zip(pixelPositions).map {
       case ((coord, cell), (pixelX, pixelY)) =>
-        val view = CellView(coord, cell, (pixelX, pixelY), onCellClicked, highlightedCells.contains(coord))
+        val view = CellView(
+          coord,
+          cell,
+          (pixelX, pixelY),
+          onCellClicked,
+          highlightedCells.contains(coord)
+        )
         view
     }
 

@@ -5,7 +5,8 @@ import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.StackPane
 
-case class TokenView(token: TerrainToken, onSelect: TerrainToken => Unit) extends StackPane:
+case class TokenView(token: TerrainToken, onSelect: TerrainToken => Unit)
+    extends StackPane:
 
   private val tokenImage = new ImageView:
     image = loadTokenImage(token)
@@ -16,8 +17,7 @@ case class TokenView(token: TerrainToken, onSelect: TerrainToken => Unit) extend
 
   children.add(tokenImage)
 
-  onMouseClicked = _ =>
-    onSelect(token)
+  onMouseClicked = _ => onSelect(token)
 
   private def loadTokenImage(token: TerrainToken): Image =
     val fileName = token.toString.toLowerCase

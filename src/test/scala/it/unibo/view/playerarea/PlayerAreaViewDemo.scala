@@ -15,9 +15,19 @@ object PlayerAreaViewDemo extends JFXApp3:
   override def start(): Unit =
     val board = PersonalBoard(SideA)
 
-    val player = Player(id = 1, name = "Player 1", board = board, activeCards = List(), completedCards = List())
+    val player = Player(
+      id = 1,
+      name = "Player 1",
+      board = board,
+      activeCards = List(),
+      completedCards = List()
+    )
 
-    val boardView = PersonalBoardView(player, coordinate => println(s"Clicked: $coordinate"))
+    val boardView = PersonalBoardView(
+      player,
+      coordinate => println(s"Clicked: $coordinate"),
+      highlightedCells = List()
+    )
 
     val forestHabitat = Habitat(
       List(
@@ -37,32 +47,27 @@ object PlayerAreaViewDemo extends JFXApp3:
       AnimalCard(
         "Orso",
         forestHabitat,
-        List(4, 7, 12, 16),
-        imageId = "default.png"
+        List(4, 7, 12, 16)
       ),
       AnimalCard(
         "Lontra",
         waterHabitat,
-        List(3, 6, 10, 15),
-        imageId = "default.png"
+        List(3, 6, 10, 15)
       ),
       AnimalCard(
         "Volpe",
         forestHabitat,
-        List(5, 8, 12, 18),
-        imageId = "default.png"
+        List(5, 8, 12, 18)
       ),
       AnimalCard(
         "Gufo",
         waterHabitat,
-        List(4, 9, 14, 20),
-        imageId = "default.png"
+        List(4, 9, 14, 20)
       ),
       AnimalCard(
         "Cervo",
         forestHabitat,
-        List(3, 7, 11, 16),
-        imageId = "default.png"
+        List(3, 7, 11, 16)
       )
     )
 

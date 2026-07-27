@@ -1,6 +1,4 @@
 package it.unibo.view.scorecalculator
-
-import it.unibo.controller.GameController
 import it.unibo.model.Player
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.scorecalculator.ScoreCalculator

@@ -76,7 +76,9 @@ object GameModel:
 
     override def takeTokens(slot: Int): GameModel =
       if turnState != TurnState.WaitingForAction then
-        throw IllegalStateException("Non puoi scegliere i tokens nello stato corrente")
+        throw IllegalStateException(
+          "Non puoi scegliere i tokens nello stato corrente"
+        )
 
       centralBoard.takeTokens(slot) match
         case None =>
@@ -98,15 +100,23 @@ object GameModel:
 
     override def takeAnimalCard(slot: Int): GameModel =
       if turnState == TurnState.TurnComplete then
-        throw IllegalStateException("Non puoi scegliere una carta dopo aver completato il turno")
+        throw IllegalStateException(
+          "Non puoi scegliere una carta dopo aver completato il turno"
+        )
       if hasTakenCardThisTurn then
-        throw IllegalStateException("Player ha gia scelto una carta Animale questo turno")
+        throw IllegalStateException(
+          "Player ha gia scelto una carta Animale questo turno"
+        )
       if currentPlayer.activeCards.size >= MaxAnimalCards then
-        throw IllegalStateException("Player ha già il numero di carte Animale massimo")
+        throw IllegalStateException(
+          "Player ha già il numero di carte Animale massimo"
+        )
 
       centralBoard.takeCard(slot) match
         case None =>
-          throw IllegalStateException(s"Slot $slot della carta è vuoto o invalido")
+          throw IllegalStateException(
+            s"Slot $slot della carta è vuoto o invalido"
+          )
         case Some((card, updatedBoard)) =>
           val updatedPlayer = currentPlayer.copy(
             activeCards = currentPlayer.activeCards :+ card
@@ -115,12 +125,14 @@ object GameModel:
             centralBoard = updatedBoard,
             players = players.updated(currentPlayerIndex, updatedPlayer),
             turnSnapshot = turnSnapshot.orElse(Some(this)),
-            hasTakenCardThisTurn = true,
+            hasTakenCardThisTurn = true
           )
 
     override def placeToken(coordinate: Coordinate): GameModel =
       if turnState != TurnState.ActionDone then
-        throw IllegalStateException("Non puoi posizionare token nello stato corrente")
+        throw IllegalStateException(
+          "Non puoi posizionare token nello stato corrente"
+        )
 
       val token = selectedToken.getOrElse(
         throw IllegalStateException("Prima di questa azione scegliere un token")
@@ -128,7 +140,7 @@ object GameModel:
 
       if !highlightedCells(token).contains(coordinate) then
         throw IllegalStateException("Piazzamento token invalido")
-        
+
       val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
       val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
       val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
@@ -149,13 +161,16 @@ object GameModel:
 
     override def endTurn(): GameModel =
       if turnState != TurnState.TurnComplete then
-        throw IllegalStateException("Non puoi terminare il turno prima di aver piazzato tutti i tokens")
+        throw IllegalStateException(
+          "Non puoi terminare il turno prima di aver piazzato tutti i tokens"
+        )
 
       val nextIndex = (currentPlayerIndex + 1) % players.size
       val (refilledBoard, updatedPouch, updatedDeck) =
         centralBoard.fill(pouch, deck)
 
-      val endConditionTriggered = updatedPouch.isEmpty || hasPlayerAlmostFullBoard
+      val endConditionTriggered =
+        updatedPouch.isEmpty || hasPlayerAlmostFullBoard
       val nextIsLastRound = isLastRound || endConditionTriggered
 
       this.copy(
@@ -192,7 +207,9 @@ object GameModel:
 
       val cardIndex = currentPlayer.activeCards.indexOf(card)
       if cardIndex == -1 then
-        throw IllegalStateException("Carta non trovata tra le carte attive del giocatore")
+        throw IllegalStateException(
+          "Carta non trovata tra le carte attive del giocatore"
+        )
 
       card.placeCube match
         case None =>
@@ -232,16 +249,24 @@ object GameModel:
     override def availableActionsMessage: String =
       val actions = List(
         Option.when(turnState == TurnState.WaitingForAction)("scegli tokens"),
-        Option.when( !hasTakenCardThisTurn && currentPlayer.activeCards.size < MaxAnimalCards)("scegli una carta animale"),
-        Option.when(turnState != TurnState.TurnComplete && currentPlayer.activeCards.exists(c => c.placedCubes < c.maxCubes))("posiziona cubo animale"),
-        Option.when(turnState == ActionDone && tokensInHand.nonEmpty)("posiziona token"),
-        Option.when(turnState == TurnState.TurnComplete && hasTakenCardThisTurn)("Nessuna azione possibile rimasta")
+        Option.when(
+          !hasTakenCardThisTurn && currentPlayer.activeCards.size < MaxAnimalCards
+        )("scegli una carta animale"),
+        Option.when(
+          turnState != TurnState.TurnComplete && currentPlayer.activeCards
+            .exists(c => c.placedCubes < c.maxCubes)
+        )("posiziona cubo animale"),
+        Option.when(turnState == ActionDone && tokensInHand.nonEmpty)(
+          "posiziona token"
+        ),
+        Option.when(
+          turnState == TurnState.TurnComplete && hasTakenCardThisTurn
+        )("Nessuna azione possibile rimasta")
       ).flatten
 
       if actions.isEmpty then
         s"${currentPlayer.name} non ha azioni disponibili (termina il turno)"
-      else
-        s"${currentPlayer.name} " + actions.mkString(" oppure ")
+      else s"${currentPlayer.name} " + actions.mkString(" oppure ")
 
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
