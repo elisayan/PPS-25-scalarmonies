@@ -138,20 +138,20 @@ object GameController:
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
       stage.scene = new Scene(homeView)
-      stage.fullScreen = true
+      stage.maximized = true
 
     override def onStartGame(names: List[String], side: BoardSide): Unit =
       val players = names.zipWithIndex.map((name, index) => Player(index, name, PersonalBoard(side)))
       model = GameModel(players)
       view.updateState(model)
       stage.scene.value.setRoot(view)
-      stage.fullScreen = true
+      stage.maximized = true
 
     override def onEndGame(players: List[Player]): Unit =
       val calculator = ScoreCalculator()
       val endGameView = ScoreCalculatorView(players, calculator)
       stage.scene.value.setRoot(endGameView)
-      stage.fullScreen = true
+      stage.maximized = true
 
 
 

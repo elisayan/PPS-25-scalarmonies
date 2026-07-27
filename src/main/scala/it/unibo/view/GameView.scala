@@ -31,7 +31,6 @@ import scalafx.util.Duration
 
 class GameView(controller: GameController) extends GridPane:
 
-  private var currentErrorMessage: String = ""
   private var errorTimer: Option[PauseTransition] = None
 
   private val systemMessageBar: HBox = new HBox():
@@ -41,16 +40,52 @@ class GameView(controller: GameController) extends GridPane:
       Array(new BackgroundFill(Color.Beige, new CornerRadii(5), Insets.Empty))
     )
 
+  private val cancelTurnButton: Button = new Button("Cancella Turno"):
+    font = Font.font("Arial", FontWeight.Bold, 14.0)
+    padding = Insets(3, 8, 3, 8)
+    minWidth = 80
+    textFill = Color.White
+    background = new Background(
+      Array(new BackgroundFill(Color.Red, new CornerRadii(5), Insets.Empty))
+    )
+    onAction = _ => controller.onCancelTurn()
+    hover.onChange((_, _, isHovered) =>
+      background = new Background(
+        Array(
+          new BackgroundFill(
+            if isHovered then Color.DarkRed else Color.Red,
+            new CornerRadii(5),
+            Insets.Empty
+          )
+        )
+      )
+    )
+
   private val endTurnButton: Button = new Button("Fine Turno"):
     font = Font.font("Arial", FontWeight.Bold, 14.0)
-    padding = Insets(6, 12, 6, 12)
-    minWidth = 120
+    padding = Insets(3, 8, 3, 8)
+    minWidth = 80
+    textFill = Color.White
+    background = new Background(
+      Array(new BackgroundFill(Color.Green, new CornerRadii(5), Insets.Empty))
+    )
     onAction = _ => controller.onEndTurn()
+    hover.onChange((_, _, isHovered) =>
+      background = new Background(
+        Array(
+          new BackgroundFill(
+            if isHovered then Color.DarkGreen else Color.Green,
+            new CornerRadii(5),
+            Insets.Empty
+          )
+        )
+      )
+    )
 
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.Center
     HBox.setHgrow(systemMessageBar, Priority.Always)
-    children = Seq(systemMessageBar, endTurnButton)
+    children = Seq(systemMessageBar, cancelTurnButton, endTurnButton)
 
   private val commonMarketBar: HBox = new HBox():
     alignment = Pos.Center
@@ -103,7 +138,6 @@ class GameView(controller: GameController) extends GridPane:
     msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
     msgTxt.fill = Color.Black
     systemMessageBar.children.add(msgTxt)
-
 
   private def updatePersonalTokenSidebar(tokens: List[TokenView]): Unit =
     personalTokenSidebar.children.clear()

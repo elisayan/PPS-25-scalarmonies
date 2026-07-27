@@ -54,10 +54,10 @@ case class CentralBoardView(
   private val tokenPositions =
     Map(
       1 -> (62.0, 45.0),
-      2 -> (140.0, 45.0),
+      2 -> (137.0, 45.0),
       3 -> (38.0, 117.0),
-      4 -> (164.0, 117.0),
-      5 -> (105.0, 160.0)
+      4 -> (161.0, 117.0),
+      5 -> (100.0, 155.0)
     )
 
   private val triangleOffsets = List(

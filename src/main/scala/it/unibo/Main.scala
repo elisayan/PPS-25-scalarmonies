@@ -15,7 +15,7 @@ object Main extends JFXApp3:
     stage = new JFXApp3.PrimaryStage:
       title = "ScalHarmonies"
 
-    stage.fullScreen =  true
+    stage.maximized = true
 
     val controller = GameController(GameModel(List()),
       (newModel, logMessage) =>
