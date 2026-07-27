@@ -147,12 +147,15 @@ class GameView(controller: GameController) extends GridPane:
         message.stripPrefix("HEADER:")
       )
     else
-      val parts = message.split(" ", 2)
-      if parts.length == 2 then
+      val player = controller.currentModel.getPlayers.find(p => message.startsWith(p.name))
+      player.foreach { p =>
+        val text = message.stripPrefix(p.name).trim
         infoPanelView.addEntry(
-          parts(0),
-          parts(1)
+          p.name,
+          text,
+          p.id
         )
+      }
 
   private def updatePlayerAreas(
       areas: List[PlayerAreaView],
