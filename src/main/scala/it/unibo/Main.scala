@@ -17,8 +17,6 @@ object Main extends JFXApp3:
 
     stage.maximized = true
 
-    val controller = GameController(GameModel(List()),
-      (newModel, logMessage) =>
-        println(s"${newModel.currentPlayer.name} sta facendo $logMessage"), stage)
+    val controller = GameController(GameModel(List()), stage)
 
     controller.start()

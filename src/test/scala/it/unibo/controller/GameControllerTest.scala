@@ -21,7 +21,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
   // helper: controller che ignora il refresh
   private def freshController(): GameController =
 
-    GameController(GameModel(players), (_, _) => (), stage)
+    GameController(GameModel(players), stage)
 
   "GameController" should "update model after taking tokens" in:
     val controller = freshController()
@@ -29,16 +29,14 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     controller.currentModel.turnState shouldBe TurnState.ActionDone
 
   it should "refresh view after taking tokens" in:
-    var refreshed = false
     val controller =
-      GameController(GameModel(players), (_, _) => refreshed = true,stage)
+      GameController(GameModel(players),stage)
     controller.onTakeTokens(1)
     refreshed shouldBe true
 
   it should "pass the log message to refresh after taking tokens" in:
-    var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
+      GameController(GameModel(players), stage)
     controller.onTakeTokens(1)
     lastMessage should include("prende")
 
@@ -53,9 +51,8 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     controller.currentModel.tokensInHand should have size 2
 
   it should "pass the log message to refresh after endTurn" in:
-    var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
+      GameController(GameModel(players), stage)
     controller.onTakeTokens(1)
     controller.currentModel.tokensInHand.foreach { token =>
       val coord = TokenValidator
@@ -86,9 +83,8 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     noException should be thrownBy controller.onTakeTokens(1)
 
   it should "pass error message to refresh on illegal action" in:
-    var lastMessage = ""
     val controller =
-      GameController(GameModel(players), (_, msg) => lastMessage = msg, stage)
+      GameController(GameModel(players), stage)
     controller.onTakeTokens(1)
     controller.onTakeTokens(1) // illegale
     lastMessage should include("Errore")

@@ -66,7 +66,7 @@ object GameViewDemo extends JFXApp3:
 
       val stage: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
         title = "ScalHarmonies"
-      val controller: GameController = GameController(model, (_, _) => (), stage)
+      val controller: GameController = GameController(model, stage)
 
       val root: GameView = GameView(controller)
 

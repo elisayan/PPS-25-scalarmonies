@@ -30,23 +30,25 @@ trait GameController:
 
 object GameController:
 
-  def apply(model: GameModel, refresh: (GameModel, String) => Unit, stage: JFXApp3.PrimaryStage): GameController =
-    GameControllerImpl(model, refresh, stage)
+  def apply(model: GameModel, stage: JFXApp3.PrimaryStage): GameController =
+    GameControllerImpl(model, stage)
 
   private class GameControllerImpl(
       private var model: GameModel,
-      refresh: (GameModel, String) => Unit,
       stage: JFXApp3.PrimaryStage
   ) extends GameController:
 
     private val view = GameView(this)
 
+    private def refreshView(message: String): Unit =
+      view.refresh(model, message)
+
     private def handleError(e: IllegalStateException): Unit =
-      refresh(model, s"Errore: ${e.getMessage}")
+      refreshView(s"Errore: ${e.getMessage}")
       view.showTemporaryError(s"Mossa illegale: ${e.getMessage}")
 
     override def startGame(): Unit =
-      refresh(model, s"HEADER:${model.currentPlayer.name}")
+      refreshView(s"HEADER:${model.currentPlayer.name}")
 
     override def currentModel: GameModel = model
 
@@ -59,7 +61,7 @@ object GameController:
         val playerName = model.currentPlayer.name
         model = model.takeTokens(slot)
         val tokenNames = model.tokensInHand.map(_.toString).mkString(", ")
-        refresh(model, s"$playerName prende $tokenNames")
+        refreshView(s"$playerName prende $tokenNames")
         view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
@@ -67,10 +69,7 @@ object GameController:
     override def onSelectToken(token: TerrainToken): Unit =
       try
         model = model.selectToken(token)
-        refresh(
-          model,
-          s"${model.currentPlayer.name} seleziona $token"
-        )
+        refreshView(s"${model.currentPlayer.name} seleziona $token")
         view.updateState(model)
 
       catch
@@ -82,7 +81,7 @@ object GameController:
         val name = model.tokensInHand.headOption.map(_.toString).getOrElse("?")
         model = model.placeToken(coordinate)
         val level = model.currentPlayer.board.cells(coordinate).getTokens.size
-        refresh(model, s"$playerName posiziona $name al livello $level")
+        refreshView(s"$playerName posiziona $name al livello $level")
         view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
@@ -93,7 +92,7 @@ object GameController:
         if model.isGameOver then
           onEndGame(model.getPlayers)
         else
-          refresh(model, s"HEADER:${model.currentPlayer.name}")
+          refreshView(s"HEADER:${model.currentPlayer.name}")
           view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
@@ -104,10 +103,7 @@ object GameController:
         val cardPosition = model.currentPlayer.activeCards.size + 1
         model = model.takeAnimalCard(slot)
         val cardName = model.currentPlayer.activeCards.last.name
-        refresh(
-          model,
-          s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition"
-        )
+        refreshView(s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition")
         view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
@@ -119,9 +115,9 @@ object GameController:
         val cardCompleted = !model.currentPlayer.activeCards.contains(card) &&
           !model.currentPlayer.activeCards.exists(_.name == card.name)
         if cardCompleted then
-          refresh(model, s"$playerName finisce una carta animale")
-          refresh(model, s"$playerName posiziona un cubo")
-        else refresh(model, s"$playerName posiziona un cubo")
+          refreshView(s"$playerName finisce una carta animale")
+          refreshView(s"$playerName posiziona un cubo")
+        else refreshView(s"$playerName posiziona un cubo")
         view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)
@@ -130,7 +126,7 @@ object GameController:
       try
         val playerName = model.currentPlayer.name
         model = model.cancelTurn()
-        refresh(model, s"$playerName annulla il turno")
+        refreshView(s"$playerName annulla il turno")
         view.updateState(model)
       catch
         case e: IllegalStateException => handleError(e)

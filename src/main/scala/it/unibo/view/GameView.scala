@@ -116,15 +116,7 @@ class GameView(controller: GameController) extends GridPane:
       )
     )
 
-  private val infoPanelLog: VBox = new VBox():
-    spacing = 10.0
-    padding = Insets(15)
-    alignment = Pos.TopLeft
-    background = new Background(
-      Array(
-        new BackgroundFill(Color.Lavender, new CornerRadii(5), Insets.Empty)
-      )
-    )
+  private val infoPanelView = new InfoPanelView()
 
   private def updateSystemMessageBar(
       message: String,
@@ -147,9 +139,18 @@ class GameView(controller: GameController) extends GridPane:
       personalTokenSidebar.children.add(token)
     )
 
-  private def updateInfoPanelLog(panel: InfoPanelView): Unit =
-    infoPanelLog.children.clear()
-    infoPanelLog.children.add(panel.root)
+  private def updateInfoPanel(message: String): Unit =
+    if message.startsWith("HEADER:") then
+      infoPanelView.addTurnHeader(
+        message.stripPrefix("HEADER:")
+      )
+    else
+      val parts = message.split(" ", 2)
+      if parts.length == 2 then
+        infoPanelView.addEntry(
+          parts(0),
+          parts(1)
+        )
 
   private def updatePlayerAreas(
       areas: List[PlayerAreaView],
@@ -165,7 +166,10 @@ class GameView(controller: GameController) extends GridPane:
     commonMarketBar.children.clear()
     commonMarketBar.children.add(board)
 
-  def refresh(playerName: String, logMessage: String): Unit = ???
+  def refresh(model: GameModel, logMessage: String): Unit = {
+    updateState(model)
+    updateInfoPanel(logMessage)
+  }
 
   private def createPlayerArea(player: Player, highlightedCells: List[Coordinate]): PlayerAreaView =
     val boardView = PersonalBoardView(player, controller.onPlaceToken, highlightedCells)
@@ -202,8 +206,8 @@ class GameView(controller: GameController) extends GridPane:
     GridPane.setRowSpan(personalTokenSidebar, 3)
     add(personalTokenSidebar, 1, 0)
 
-    GridPane.setRowSpan(infoPanelLog, 3)
-    add(infoPanelLog, 2, 0)
+    GridPane.setRowSpan(infoPanelView.root, 3)
+    add(infoPanelView.root, 2, 0)
 
   def updateState(model: GameModel): Unit =
     val highlighted = model.selectedToken match {

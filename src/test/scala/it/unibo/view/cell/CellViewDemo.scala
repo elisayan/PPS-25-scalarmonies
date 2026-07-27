@@ -16,12 +16,12 @@ object CellViewDemo extends JFXApp3:
     val model: GameModel = GameModel(List())
     val stage2: JFXApp3.PrimaryStage = new JFXApp3.PrimaryStage:
       title = "ScalHarmonies"
-    val controller: GameController = GameController(model, (_, _) => (), stage2)
+    val controller: GameController = GameController(model, stage2)
     val c = Cell()
     val c1 = c.placeToken(Ground)
     val c2 = c1.placeToken(Ground)
     val c3 = c2.placeToken(Forest)
-    val cv = CellView(Coordinate(0, 0), c3, (20.0, 50.0), controller.onPlaceToken)
+    val cv = CellView(Coordinate(0, 0), c3, (20.0, 50.0), controller.onPlaceToken, false)
     val root: StackPane = StackPane()
     root.children.add(cv)
     stage = new JFXApp3.PrimaryStage:

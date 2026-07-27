@@ -1,18 +1,18 @@
 package it.unibo.view.infopanel
 
 import scalafx.geometry.Insets
-import scalafx.scene.control.Label
-import scalafx.scene.control.ScrollPane
-import scalafx.scene.layout.HBox
-import scalafx.scene.layout.Priority
+import scalafx.scene.control.{Label, ScrollPane}
 import scalafx.scene.layout.VBox
 import scalafx.scene.text.{Font, FontWeight, Text, TextFlow}
 
 class InfoPanelView:
 
-  private val logBox = new VBox(2):
-    padding = Insets(10)
-    style = "-fx-background-color: #f5f0e8;"
+  private val logBox = new VBox(4):
+    padding = Insets(8)
+    style =
+      """
+      -fx-background-color: transparent;
+      """
 
   private val playerColors = Map(
     "Player1" -> "#2d7a2d",
@@ -27,45 +27,71 @@ class InfoPanelView:
     prefWidth = 300
     prefHeight = 500
     hbarPolicy = ScrollPane.ScrollBarPolicy.Never
-    style = "-fx-background-color: #f5f0e8; " +
-      "-fx-border-color: #c8b89a; " +
-      "-fx-border-width: 1;"
+    vbarPolicy = ScrollPane.ScrollBarPolicy.AsNeeded
 
-  def addEntry(playerName: String, message: String): Unit =
-    val color = playerColors.getOrElse(playerName, "#333333")
-  
+    style =
+      """
+      -fx-background-color: transparent;
+      -fx-background-insets: 0;
+      """
+
+  def addEntry(playerName:String, message:String):Unit =
+    val color =
+      playerColors.getOrElse(playerName,"#333333")
     val nameText = new Text(s"$playerName "):
-      font = Font.font("System", FontWeight.Bold, 12)
-      style = s"-fx-fill: $color;"
-  
+      font = Font.font(
+          "System",
+          FontWeight.Bold,
+          13
+        )
+      style = s"-fx-fill:$color;"
     val messageText = new Text(message):
-      font = Font.font("System", 12)
-      style = "-fx-fill: #333333;"
-  
-    val textFlow = new TextFlow:
-      padding = Insets(3, 8, 3, 8)
-      prefWidth = 280
+      font =
+        Font.font(
+          "System",
+          13
+        )
+      style = "-fx-fill:#222222;"
+
+    val eventBox = new TextFlow:
+      padding = Insets(6,10,6,10)
       children.addAll(
         nameText,
         messageText
       )
-  
-    logBox.children.add(0, textFlow)
-    logBox.children.add(1, divider())
 
-  def addTurnHeader(playerName: String): Unit =
-    val headerLabel = new Label(s"► Inizio del turno di $playerName"):
-      font = Font.font("System", FontWeight.Bold, 12)
-      style = "-fx-text-fill: #222222; " +
-        "-fx-background-color: #e8e0d0; " +
-        "-fx-padding: 4 8 4 8;"
+      style =
+        """
+        -fx-background-color:white;
+        -fx-background-radius:2;
+        -fx-border-radius:2;
+        -fx-border-color:#e2d8c5;
+        -fx-border-width:1;
+        """
+
+      maxWidth = 280
+
+    logBox.children.add(
+      0,
+      eventBox
+    )
+
+  def addTurnHeader(playerName:String):Unit =
+    val header = new Label(s"▶ Inizio del turno di $playerName"):
+      font =
+        Font.font(
+          "System",
+          FontWeight.Bold,
+          13
+        )
+      style =
+        """
+        -fx-background-color:#eadfce;
+        -fx-text-fill:#333333;
+        -fx-padding:6 10 6 10;
+        -fx-background-radius:2;
+        """
+      maxWidth = 280
       wrapText = true
-      prefWidth = 280
-      maxWidth = Double.MaxValue
-    logBox.children.add(0, headerLabel)
 
-  private def divider() =
-    new Label(""):
-      prefHeight = 1
-      maxWidth = Double.MaxValue
-      style = "-fx-background-color: #ddd; -fx-padding: 0;"
+    logBox.children.add(0, header)
