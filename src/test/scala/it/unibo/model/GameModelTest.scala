@@ -23,6 +23,17 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
   private def modelAfterTake(model: GameModel): GameModel = model.takeTokens(1)
 
+  private def placeSelectedToken(
+      model: GameModel,
+      token: TerrainToken
+  ): GameModel =
+    val positions =
+      TokenValidator.validPositions(token, model.currentPlayer.board)
+    if positions.isEmpty then model
+    else
+      val selected = model.selectToken(token)
+      selected.placeToken(positions.head)
+
   private val CardSlot = 1
 
   private def modelWithCards(cards: List[AnimalCard]): GameModel =
@@ -63,16 +74,15 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val validCoord = TokenValidator
       .validPositions(firstToken, afterTake.currentPlayer.board)
       .head
-    val afterPlace = afterTake.placeToken(validCoord)
+    val afterSelect = afterTake.selectToken(firstToken)
+    val afterPlace = afterSelect.placeToken(validCoord)
     afterPlace.tokensInHand should have size 2
 
   it should "move to TurnComplete after placing all 3 tokens" in:
     val model = GameModel(players)
     val afterTake = model.takeTokens(1)
     val finalModel = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     }
     finalModel.turnState shouldBe TurnState.TurnComplete
 
@@ -81,9 +91,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val model = GameModel(players)
     val afterTake = model.takeTokens(1)
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     }
     val afterEnd = afterPlace.endTurn()
     afterEnd.currentPlayer.id shouldBe 2
@@ -94,10 +102,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     def playTurn(m: GameModel, slot: Int): GameModel =
       val afterTake = m.takeTokens(slot)
       val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) {
-        (m2, token) =>
-          val coord =
-            TokenValidator.validPositions(token, m2.currentPlayer.board).head
-          m2.placeToken(coord)
+        (m2, token) => placeSelectedToken(m2, token)
       }
       afterPlace.endTurn()
 
@@ -109,9 +114,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val model = GameModel(players)
     val afterTake = model.takeTokens(1)
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     }
     val afterEnd = afterPlace.endTurn()
     afterEnd.tokensInHand shouldBe empty
@@ -122,30 +125,62 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val model = GameModel(players)
     model.isGameOver shouldBe false
 
-  it should "be game over when pouch is empty" in:
-    val emptyPouchPlayers = List(
-      Player(1, "Player1", PersonalBoard(SideA)),
-      Player(2, "Player2", PersonalBoard(SideA))
-    )
-    val model = GameModel(emptyPouchPlayers, forceEmptyPouch = true)
-    model.isGameOver shouldBe true
-
-  it should "be game over when a player has 2 or fewer empty cells" in:
-    val model = GameModel(players)
-    model.isGameOver shouldBe false
-    // SideA ha 23 celle, lasciamo 2 vuote
-    val nearlyFullBoard = PersonalBoard(SideA).cells.keys.toList
-      .take(21) // occupa 21 celle su 23
-      .foldLeft(PersonalBoard(SideA)) { (b, coord) =>
-        b.placeToken(TerrainToken.Water, coord).get
-      }
-    val modelWithFullBoard = GameModel(
+  it should "activate last round when pouch is empty" in:
+    val model = GameModel(
       List(
-        Player(1, "Player1", nearlyFullBoard),
+        Player(1, "Player1", PersonalBoard(SideA)),
+        Player(2, "Player2", PersonalBoard(SideA))
+      ),
+      forceEmptyPouch = true
+    )
+
+    model.isGameOver shouldBe false
+
+  it should "trigger last round when a player has almost full board" in:
+    val almostFullBoard =
+      PersonalBoard(SideA).cells.keys.toList
+        .take(PersonalBoard(SideA).cells.size - 2)
+        .foldLeft(PersonalBoard(SideA)) { (b, coord) =>
+          b.placeToken(TerrainToken.Water, coord).get
+        }
+
+    val model = GameModel(
+      List(
+        Player(1, "Player1", almostFullBoard),
+        Player(2, "Player2", PersonalBoard(SideA))
+      ),
+      forceEmptyPouch = true
+    )
+    model.isGameOver shouldBe false
+
+  it should "be game over after last round is completed" in:
+    val model = GameModel(
+      List(
+        Player(1, "Player1", PersonalBoard(SideA)),
         Player(2, "Player2", PersonalBoard(SideA))
       )
     )
-    modelWithFullBoard.isGameOver shouldBe true
+    def completeTurn(m: GameModel): GameModel =
+      val afterTake = m.takeTokens(1)
+
+      afterTake.tokensInHand.foldLeft(afterTake) { (current, token) =>
+        val selected = current.selectToken(token)
+        val coord =
+          TokenValidator
+            .validPositions(
+              token,
+              selected.currentPlayer.board
+            )
+            .head
+
+        selected.placeToken(coord)
+      }
+
+    var current = model
+    while (!current.isGameOver) {
+      current = completeTurn(current).endTurn()
+    }
+    current.isGameOver shouldBe true
 
   // highlightedCells
   "GameModel" should "return valid positions when no habitats are completed" in:
@@ -193,9 +228,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterTake = modelAfterTake(model)
 
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     } // TurnComplete
 
     assertThrows[IllegalStateException] {
@@ -218,9 +251,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterTake = afterCard.takeTokens(1)
 
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     } // TurnComplete
 
     assertThrows[IllegalStateException] {
@@ -294,9 +325,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val boardBefore = model.currentPlayer.board
     val afterTake = model.takeTokens(1)
     val afterPlace = afterTake.tokensInHand.foldLeft(afterTake) { (m, token) =>
-      val coord =
-        TokenValidator.validPositions(token, m.currentPlayer.board).head
-      m.placeToken(coord)
+      placeSelectedToken(m, token)
     }
     val afterCancel = afterPlace.cancelTurn()
     afterCancel.currentPlayer.board.cells shouldBe boardBefore.cells
