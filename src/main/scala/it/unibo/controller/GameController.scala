@@ -17,7 +17,6 @@ import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
 
 trait GameController:
-  def startGame(): Unit
   def currentModel: GameModel
   def currentPlayerId: Int
   def currentTurnState: TurnState
@@ -50,9 +49,6 @@ object GameController:
     private def handleError(e: IllegalStateException): Unit =
       refreshView(s"Errore: ${e.getMessage}")
       view.showTemporaryError(s"Mossa illegale: ${e.getMessage}")
-
-    override def startGame(): Unit =
-      refreshView(s"HEADER:${model.currentPlayer.name}")
 
     override def currentModel: GameModel = model
 
@@ -140,6 +136,7 @@ object GameController:
       )
       model = GameModel(players)
       view.updateState(model)
+      refreshView(s"HEADER:${model.currentPlayer.name}")
       stage.scene.value.setRoot(view)
       stage.maximized = true
 
