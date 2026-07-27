@@ -20,7 +20,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 9, 15),
-      imageId = "card_crocodile.png"
+      imageId = "card_crocodile.jpg"
     ),
     AnimalCard(
       name = "Manta",
@@ -32,7 +32,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 10, 16),
-      imageId = "card_manta.png"
+      imageId = "card_manta.jpg"
     ),
     AnimalCard(
       name = "Salmone",
@@ -43,7 +43,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(3, 6, 10, 16),
-      imageId = "card_salmon.png"
+      imageId = "card_salmon.jpg"
     ),
     AnimalCard(
       name = "Lontra",
@@ -55,7 +55,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 16),
-      imageId = "card_otter.png"
+      imageId = "card_otter.jpg"
     ),
     AnimalCard(
       name = "Rana",
@@ -66,7 +66,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(2, 4, 6, 10, 15),
-      imageId = "card_frog.png"
+      imageId = "card_frog.jpg"
     ),
     AnimalCard(
       name = "Oca",
@@ -77,7 +77,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(2, 4, 8, 13),
-      imageId = "card_goose.png"
+      imageId = "card_goose.jpg"
     ),
     AnimalCard(
       name = "Fenicottero",
@@ -89,7 +89,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 10, 16),
-      imageId = "card_flamingo.png"
+      imageId = "card_flamingo.jpg"
     ),
     AnimalCard(
       name = "Martin Pescatore",
@@ -101,7 +101,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 11, 18),
-      imageId = "card_kingfisher.png"
+      imageId = "card_kingfisher.jpg"
     ),
     AnimalCard(
       name = "Airone",
@@ -113,7 +113,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 17),
-      imageId = "card_heron.png"
+      imageId = "card_heron.jpg"
     ),
     AnimalCard(
       name = "Procione",
@@ -126,7 +126,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(6, 12),
-      imageId = "card_raccoon.png"
+      imageId = "card_raccoon.jpg"
     ),
     AnimalCard(
       name = "Geco",
@@ -138,7 +138,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 16),
-      imageId = "card_gecko.png"
+      imageId = "card_gecko.jpg"
     ),
     AnimalCard(
       name = "Topo",
@@ -150,7 +150,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 17),
-      imageId = "card_mouse.png"
+      imageId = "card_mouse.jpg"
     ),
     AnimalCard(
       name = "Pavone",
@@ -162,7 +162,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 17),
-      imageId = "card_peacock.png"
+      imageId = "card_peacock.jpg"
     ),
     AnimalCard(
       name = "Scoiattolo",
@@ -173,7 +173,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 9, 15),
-      imageId = "card_squirrel.png"
+      imageId = "card_squirrel.jpg"
     ),
     AnimalCard(
       name = "Riccio",
@@ -185,7 +185,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 12),
-      imageId = "card_hedgehog.png"
+      imageId = "card_hedgehog.jpg"
     ),
     AnimalCard(
       name = "Ape",
@@ -198,7 +198,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(8, 18),
-      imageId = "card_bee.png"
+      imageId = "card_bee.jpg"
     ),
     AnimalCard(
       name = "Coniglio",
@@ -210,7 +210,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 10, 17),
-      imageId = "card_rabbit.png"
+      imageId = "card_rabbit.jpg"
     ),
     AnimalCard(
       name = "Volpe",
@@ -222,7 +222,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 9, 16),
-      imageId = "card_fox.png"
+      imageId = "card_fox.jpg"
     ),
     AnimalCard(
       name = "Corvo",
@@ -234,7 +234,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 9),
-      imageId = "card_crow.png"
+      imageId = "card_crow.jpg"
     ),
     AnimalCard(
       name = "Lama",
@@ -246,7 +246,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 12),
-      imageId = "card_llama.png"
+      imageId = "card_llama.jpg"
     ),
     AnimalCard(
       name = "Coccinella",
@@ -271,7 +271,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 11),
-      imageId = "card_bear.png"
+      imageId = "card_bear.jpg"
     ),
     AnimalCard(
       name = "Pinguino",
@@ -283,7 +283,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 10, 16),
-      imageId = "card_penguin.png"
+      imageId = "card_penguin.jpg"
     ),
     AnimalCard(
       name = "Pipistrello",
@@ -294,7 +294,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(3, 6, 10, 15),
-      imageId = "card_bat.png"
+      imageId = "card_bat.jpg"
     ),
     AnimalCard(
       name = "Leopardo delle Nevi",
@@ -306,7 +306,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 11),
-      imageId = "card_snowleopard.png"
+      imageId = "card_snowleopard.jpg"
     ),
     AnimalCard(
       name = "Aquila",
@@ -317,7 +317,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 11),
-      imageId = "card_eagle"
+      imageId = "card_eagle.jpg"
     ),
     AnimalCard(
       name = "Suricato",
@@ -329,7 +329,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(2, 5, 9, 14),
-      imageId = "card_meerkat.png"
+      imageId = "card_meerkat.jpg"
     ),
     AnimalCard(
       name = "Pappagallo",
@@ -341,7 +341,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 9, 14),
-      imageId = "card_macaw.png"
+      imageId = "card_macaw.jpg"
     ),
     AnimalCard(
       name = "Cinghiale",
@@ -352,7 +352,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 8, 13),
-      imageId = "card_boar.png"
+      imageId = "card_boar.jpg"
     ),
     AnimalCard(
       name = "Koala",
@@ -364,7 +364,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(3, 6, 10, 15),
-      imageId = "card_koala.png"
+      imageId = "card_koala.jpg"
     ),
     AnimalCard(
       name = "Lupo",
@@ -376,7 +376,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(4, 10, 16),
-      imageId = "card_wolf.png"
+      imageId = "card_wolf.jpg"
     ),
     AnimalCard(
       name = "Pantera",
@@ -388,7 +388,7 @@ object AnimalDeckFactory:
         )
       ),
       points = List(5, 11),
-      imageId = "card_panther.png"
+      imageId = "card_panther.jpg"
     )
   )
 
