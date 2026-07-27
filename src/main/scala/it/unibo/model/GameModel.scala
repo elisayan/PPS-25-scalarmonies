@@ -99,10 +99,6 @@ object GameModel:
       )
 
     override def takeAnimalCard(slot: Int): GameModel =
-      if turnState == TurnState.TurnComplete then
-        throw IllegalStateException(
-          "Non puoi scegliere una carta dopo aver completato il turno"
-        )
       if hasTakenCardThisTurn then
         throw IllegalStateException(
           "Player ha gia scelto una carta Animale questo turno"
