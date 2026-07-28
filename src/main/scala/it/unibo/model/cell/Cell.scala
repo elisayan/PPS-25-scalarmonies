@@ -24,16 +24,16 @@ case class Cell(
   /** Returns the list of tokens currently placed in this cell.
     *
     * @return
-    *   the list of [[TerrainToken]] instances
+    *   the list of TerrainToken instances
     */
   def getTokens: List[TerrainToken] = tokens
 
   /** Places a new terrain token on top of the existing stack in this cell.
     *
     * @param token
-    *   the [[TerrainToken]] to place
+    *   the TerrainToken to place
     * @return
-    *   a new [[Cell]] instance containing the added token
+    *   a new Cell instance containing the added token
     */
   def placeToken(token: TerrainToken): Cell =
     Cell(tokens :+ token)
@@ -41,7 +41,7 @@ case class Cell(
   /** Returns the topmost token placed in this cell, if any.
     *
     * @return
-    *   an [[Option]] containing the top [[TerrainToken]], or [[None]] if the
+    *   an Option containing the top terrainToken, or None if the
     *   cell is empty
     */
   def topToken: Option[TerrainToken] = tokens.lastOption
@@ -57,18 +57,18 @@ case class Cell(
   /** Occupies this cell with an animal cube if it is valid to do so.
     *
     * @return
-    *   an [[Option]] containing the updated [[Cell]] with the animal cube, or
-    *   [[None]] if the cell has no tokens or is already occupied by an animal
+    *   an Option containing the updated Cell with the animal cube, or
+    *   None if the cell has no tokens or is already occupied by an animal
     */
   def occupyWithAnimal: Option[Cell] =
     if tokens.isEmpty || hasAnimal then None
     else Some(this.copy(hasAnimal = true))
 
-/** Factory object for creating [[Cell]] instances. */
+/** Factory object for creating Cell instances. */
 object Cell:
-  /** Creates a default empty [[Cell]] with no tokens and no animal cube.
+  /** Creates a default empty Cell with no tokens and no animal cube.
     *
     * @return
-    *   a new empty [[Cell]]
+    *   a new empty Cell
     */
   def apply(): Cell = Cell(List.empty)
