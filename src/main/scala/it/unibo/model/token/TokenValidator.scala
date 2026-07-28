@@ -12,6 +12,7 @@ object TokenValidator:
   def canPlace(token: TerrainToken, cell: Cell): Boolean =
     val height = cell.getTokens.length
     if height >= MaxStackHeight then false
+    else if cell.hasAnimal then false
     else
       token match
         case Water | Field => !cell.hasTokens

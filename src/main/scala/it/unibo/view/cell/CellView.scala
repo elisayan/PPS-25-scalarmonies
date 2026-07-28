@@ -8,6 +8,7 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Polygon
+import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Font
 import scalafx.scene.text.Text
 
@@ -60,6 +61,19 @@ case class CellView(
       val tv = createConfiguredTokenView(token, offsetY)
       children.add(tv)
     }
+
+    if cell.hasAnimal then
+      val cube = Rectangle(14.0, 14.0)
+      cube.fill = Color.SaddleBrown
+      cube.stroke = Color.Black
+      cube.strokeWidth = 1.5
+      val cubeOffset = cell.height match
+        case 2 => -12.0
+        case 3 => -15.0
+        case _ => -8.0
+      cube.translateY = cubeOffset
+      cube.mouseTransparent = true
+      children.add(cube)
 
   private def createConfiguredTokenView(
       token: TerrainToken,

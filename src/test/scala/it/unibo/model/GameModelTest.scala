@@ -28,7 +28,9 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       token: TerrainToken
   ): GameModel =
     val positions =
-      TokenValidator.validPositions(token, model.currentPlayer.board)
+      TokenValidator
+        .validPositions(token, model.currentPlayer.board)
+        .filterNot(_ == Coordinate(0, 0))
     if positions.isEmpty then model
     else
       val selected = model.selectToken(token)
@@ -36,8 +38,23 @@ class GameModelTest extends AnyFlatSpec with Matchers:
 
   private val CardSlot = 1
 
+  private def playerWithMountainAt00(id: Int, name: String): Player =
+    Player(
+      id,
+      name,
+      PersonalBoard(SideA)
+        .placeToken(TerrainToken.Mountain, Coordinate(0, 0))
+        .get
+    )
+
   private def modelWithCards(cards: List[AnimalCard]): GameModel =
-    GameModel(players, cards)
+    GameModel(
+      List(
+        playerWithMountainAt00(1, "Player1"),
+        Player(2, "Player2", PersonalBoard(SideA))
+      ),
+      deck = cards
+    )
 
   "GameModel" should "start with Player 1 as current player" in:
     val model = GameModel(players)
@@ -191,19 +208,18 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     highlighted should not be empty
 
   it should "exclude cells of completed habitats from highlighted cells" in:
-    // habitat minimo: richiede una cella a offset (0,0) con Mountain altezza 1
     val simpleHabitat =
       Habitat(List(CellRequirement(Coordinate(0, 0), TerrainToken.Mountain, 1)))
     val card = AnimalCard("Test", simpleHabitat, List(1, 2, 3))
-    // piazziamo un Mountain su (0,0) e simuliamo cubo già piazzato
+    // piazziamo un Mountain su (0,0)
     val boardWithMountain =
       PersonalBoard(SideA).placeToken(TerrainToken.Mountain, Coordinate(0, 0))
     val playerWithCard = Player(
       1,
       "Player1",
       boardWithMountain.get,
-      activeCards = List(card.placeCube.get)
-    ) // cubo già piazzato
+      activeCards = List(card.placeCube.get) // cubo simulato come piazzato
+    )
     val model = GameModel(
       List(playerWithCard, Player(2, "Player2", PersonalBoard(SideA)))
     )
@@ -235,15 +251,25 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       afterPlace.takeAnimalCard(CardSlot)
     }
 
+  it should "reject selecting an animal card if it has no completed habitats" in:
+    val model = GameModel(players) // Plancia vuota (senza montagna in (0,0))
+    val modelWithDeck = GameModel(players, deck = List(testCard))
+    val afterCard = modelWithDeck.takeAnimalCard(CardSlot)
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
+    assertThrows[IllegalStateException] {
+      afterCard.selectAnimalCard(cardTaken)
+    }
+
   it should "allow placing animal cube before taking tokens" in:
     val model = modelWithCards(List(testCard))
     val afterCard = model.takeAnimalCard(CardSlot)
-
     val cardTaken = afterCard.currentPlayer.activeCards.head
 
-    noException should be thrownBy afterCard.placeAnimalCube(cardTaken)
+    val afterSelect = afterCard.selectAnimalCard(cardTaken)
+    noException should be thrownBy afterSelect.placeAnimalCube(Coordinate(0, 0))
 
-  it should "reject placing animal cube when turn is complete" in:
+  it should "allow placing animal cube when turn is complete" in:
     val model = modelWithCards(List(testCard))
     val afterCard = model.takeAnimalCard(CardSlot)
     val cardTaken = afterCard.currentPlayer.activeCards.head
@@ -254,9 +280,24 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       placeSelectedToken(m, token)
     } // TurnComplete
 
-    assertThrows[IllegalStateException] {
-      afterPlace.placeAnimalCube(cardTaken)
+    val afterSelect = afterPlace.selectAnimalCard(cardTaken)
+    noException should be thrownBy {
+      afterSelect.placeAnimalCube(Coordinate(0, 0))
     }
+
+  it should "clear selectedAnimalCard when selectToken is called" in:
+    val model = modelWithCards(List(testCard))
+    val afterTake = model.takeTokens(1)
+    val afterCard = afterTake.takeAnimalCard(CardSlot)
+    val cardTaken = afterCard.currentPlayer.activeCards.head
+
+    val afterSelectCard = afterCard.selectAnimalCard(cardTaken)
+    afterSelectCard.selectedAnimalCard shouldBe defined
+
+    val afterSelectToken =
+      afterSelectCard.selectToken(afterSelectCard.tokensInHand.head)
+    afterSelectToken.selectedAnimalCard shouldBe empty
+    afterSelectToken.selectedToken shouldBe defined
 
   // complete animal cards
   it should "move a completed card to completedCards when all cubes are placed" in:
@@ -266,7 +307,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterCard = model.takeAnimalCard(CardSlot)
     val cardTaken = afterCard.currentPlayer.activeCards.head
 
-    val afterCube = afterCard.placeAnimalCube(cardTaken)
+    val afterSelect = afterCard.selectAnimalCard(cardTaken)
+    val afterCube = afterSelect.placeAnimalCube(Coordinate(0, 0))
 
     afterCube.currentPlayer.activeCards should not contain cardTaken
     afterCube.currentPlayer.completedCards should have size 1
@@ -278,10 +320,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val card4 = AnimalCard("D", simpleHabitat, List(1))
     val card5 = AnimalCard("E", simpleHabitat, List(1))
 
-    val playerWithFullCards = Player(
-      1,
-      "Player1",
-      PersonalBoard(SideA),
+    val playerWithFullCards = playerWithMountainAt00(1, "Player1").copy(
       activeCards = List(card1, card2, card3, card4)
     )
 
@@ -293,7 +332,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       deck = List(card5)
     )
 
-    val afterCube = model.placeAnimalCube(card1)
+    val afterSelect = model.selectAnimalCard(card1)
+    val afterCube = afterSelect.placeAnimalCube(Coordinate(0, 0))
 
     afterCube.currentPlayer.activeCards should have size 3
     afterCube.currentPlayer.completedCards should have size 1
@@ -307,7 +347,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterCard = model.takeAnimalCard(CardSlot)
     val cardTaken = afterCard.currentPlayer.activeCards.head
 
-    val afterCube = afterCard.placeAnimalCube(cardTaken)
+    val afterSelect = afterCard.selectAnimalCard(cardTaken)
+    val afterCube = afterSelect.placeAnimalCube(Coordinate(0, 0))
 
     afterCube.currentPlayer.completedCards.head.currentPoints shouldBe 3
     afterCube.currentPlayer.activeCards shouldBe empty
