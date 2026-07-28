@@ -22,7 +22,10 @@ trait GameModel:
   def placeToken(coordinate: Coordinate): GameModel
   def endTurn(): GameModel
   def highlightedCells(token: TerrainToken): List[Coordinate]
-  def placeAnimalCube(card: AnimalCard): GameModel
+  def selectedAnimalCard: Option[AnimalCard]
+  def selectAnimalCard(card: AnimalCard): GameModel
+  def highlightedAnimalCells(card: AnimalCard): List[Coordinate]
+  def placeAnimalCube(coordinate: Coordinate): GameModel
   def cancelTurn(): GameModel
   def getPlayers: List[Player]
   def centralBoard: CentralBoard
@@ -68,6 +71,7 @@ object GameModel:
       override val turnState: TurnState,
       override val tokensInHand: List[TerrainToken] = List(),
       override val selectedToken: Option[TerrainToken] = None,
+      override val selectedAnimalCard: Option[AnimalCard] = None,
       hasTakenCardThisTurn: Boolean = false,
       isLastRound: Boolean = false
   ) extends GameModel:
@@ -100,7 +104,8 @@ object GameModel:
       if !tokensInHand.contains(token) then
         throw IllegalStateException("Token non disponibile")
       this.copy(
-        selectedToken = Some(token)
+        selectedToken = Some(token),
+        selectedAnimalCard = None
       )
 
     override def takeAnimalCard(slot: Int): GameModel =
@@ -200,44 +205,44 @@ object GameModel:
 
       physicallyValid.filterNot(blockedCells.contains)
 
-    override def placeAnimalCube(card: AnimalCard): GameModel =
-      if turnState == TurnState.TurnComplete then
-        throw IllegalStateException(
-          "Non puoi piazzare un cubo Animale dopo che il turno è stato completato"
-        )
+    override def selectAnimalCard(card: AnimalCard): GameModel =
+      if !currentPlayer.activeCards.contains(card) then
+        throw IllegalStateException("Carta non posseduta")
+      if highlightedAnimalCells(card).isEmpty then
+        throw IllegalStateException("Nessun habitat completato per questa carta")
+      this.copy(selectedAnimalCard = Some(card), selectedToken = None)
 
-      val cardIndex = currentPlayer.activeCards.indexOf(card)
-      if cardIndex == -1 then
-        throw IllegalStateException(
-          "Carta non trovata tra le carte attive del giocatore"
-        )
+    override def highlightedAnimalCells(card: AnimalCard): List[Coordinate] =
+      HabitatMatcher.findMatches(currentPlayer.board, card.habitat)
+        .map(_.origin)
+        .toList
 
-      card.placeCube match
-        case None =>
-          throw IllegalStateException("Nessun cubo rimasto in questa carta")
+    override def placeAnimalCube(coordinate: Coordinate): GameModel =
+      val card = selectedAnimalCard.getOrElse(throw IllegalStateException("Nessuna carta selezionata"))
 
-        case Some(updatedCard) =>
-          val (newActiveCards, newCompletedCards) =
-            if updatedCard.placedCubes == updatedCard.maxCubes then
-              (
-                currentPlayer.activeCards.filterNot(_ == card),
-                currentPlayer.completedCards :+ updatedCard
-              )
-            else
-              (
-                currentPlayer.activeCards.updated(cardIndex, updatedCard),
-                currentPlayer.completedCards
-              )
+      if !highlightedAnimalCells(card).contains(coordinate) then
+        throw IllegalStateException("Posizione non valida per questo habitat")
 
-          val updatedPlayer = currentPlayer.copy(
-            activeCards = newActiveCards,
-            completedCards = newCompletedCards
-          )
+      val updatedBoard = currentPlayer.board.placeAnimalOnCell(coordinate).get
+      val updatedCard = card.placeCube.get
 
-          this.copy(
-            players = players.updated(currentPlayerIndex, updatedPlayer),
-            turnSnapshot = turnSnapshot.orElse(Some(this))
-          )
+      val (newActive, newCompleted) =
+        if updatedCard.placedCubes == updatedCard.maxCubes then
+          (currentPlayer.activeCards.filterNot(_ == card), currentPlayer.completedCards :+ updatedCard)
+        else
+          (currentPlayer.activeCards.map(c => if c == card then updatedCard else c), currentPlayer.completedCards)
+
+      val updatedPlayer = currentPlayer.copy(
+        board = updatedBoard,
+        activeCards = newActive,
+        completedCards = newCompleted
+      )
+
+      this.copy(
+        players = players.updated(currentPlayerIndex, updatedPlayer),
+        selectedAnimalCard = None,
+        turnSnapshot = turnSnapshot.orElse(Some(this))
+      )
 
     override def cancelTurn(): GameModel =
       turnSnapshot match
@@ -254,7 +259,7 @@ object GameModel:
           !hasTakenCardThisTurn && currentPlayer.activeCards.size < MaxAnimalCards
         )("scegli una carta animale"),
         Option.when(
-          turnState != TurnState.TurnComplete && currentPlayer.activeCards
+          currentPlayer.activeCards
             .exists(c => c.placedCubes < c.maxCubes)
         )("posiziona cubo animale"),
         Option.when(turnState == ActionDone && tokensInHand.nonEmpty)(

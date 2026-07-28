@@ -25,7 +25,8 @@ trait GameController:
   def onPlaceToken(coordinate: Coordinate): Unit
   def onEndTurn(): Unit
   def onTakeAnimalCard(slot: Int): Unit
-  def onPlaceAnimalCube(card: AnimalCard): Unit
+  def onSelectActiveCard(card: AnimalCard): Unit
+  def onCellClicked(coordinate: Coordinate): Unit
   def onCancelTurn(): Unit
   def start(): Unit
   def onStartGame(names: List[String], side: BoardSide): Unit
@@ -104,16 +105,31 @@ object GameController:
         view.updateState(model)
       catch case e: IllegalStateException => handleError(e)
 
-    override def onPlaceAnimalCube(card: AnimalCard): Unit =
+    override def onSelectActiveCard(card: AnimalCard): Unit =
+      try
+        if model.selectedAnimalCard.contains(card) then return
+        model = model.selectAnimalCard(card)
+        refreshView(s"${model.currentPlayer.name} sceglie la carta ${card.name}")
+        view.updateState(model)
+      catch case e: IllegalStateException => handleError(e)
+
+    override def onCellClicked(coordinate: Coordinate): Unit =
       try
         val playerName = model.currentPlayer.name
-        model = model.placeAnimalCube(card)
-        val cardCompleted = !model.currentPlayer.activeCards.contains(card) &&
-          !model.currentPlayer.activeCards.exists(_.name == card.name)
-        if cardCompleted then
-          refreshView(s"$playerName finisce una carta animale")
-          refreshView(s"$playerName posiziona un cubo")
-        else refreshView(s"$playerName posiziona un cubo")
+        if model.selectedToken.isDefined then
+          model = model.placeToken(coordinate)
+          refreshView(s"$playerName posiziona un token")
+        else if model.selectedAnimalCard.isDefined then
+          model = model.placeAnimalCube(coordinate)
+          refreshView(s"$playerName posiziona un cubo animale")
+        else
+          val playableCards = model.currentPlayer.activeCards.filter(c => model.highlightedAnimalCells(c).nonEmpty)
+          if playableCards.size == 1 && model.highlightedAnimalCells(playableCards.head).contains(coordinate) then
+            model = model.selectAnimalCard(playableCards.head)
+            model = model.placeAnimalCube(coordinate)
+            refreshView(s"$playerName posiziona un cubo animale")
+          else
+            return
         view.updateState(model)
       catch case e: IllegalStateException => handleError(e)
 
