@@ -21,7 +21,8 @@ private def scoreForCoords(
     acc + pointsForHeight(height)
   }
 
-trait TerrainScoring:
+trait TerrainScoring extends Scorable:
+  override def computeScore(board: PersonalBoard): Score = compute(board)
   def compute(board: PersonalBoard): Score
 
 object FieldsScoring extends TerrainScoring:

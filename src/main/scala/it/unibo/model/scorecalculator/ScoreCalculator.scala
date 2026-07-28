@@ -6,6 +6,14 @@ import it.unibo.model.scorecalculator.Score.Score
 
 object ScoreCalculator:
 
+  private val terrainScorers: Map[String, TerrainScoring] = Map(
+    "Field" -> FieldsScoring,
+    "Water" -> WaterScoring,
+    "Building" -> BuildingsScoring,
+    "Forest" -> ForestsScoring,
+    "Mountain" -> MountainsScoring
+  )
+
   def calculateScore(
       personalBoard: PersonalBoard,
       cards: List[AnimalCard]
@@ -16,21 +24,14 @@ object ScoreCalculator:
       board: PersonalBoard,
       cards: List[AnimalCard]
   ): (Score, Map[String, Score]) =
-    val map: Map[String, Score] = Map(
-      "Field" -> FieldsScoring.compute(board),
-      "Water" -> WaterScoring.compute(board),
-      "Building" -> BuildingsScoring.compute(board),
-      "Forest" -> ForestsScoring.compute(board),
-      "Mountain" -> MountainsScoring.compute(board),
-      "Animal Cards" -> scoreFromAnimalCards(cards)
-    )
+    val terrainMap: Map[String, Score] = terrainScorers.map {
+      case (label, scorer) => label -> scorer.computeScore(board)
+    }
 
-    val totalScore =
-      map.values.foldLeft(Score.zero)(_ + _) + scoreFromSpirits(board)
+    val animalScore =
+      cards.foldLeft(Score.zero)((acc, card) => acc + card.computeScore(board))
 
-    (totalScore, map)
+    val detailedMap = terrainMap + ("Animal Cards" -> animalScore)
+    val totalScore = detailedMap.values.reduce(_ + _)
 
-  private def scoreFromAnimalCards(cards: List[AnimalCard]): Score =
-    Score(cards.foldLeft(0)((current, card) => current + card.currentPoints))
-
-  private def scoreFromSpirits(board: PersonalBoard): Score = Score.zero
+    (totalScore, detailedMap)
