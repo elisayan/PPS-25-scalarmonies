@@ -8,7 +8,9 @@ import scalafx.geometry.Pos
 import scalafx.scene.control.Label
 import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{HBox, StackPane, VBox}
+import scalafx.scene.layout.HBox
+import scalafx.scene.layout.StackPane
+import scalafx.scene.layout.VBox
 
 case class CentralBoardView(
     board: CentralBoard,
@@ -64,8 +66,7 @@ case class CentralBoardView(
 
   private val pouchLabel = new Label:
     text = s"x$pouchSize"
-    style =
-      """
+    style = """
       -fx-font-size: 18px;
       -fx-font-weight: bold;
       """
