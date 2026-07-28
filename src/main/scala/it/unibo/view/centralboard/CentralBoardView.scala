@@ -5,13 +5,14 @@ import it.unibo.view.card.AnimalCardView
 import it.unibo.view.token.TokenView
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
+import scalafx.scene.control.Label
 import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.HBox
-import scalafx.scene.layout.StackPane
+import scalafx.scene.layout.{HBox, StackPane, VBox}
 
 case class CentralBoardView(
     board: CentralBoard,
+    pouchSize: Int,
     onCardClicked: Int => Unit,
     onTokenClicked: Int => Unit
 ) extends HBox:
@@ -61,6 +62,14 @@ case class CentralBoardView(
     (12.0, 8.0)
   )
 
+  private val pouchLabel = new Label:
+    text = s"x$pouchSize"
+    style =
+      """
+      -fx-font-size: 18px;
+      -fx-font-weight: bold;
+      """
+
   board.availableTokens.foreach:
     case (slot, tokens) =>
       val tokenStack = new StackPane:
@@ -95,7 +104,14 @@ case class CentralBoardView(
 
       tokensContainer.children.add(tokenStack)
 
+  pouchLabel.translateX = 75
+  pouchLabel.translateY = -35
+
+  private val boardWithPouch = new VBox(5):
+    alignment = Pos.Center
+    children.addAll(tokensContainer, pouchLabel)
+
   children.addAll(
     cardsContainer,
-    tokensContainer
+    boardWithPouch
   )

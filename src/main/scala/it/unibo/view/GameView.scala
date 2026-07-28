@@ -235,6 +235,7 @@ class GameView(controller: GameController) extends GridPane:
     updateCentralBoard(
       CentralBoardView(
         model.centralBoard,
+        model.pouchSize,
         controller.onTakeAnimalCard,
         controller.onTakeTokens
       )

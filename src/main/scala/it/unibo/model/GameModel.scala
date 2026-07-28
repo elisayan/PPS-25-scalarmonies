@@ -14,6 +14,7 @@ trait GameModel:
   def currentPlayer: Player
   def turnState: TurnState
   def tokensInHand: List[TerrainToken]
+  def pouchSize: Int
   def isGameOver: Boolean
   def takeTokens(slot: Int): GameModel
   def selectedToken: Option[TerrainToken]
@@ -75,6 +76,8 @@ object GameModel:
     private val MaxAnimalCards = 4
 
     override def currentPlayer: Player = players(currentPlayerIndex)
+
+    override def pouchSize: Int = pouch.size
 
     override def isGameOver: Boolean =
       isLastRound && currentPlayerIndex == 0
