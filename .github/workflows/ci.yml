@@ -31,4 +31,4 @@ jobs:
         run: sbt "scalafix --check"
 
       - name: 3. Esecuzione Test e Generazione Report Copertura (Scoverage)
-        run: sbt clean coverage test coverageReport
+        run: xvfb-run clean coverage test coverageReport
