@@ -66,6 +66,11 @@ case class CellView(
       cube.fill = Color.SaddleBrown
       cube.stroke = Color.Black
       cube.strokeWidth = 1.5
+      val cubeOffset = cell.height match
+        case 2 => -12.0
+        case 3 => -15.0
+        case _ => 0.0
+      cube.translateY = cubeOffset
       cube.mouseTransparent = true
       children.add(cube)
 
