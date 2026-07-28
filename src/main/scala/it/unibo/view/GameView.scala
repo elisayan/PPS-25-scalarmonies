@@ -15,6 +15,7 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.control.ScrollPane
+import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.Background
 import scalafx.scene.layout.BackgroundFill
 import scalafx.scene.layout.ColumnConstraints
@@ -186,6 +187,15 @@ class GameView(controller: GameController) extends GridPane:
       val cardView = AnimalCardView(c)
       if player == controller.currentModel.currentPlayer then
         cardView.onMouseClicked = _ => controller.onSelectActiveCard(c)
+        val isSelected = controller.currentModel.selectedAnimalCard.contains(c)
+        val isPlayable = controller.currentModel.highlightedAnimalCells(c).nonEmpty
+        val hasSelection = controller.currentModel.selectedAnimalCard.isDefined
+        if isSelected then
+          cardView.effect = new DropShadow(20.0, Color.LimeGreen)
+        else if !hasSelection && isPlayable then
+          cardView.effect = new DropShadow(15.0, Color.Gold)
+        else
+          cardView.effect = null
       cardView
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
     PlayerAreaView(boardView, cards, completedCards, player.name)
