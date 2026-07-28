@@ -12,75 +12,40 @@ def pointsForHeight(height: Int): Score = height match
   case 3 => Score(7)
   case _ => Score.zero
 
-object FieldsScoring:
+private def scoreForCoords(
+    board: PersonalBoard,
+    coords: Iterable[Coordinate]
+): Score =
+  coords.foldLeft(Score.zero) { (acc, coord) =>
+    val height = board.cells.get(coord).map(_.height).getOrElse(0)
+    acc + pointsForHeight(height)
+  }
 
-  def compute(
-      board: PersonalBoard,
-      buildGroup: (
-          Set[Coordinate],
-          Set[Coordinate]
-      ) => (Set[Coordinate], Set[Coordinate])
-  ): Score =
-    val allFields = board.cells.collect {
-      case (coord, cell) if cell.topToken.contains(TerrainToken.Field) => coord
-    }.toSet
+trait TerrainScoring:
+  def compute(board: PersonalBoard): Score
 
-    @scala.annotation.tailrec
-    def calculateTotal(
-        unprocessed: Set[Coordinate],
-        currentScore: Score
-    ): Score =
-      if unprocessed.isEmpty then currentScore
-      else
-        val (completedGroup, leftOver) =
-          buildGroup(Set(unprocessed.head), unprocessed.tail)
-        val points = if completedGroup.size >= 2 then Score(5) else Score.zero
-        calculateTotal(leftOver, currentScore + points)
+object FieldsScoring extends TerrainScoring:
 
-    calculateTotal(allFields, Score.zero)
+  override def compute(board: PersonalBoard): Score =
+    val allFields = board.coordsWithTerrain(TerrainToken.Field)
+    val groups = board.findConnectedGroups(allFields)
+    val validGroupsCount = groups.count(_.size >= 2)
+    Score(validGroupsCount * 5)
 
-object MountainsScoring:
+object MountainsScoring extends TerrainScoring:
 
-  def compute(
-      board: PersonalBoard,
-      buildGroup: (
-          Set[Coordinate],
-          Set[Coordinate]
-      ) => (Set[Coordinate], Set[Coordinate])
-  ): Score =
-    val mountainHeights = board.cells.collect {
-      case (coord, cell) if cell.topToken.contains(TerrainToken.Mountain) =>
-        coord -> cell.height
+  override def compute(board: PersonalBoard): Score =
+    val allMountains = board.coordsWithTerrain(TerrainToken.Mountain)
+    val groups = board.findConnectedGroups(allMountains)
+
+    groups.filter(_.size >= 2).foldLeft(Score.zero) { (acc, group) =>
+      acc + scoreForCoords(board, group)
     }
-    val allMountains = mountainHeights.keySet
 
-    @scala.annotation.tailrec
-    def calculateTotal(
-        unprocessed: Set[Coordinate],
-        currentScore: Score
-    ): Score =
-      if unprocessed.isEmpty then currentScore
-      else
-        val (completedGroup, leftOver) =
-          buildGroup(Set(unprocessed.head), unprocessed.tail)
+object BuildingsScoring extends TerrainScoring:
 
-        if completedGroup.size < 2 then calculateTotal(leftOver, currentScore)
-        else
-          val groupPoints = completedGroup.foldLeft(Score.zero) {
-            (acc, coord) =>
-              acc + pointsForHeight(mountainHeights.getOrElse(coord, 0))
-          }
-          calculateTotal(leftOver, currentScore + groupPoints)
-
-    calculateTotal(allMountains, Score.zero)
-
-object BuildingsScoring:
-
-  def compute(board: PersonalBoard): Score =
-    val allBuildings: Set[Coordinate] = board.cells.collect {
-      case (coord, cell) if cell.topToken.contains(TerrainToken.Building) =>
-        coord
-    }.toSet
+  override def compute(board: PersonalBoard): Score =
+    val allBuildings = board.coordsWithTerrain(TerrainToken.Building)
 
     def isValidBuilding(coord: Coordinate): Boolean =
       val neighbourTerrains: Set[TerrainToken] = coord.allNeighbours
@@ -91,30 +56,16 @@ object BuildingsScoring:
     val validBuildingsCount = allBuildings.count(isValidBuilding)
     Score(validBuildingsCount * 5)
 
-object ForestsScoring:
+object ForestsScoring extends TerrainScoring:
 
-  def compute(board: PersonalBoard): Score =
-    val treeHeights: Map[Coordinate, Int] = board.cells.collect {
-      case (coord, cell) if cell.topToken.contains(TerrainToken.Forest) =>
-        coord -> cell.height
-    }
+  override def compute(board: PersonalBoard): Score =
+    val forestCoords = board.coordsWithTerrain(TerrainToken.Forest)
+    scoreForCoords(board, forestCoords)
 
-    treeHeights.values.foldLeft(Score.zero) { (acc, height) =>
-      acc + pointsForHeight(height)
-    }
+object WaterScoring extends TerrainScoring:
 
-object WaterScoring:
-
-  def compute(
-      board: PersonalBoard,
-      buildGroup: (
-          Set[Coordinate],
-          Set[Coordinate]
-      ) => (Set[Coordinate], Set[Coordinate])
-  ): Score =
-    val allWater: Set[Coordinate] = board.cells.collect {
-      case (coord, cell) if cell.topToken.contains(TerrainToken.Water) => coord
-    }.toSet
+  override def compute(board: PersonalBoard): Score =
+    val allWater = board.coordsWithTerrain(TerrainToken.Water)
 
     def maxPathInGroup(group: Set[Coordinate]): Int =
       def dfs(current: Coordinate, visited: Set[Coordinate]): Int =
@@ -126,18 +77,6 @@ object WaterScoring:
       if group.isEmpty then 0
       else group.map(start => dfs(start, Set(start))).max
 
-    @scala.annotation.tailrec
-    def findRiverLengths(
-        unprocessed: Set[Coordinate],
-        lengths: List[Int]
-    ): List[Int] =
-      if unprocessed.isEmpty then lengths
-      else
-        val (completedGroup, leftOver) =
-          buildGroup(Set(unprocessed.head), unprocessed.tail)
-        val maxLengthForThisGroup = maxPathInGroup(completedGroup)
-        findRiverLengths(leftOver, maxLengthForThisGroup :: lengths)
-
     def pointsForSideA(length: Int): Score = length match
       case l if l <= 1 => Score.zero
       case 2           => Score(2)
@@ -147,21 +86,13 @@ object WaterScoring:
       case 6           => Score(15)
       case l           => Score(15 + (l - 6) * 4)
 
-    @scala.annotation.tailrec
-    def countIslands(unprocessedLand: Set[Coordinate], islandCount: Int): Int =
-      if unprocessedLand.isEmpty then islandCount
-      else
-        val (_, leftOverLand) =
-          buildGroup(Set(unprocessedLand.head), unprocessedLand.tail)
-        countIslands(leftOverLand, islandCount + 1)
-
     board.side match
       case BoardSide.SideA =>
-        val allLengths = findRiverLengths(allWater, Nil)
-        val longestRiver = allLengths.maxOption.getOrElse(0)
+        val groups = board.findConnectedGroups(allWater)
+        val longestRiver = groups.map(maxPathInGroup).maxOption.getOrElse(0)
         pointsForSideA(longestRiver)
 
       case BoardSide.SideB =>
         val allLand = board.cells.keySet.diff(allWater)
-        val totalIslands = countIslands(allLand, 0)
-        Score(totalIslands * 5)
+        val islands = board.findConnectedGroups(allLand)
+        Score(islands.size * 5)
