@@ -69,7 +69,7 @@ case class CellView(
       val cubeOffset = cell.height match
         case 2 => -12.0
         case 3 => -15.0
-        case _ => 0.0
+        case _ => -8.0
       cube.translateY = cubeOffset
       cube.mouseTransparent = true
       children.add(cube)
