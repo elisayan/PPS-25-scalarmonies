@@ -4,13 +4,14 @@ import it.unibo.model.card.AnimalCard
 import it.unibo.model.card.Habitat
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
+import it.unibo.view.utils.ImageCache
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
 import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout._
+import scalafx.scene.layout.*
 import scalafx.scene.shape.Rectangle
 
 private object CardTheme:
@@ -55,28 +56,24 @@ private object HexMath:
 
 private object CardComponents:
 
-  def imageBox(id: String, w: Double, h: Double): Node =
-    val url = getClass.getResource(s"/animal/$id")
+  def imageBox(idImg: String, w: Double, h: Double): Node =
     new StackPane:
       prefWidth = w; prefHeight = h; alignment = Pos.Center
-      if url != null then
-        val img = new Image(url.toURI.toString)
-        if !img.delegate.isError then
-          children = new ImageView(img):
-            fitWidth = w
-            fitHeight = h
-            preserveRatio = false
-            clip = new Rectangle:
-              width = w
-              height = h
-              arcWidth = 20
-              arcHeight = 20
-        else
+      try
+        val img = ImageCache.getImage(s"/animal/$idImg")
+        children = new ImageView(img):
+          fitWidth = w
+          fitHeight = h
+          preserveRatio = false
+          clip = new Rectangle:
+            width = w
+            height = h
+            arcWidth = 20
+            arcHeight = 20
+      catch
+        case e: IllegalArgumentException =>
           children = new Label("Img Err"):
-            style = "-fx-text-fill: orange;"
-      else
-        children = new Label("Path Err"):
-          style = "-fx-text-fill: red;"
+            style = "-fx-text-fill: red;"
 
   def scoringTrack(
       card: AnimalCard,
