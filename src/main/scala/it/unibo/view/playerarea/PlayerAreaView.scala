@@ -14,6 +14,7 @@ class PlayerAreaView(
     cards: List[Node],
     completedCards: List[Node],
     playerName: String,
+    isStartingPlayer: Boolean = false,
     maxCardSlots: Int = 4
 ) extends VBox:
 
@@ -38,7 +39,10 @@ class PlayerAreaView(
     alignment = Pos.Center
     children.add(boardView)
 
-  private val nameLabel = new Label(playerName):
+  private val nameLabel = new Label(
+    if isStartingPlayer then s"$playerName (1°)"
+    else playerName
+  ):
     style =
       "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"
     alignment = Pos.Center

@@ -179,7 +179,8 @@ class GameView(controller: GameController) extends GridPane:
 
   private def createPlayerArea(
       player: Player,
-      highlightedCells: List[Coordinate]
+      highlightedCells: List[Coordinate],
+      isStartingPlayer: Boolean
   ): PlayerAreaView =
     val boardView =
       PersonalBoardView(player, controller.onCellClicked, highlightedCells)
@@ -198,7 +199,7 @@ class GameView(controller: GameController) extends GridPane:
         else cardView.effect = null
       cardView
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
-    PlayerAreaView(boardView, cards, completedCards, player.name)
+    PlayerAreaView(boardView, cards, completedCards, player.name, isStartingPlayer)
 
   private def initLayout(): Unit =
     padding = Insets(10)
@@ -247,7 +248,7 @@ class GameView(controller: GameController) extends GridPane:
       val playerHighlightedCells =
         if p == model.currentPlayer then highlighted
         else List()
-      createPlayerArea(p, playerHighlightedCells)
+      createPlayerArea(p, playerHighlightedCells, p == model.startingPlayer)
     )
     updatePlayerAreas(areas, model.currentPlayer.name)
     updatePersonalTokenSidebar(
