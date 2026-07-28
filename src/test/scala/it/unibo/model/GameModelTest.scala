@@ -24,11 +24,13 @@ class GameModelTest extends AnyFlatSpec with Matchers:
   private def modelAfterTake(model: GameModel): GameModel = model.takeTokens(1)
 
   private def placeSelectedToken(
-                                  model: GameModel,
-                                  token: TerrainToken
-                                ): GameModel =
+      model: GameModel,
+      token: TerrainToken
+  ): GameModel =
     val positions =
-      TokenValidator.validPositions(token, model.currentPlayer.board).filterNot(_ == Coordinate(0, 0))
+      TokenValidator
+        .validPositions(token, model.currentPlayer.board)
+        .filterNot(_ == Coordinate(0, 0))
     if positions.isEmpty then model
     else
       val selected = model.selectToken(token)
@@ -37,11 +39,20 @@ class GameModelTest extends AnyFlatSpec with Matchers:
   private val CardSlot = 1
 
   private def playerWithMountainAt00(id: Int, name: String): Player =
-    Player(id, name, PersonalBoard(SideA).placeToken(TerrainToken.Mountain, Coordinate(0, 0)).get)
+    Player(
+      id,
+      name,
+      PersonalBoard(SideA)
+        .placeToken(TerrainToken.Mountain, Coordinate(0, 0))
+        .get
+    )
 
   private def modelWithCards(cards: List[AnimalCard]): GameModel =
     GameModel(
-      List(playerWithMountainAt00(1, "Player1"), Player(2, "Player2", PersonalBoard(SideA))),
+      List(
+        playerWithMountainAt00(1, "Player1"),
+        Player(2, "Player2", PersonalBoard(SideA))
+      ),
       deck = cards
     )
 
@@ -283,7 +294,8 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterSelectCard = afterCard.selectAnimalCard(cardTaken)
     afterSelectCard.selectedAnimalCard shouldBe defined
 
-    val afterSelectToken = afterSelectCard.selectToken(afterSelectCard.tokensInHand.head)
+    val afterSelectToken =
+      afterSelectCard.selectToken(afterSelectCard.tokensInHand.head)
     afterSelectToken.selectedAnimalCard shouldBe empty
     afterSelectToken.selectedToken shouldBe defined
 

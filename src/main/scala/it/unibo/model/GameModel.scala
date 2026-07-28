@@ -209,16 +209,21 @@ object GameModel:
       if !currentPlayer.activeCards.contains(card) then
         throw IllegalStateException("Carta non posseduta")
       if highlightedAnimalCells(card).isEmpty then
-        throw IllegalStateException("Nessun habitat completato per questa carta")
+        throw IllegalStateException(
+          "Nessun habitat completato per questa carta"
+        )
       this.copy(selectedAnimalCard = Some(card), selectedToken = None)
 
     override def highlightedAnimalCells(card: AnimalCard): List[Coordinate] =
-      HabitatMatcher.findMatches(currentPlayer.board, card.habitat)
+      HabitatMatcher
+        .findMatches(currentPlayer.board, card.habitat)
         .map(_.origin)
         .toList
 
     override def placeAnimalCube(coordinate: Coordinate): GameModel =
-      val card = selectedAnimalCard.getOrElse(throw IllegalStateException("Nessuna carta selezionata"))
+      val card = selectedAnimalCard.getOrElse(
+        throw IllegalStateException("Nessuna carta selezionata")
+      )
 
       if !highlightedAnimalCells(card).contains(coordinate) then
         throw IllegalStateException("Posizione non valida per questo habitat")
@@ -228,9 +233,17 @@ object GameModel:
 
       val (newActive, newCompleted) =
         if updatedCard.placedCubes == updatedCard.maxCubes then
-          (currentPlayer.activeCards.filterNot(_ == card), currentPlayer.completedCards :+ updatedCard)
+          (
+            currentPlayer.activeCards.filterNot(_ == card),
+            currentPlayer.completedCards :+ updatedCard
+          )
         else
-          (currentPlayer.activeCards.map(c => if c == card then updatedCard else c), currentPlayer.completedCards)
+          (
+            currentPlayer.activeCards.map(c =>
+              if c == card then updatedCard else c
+            ),
+            currentPlayer.completedCards
+          )
 
       val updatedPlayer = currentPlayer.copy(
         board = updatedBoard,

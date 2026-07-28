@@ -188,18 +188,17 @@ class GameView(controller: GameController) extends GridPane:
       if player == controller.currentModel.currentPlayer then
         cardView.onMouseClicked = _ => controller.onSelectActiveCard(c)
         val isSelected = controller.currentModel.selectedAnimalCard.contains(c)
-        val isPlayable = controller.currentModel.highlightedAnimalCells(c).nonEmpty
+        val isPlayable =
+          controller.currentModel.highlightedAnimalCells(c).nonEmpty
         val hasSelection = controller.currentModel.selectedAnimalCard.isDefined
         if isSelected then
           cardView.effect = new DropShadow(20.0, Color.LimeGreen)
         else if !hasSelection && isPlayable then
           cardView.effect = new DropShadow(15.0, Color.Gold)
-        else
-          cardView.effect = null
+        else cardView.effect = null
       cardView
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
     PlayerAreaView(boardView, cards, completedCards, player.name)
-
 
   private def initLayout(): Unit =
     padding = Insets(10)
@@ -233,7 +232,9 @@ class GameView(controller: GameController) extends GridPane:
     add(infoPanelView.root, 2, 0)
 
   def updateState(model: GameModel): Unit =
-    val playableCards = model.currentPlayer.activeCards.filter(c => model.highlightedAnimalCells(c).nonEmpty)
+    val playableCards = model.currentPlayer.activeCards.filter(c =>
+      model.highlightedAnimalCells(c).nonEmpty
+    )
     val highlighted =
       if model.selectedToken.isDefined then
         model.highlightedCells(model.selectedToken.get)
@@ -241,8 +242,7 @@ class GameView(controller: GameController) extends GridPane:
         model.highlightedAnimalCells(model.selectedAnimalCard.get)
       else if playableCards.size == 1 then
         model.highlightedAnimalCells(playableCards.head)
-      else
-        List()
+      else List()
     val areas = model.getPlayers.map(p =>
       val playerHighlightedCells =
         if p == model.currentPlayer then highlighted

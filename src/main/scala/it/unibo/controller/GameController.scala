@@ -109,7 +109,9 @@ object GameController:
       try
         if model.selectedAnimalCard.contains(card) then return
         model = model.selectAnimalCard(card)
-        refreshView(s"${model.currentPlayer.name} sceglie la carta ${card.name}")
+        refreshView(
+          s"${model.currentPlayer.name} sceglie la carta ${card.name}"
+        )
         view.updateState(model)
       catch case e: IllegalStateException => handleError(e)
 
@@ -123,13 +125,17 @@ object GameController:
           model = model.placeAnimalCube(coordinate)
           refreshView(s"$playerName posiziona un cubo animale")
         else
-          val playableCards = model.currentPlayer.activeCards.filter(c => model.highlightedAnimalCells(c).nonEmpty)
-          if playableCards.size == 1 && model.highlightedAnimalCells(playableCards.head).contains(coordinate) then
+          val playableCards = model.currentPlayer.activeCards.filter(c =>
+            model.highlightedAnimalCells(c).nonEmpty
+          )
+          if playableCards.size == 1 && model
+              .highlightedAnimalCells(playableCards.head)
+              .contains(coordinate)
+          then
             model = model.selectAnimalCard(playableCards.head)
             model = model.placeAnimalCube(coordinate)
             refreshView(s"$playerName posiziona un cubo animale")
-          else
-            return
+          else return
         view.updateState(model)
       catch case e: IllegalStateException => handleError(e)
 

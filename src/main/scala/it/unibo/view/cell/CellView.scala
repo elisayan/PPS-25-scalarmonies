@@ -3,11 +3,12 @@ import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.token.TokenView
-import scalafx.Includes.*
+import scalafx.Includes._
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Polygon, Rectangle}
+import scalafx.scene.shape.Polygon
+import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Font
 import scalafx.scene.text.Text
 

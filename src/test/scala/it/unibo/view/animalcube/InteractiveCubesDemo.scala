@@ -19,8 +19,12 @@ object InteractiveCubesDemo extends JFXApp3:
   var model: GameModel = _
 
   override def start(): Unit =
-    val forestHabitat = Habitat(List(CellRequirement(Coordinate(0,0), TerrainToken.Forest, 1)))
-    val mountainHabitat = Habitat(List(CellRequirement(Coordinate(0,0), TerrainToken.Mountain, 2)))
+    val forestHabitat = Habitat(
+      List(CellRequirement(Coordinate(0, 0), TerrainToken.Forest, 1))
+    )
+    val mountainHabitat = Habitat(
+      List(CellRequirement(Coordinate(0, 0), TerrainToken.Mountain, 2))
+    )
 
     val card1 = AnimalCard("Volpe (1 Habitat)", forestHabitat, List(2, 4))
     val card2 = AnimalCard("Aquila (2 Habitat)", mountainHabitat, List(3, 5))
@@ -51,8 +55,11 @@ object InteractiveCubesDemo extends JFXApp3:
     val highlighted = model.selectedAnimalCard match
       case Some(card) => model.highlightedAnimalCells(card)
       case None =>
-        val playable = player.activeCards.filter(c => model.highlightedAnimalCells(c).nonEmpty)
-        if playable.size == 1 then model.highlightedAnimalCells(playable.head) else List()
+        val playable = player.activeCards.filter(c =>
+          model.highlightedAnimalCells(c).nonEmpty
+        )
+        if playable.size == 1 then model.highlightedAnimalCells(playable.head)
+        else List()
 
     val boardView = PersonalBoardView(player, onCellClicked, highlighted)
 
@@ -69,8 +76,7 @@ object InteractiveCubesDemo extends JFXApp3:
           cardView.effect = new DropShadow(20.0, Color.LimeGreen)
         else if !hasSelection && isPlayable then
           cardView.effect = new DropShadow(15.0, Color.Gold)
-        else
-          cardView.effect = null
+        else cardView.effect = null
 
         cardView
 
@@ -97,8 +103,13 @@ object InteractiveCubesDemo extends JFXApp3:
         println(s"Cubo piazzato in $coord")
       catch case e: Exception => println(s"ERRORE: ${e.getMessage}")
     else
-      val playable = model.currentPlayer.activeCards.filter(c => model.highlightedAnimalCells(c).nonEmpty)
-      if playable.size == 1 && model.highlightedAnimalCells(playable.head).contains(coord) then
+      val playable = model.currentPlayer.activeCards.filter(c =>
+        model.highlightedAnimalCells(c).nonEmpty
+      )
+      if playable.size == 1 && model
+          .highlightedAnimalCells(playable.head)
+          .contains(coord)
+      then
         model = model.selectAnimalCard(playable.head)
         model = model.placeAnimalCube(coord)
         println(s"Cubo piazzato in $coord")
