@@ -199,7 +199,13 @@ class GameView(controller: GameController) extends GridPane:
         else cardView.effect = null
       cardView
     val completedCards = player.completedCards.map(c => AnimalCardView(c))
-    PlayerAreaView(boardView, cards, completedCards, player.name, isStartingPlayer)
+    PlayerAreaView(
+      boardView,
+      cards,
+      completedCards,
+      player.name,
+      isStartingPlayer
+    )
 
   private def initLayout(): Unit =
     padding = Insets(10)
