@@ -9,9 +9,8 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
-import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.*
+import scalafx.scene.layout._
 import scalafx.scene.shape.Rectangle
 
 private object CardTheme:

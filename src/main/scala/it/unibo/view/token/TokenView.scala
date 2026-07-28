@@ -2,7 +2,6 @@ package it.unibo.view.token
 
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.utils.ImageCache
-import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.StackPane
 
