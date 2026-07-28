@@ -88,7 +88,7 @@ object CentralBoardViewDemo extends JFXApp3:
         )
       )
 
-    val (centralBoard, _, _) =
+    val (centralBoard, updatedPouch, _) =
       CentralBoard.empty.fill(
         pouch = pouch,
         deck = deck
@@ -97,6 +97,7 @@ object CentralBoardViewDemo extends JFXApp3:
     val centralBoardView =
       CentralBoardView(
         board = centralBoard,
+        pouchSize = updatedPouch.size,
         onCardClicked = controller.onTakeAnimalCard,
         onTokenClicked = controller.onTakeTokens
       )
