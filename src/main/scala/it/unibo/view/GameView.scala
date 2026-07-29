@@ -43,7 +43,7 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private val cancelTurnButton: Button = new Button("Cancella Turno"):
-    font = Font.font("Arial", FontWeight.Bold, 14.0)
+    font = Font.font("Palatino", FontWeight.Bold, 14.0)
     padding = Insets(3, 8, 3, 8)
     minWidth = 80
     textFill = Color.White
@@ -64,7 +64,7 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private val endTurnButton: Button = new Button("Fine Turno"):
-    font = Font.font("Arial", FontWeight.Bold, 14.0)
+    font = Font.font("Palatino", FontWeight.Bold, 14.0)
     padding = Insets(3, 8, 3, 8)
     minWidth = 80
     textFill = Color.White
@@ -140,7 +140,7 @@ class GameView(controller: GameController) extends GridPane:
     )
     systemMessageBar.children.clear()
     val msgTxt = new Text(message)
-    msgTxt.font = Font.font("Arial", FontWeight.Bold, 16.0)
+    msgTxt.font = Font.font("Palatino", FontWeight.Bold, 16.0)
     msgTxt.fill = Color.Black
     systemMessageBar.children.add(msgTxt)
 

@@ -43,7 +43,7 @@ case class CellView(
     relocate(pos._1, pos._2)
     label.text = s""
     label.fill = Color.Black
-    label.font = Font.font("Arial", 12)
+    label.font = Font.font("Palatino", 12)
     label.mouseTransparent = true
     placeTokenView()
 

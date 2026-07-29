@@ -8,6 +8,7 @@ import scalafx.scene.control.Label
 import scalafx.scene.effect.{ColorAdjust, DropShadow}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
+import scalafx.scene.text.{Font, FontWeight}
 
 class PlayerAreaView(
     boardView: PersonalBoardView,
@@ -46,6 +47,7 @@ class PlayerAreaView(
     if isStartingPlayer then s"$playerName (1°)"
     else playerName
   ):
+    font = Font.font("Palatino", FontWeight.Bold, 15.0)
     style =
       "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"
     alignment = Pos.Center

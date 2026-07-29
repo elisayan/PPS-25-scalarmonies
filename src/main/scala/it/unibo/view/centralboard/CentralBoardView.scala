@@ -67,6 +67,7 @@ case class CentralBoardView(
   private val pouchLabel = new Label:
     text = s"x$pouchSize"
     style = """
+      -fx-font-family: 'Palatino';
       -fx-font-size: 18px;
       -fx-font-weight: bold;
       """

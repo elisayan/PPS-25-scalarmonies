@@ -33,7 +33,7 @@ class InfoPanelView:
     VBox.setVgrow(this, Priority.Always)
 
   private val headerLabel = new Label("Game Log:"):
-    font = Font.font("System", FontWeight.Bold, 12)
+    font = Font.font("Palatino", FontWeight.Bold, 12)
     maxWidth = Double.MaxValue
     alignment = Pos.Center
     style = """
@@ -54,14 +54,14 @@ class InfoPanelView:
     val color = colors(playerId % colors.size)
     val nameText = new Text(s"$playerName "):
       font = Font.font(
-        "System",
+        "Palatino",
         FontWeight.Bold,
         13
       )
       style = s"-fx-fill:$color;"
     val messageText = new Text(message):
       font = Font.font(
-        "System",
+        "Palatino",
         13
       )
       style = "-fx-fill:#222222;"
@@ -91,7 +91,7 @@ class InfoPanelView:
   def addTurnHeader(playerName: String): Unit =
     val header = new Label(s"▶ Inizio del turno di $playerName"):
       font = Font.font(
-        "System",
+        "Palatino",
         FontWeight.Bold,
         13
       )
