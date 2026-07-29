@@ -1,8 +1,9 @@
 package it.unibo.model.card
 
 import it.unibo.model.personalboard.PersonalBoard
+import it.unibo.model.scorecalculator.Scorable
+import it.unibo.model.scorecalculator.Score
 import it.unibo.model.scorecalculator.Score.Score
-import it.unibo.model.scorecalculator.{Scorable, Score}
 
 /** Represents the general concept of a Card within the game.
   */

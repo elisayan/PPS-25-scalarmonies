@@ -7,7 +7,6 @@ import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.BoardSide
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.personalboard.PersonalBoard
-import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
