@@ -41,8 +41,7 @@ case class Cell(
   /** Returns the topmost token placed in this cell, if any.
     *
     * @return
-    *   an Option containing the top terrainToken, or None if the
-    *   cell is empty
+    *   an Option containing the top terrainToken, or None if the cell is empty
     */
   def topToken: Option[TerrainToken] = tokens.lastOption
 
@@ -57,8 +56,8 @@ case class Cell(
   /** Occupies this cell with an animal cube if it is valid to do so.
     *
     * @return
-    *   an Option containing the updated Cell with the animal cube, or
-    *   None if the cell has no tokens or is already occupied by an animal
+    *   an Option containing the updated Cell with the animal cube, or None if
+    *   the cell has no tokens or is already occupied by an animal
     */
   def occupyWithAnimal: Option[Cell] =
     if tokens.isEmpty || hasAnimal then None
