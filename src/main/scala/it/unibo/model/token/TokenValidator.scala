@@ -5,10 +5,19 @@ import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.token.TerrainToken._
 
+/** Validates terrain token placement according to the game rules. */
 object TokenValidator:
 
   private val MaxStackHeight = 3
 
+  /** Checks whether a terrain token can be placed on a cell.
+   * @param token
+   *  the terrain token to place.
+   * @param cell
+   *  the target cell.
+   * @return
+   *  true if the placement is valid, false otherwise.
+   */
   def canPlace(token: TerrainToken, cell: Cell): Boolean =
     val height = cell.getTokens.length
     if height >= MaxStackHeight then false
@@ -26,6 +35,14 @@ object TokenValidator:
             case _                            => false
           }
 
+  /** Returns all valid placement coordinates for a terrain token.
+   * @param token
+   *  the terrain token to place.
+   * @param board
+   *  the player's board.
+   * @return
+   *  the list of valid coordinates.
+   */
   def validPositions(
       token: TerrainToken,
       board: PersonalBoard
