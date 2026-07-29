@@ -11,6 +11,7 @@ import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator
 
 trait GameModel:
+  def startingPlayer: Player
   def currentPlayer: Player
   def turnState: TurnState
   def tokensInHand: List[TerrainToken]
@@ -78,6 +79,8 @@ object GameModel:
   ) extends GameModel:
 
     private val MaxAnimalCards = 4
+
+    override def startingPlayer: Player = players.head
 
     override def currentPlayer: Player = players(currentPlayerIndex)
 

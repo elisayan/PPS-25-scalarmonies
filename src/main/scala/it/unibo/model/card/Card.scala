@@ -1,5 +1,10 @@
 package it.unibo.model.card
 
+import it.unibo.model.personalboard.PersonalBoard
+import it.unibo.model.scorecalculator.Scorable
+import it.unibo.model.scorecalculator.Score
+import it.unibo.model.scorecalculator.Score.Score
+
 /** Represents the general concept of a Card within the game.
   */
 sealed trait Card
@@ -8,7 +13,7 @@ sealed trait Card
   * calculating points. The instance is purely immutable: any state modification
   * generates a new card.
   */
-trait AnimalCard extends Card:
+trait AnimalCard extends Card with Scorable:
   /** @return The name of the animal. */
   def name: String
 
@@ -85,3 +90,6 @@ object AnimalCard:
     override def placeCube: Option[AnimalCard] =
       if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))
       else None
+
+    override def computeScore(board: PersonalBoard): Score =
+      Score(currentPoints)

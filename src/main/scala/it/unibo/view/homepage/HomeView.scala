@@ -66,7 +66,7 @@ object HomeView:
       children = Seq(
         new Label("SCALARMONIES"):
           style =
-            "-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+            "-fx-font-family: 'Palatino'; -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
         ,
         new VBox:
           alignment = Pos.Center; spacing = 10;

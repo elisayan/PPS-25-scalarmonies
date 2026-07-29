@@ -26,7 +26,6 @@ import scalafx.scene.text.Text
 
 case class ScoreCalculatorView(
     playerBoards: List[Player],
-    calculator: ScoreCalculator,
     pos: (Double, Double) = (0.0, 0.0)
 ) extends HBox:
 
@@ -54,7 +53,7 @@ case class ScoreCalculatorView(
       else children.add(createEmptyLane())
 
   private def createActiveLane(player: Player, board: PersonalBoard): VBox =
-    val (totalScore, details) = calculator.calculateDetailedScore(
+    val (totalScore, details) = ScoreCalculator.calculateDetailedScore(
       board,
       player.activeCards ::: player.completedCards
     )
@@ -85,7 +84,7 @@ case class ScoreCalculatorView(
       effect = new DropShadow(8.0, 0.0, 4.0, Color.gray(0.0, 0.15))
 
       val nameText = new Text(player.name.toUpperCase)
-      nameText.font = Font.font("Arial", FontWeight.Bold, 16)
+      nameText.font = Font.font("Palatino", FontWeight.Bold, 16)
       nameText.fill = Color.Black
 
       val scoresGrid: GridPane = new GridPane():
@@ -93,7 +92,6 @@ case class ScoreCalculatorView(
         vgap = 12.0
         alignment = Pos.Center
 
-        // Affiancati i token Forest e Ground nella prima riga
         add(
           createTerrainBox(
             Seq(
@@ -142,15 +140,14 @@ case class ScoreCalculatorView(
           spacing = 8.0
           alignment = Pos.CenterLeft
           val animalText = new Text("Animali:")
-          animalText.font = Font.font("Arial", FontWeight.Normal, 13)
+          animalText.font = Font.font("Palatino", FontWeight.Normal, 13)
           val animalScore = new Text(details.getOrElse("Animal", 0).toString)
-          animalScore.font = Font.font("Arial", FontWeight.Bold, 14)
+          animalScore.font = Font.font("Palatino", FontWeight.Bold, 14)
           children.addAll(animalText, animalScore)
 
         GridPane.setColumnSpan(animalBox, 2)
         add(animalBox, 0, 5)
 
-      // Permette alla griglia di espandersi verticalmente quando la finestra è massimizzata
       VBox.setVgrow(scoresGrid, Priority.Always)
 
       val totalBox: VBox = new VBox():
@@ -167,11 +164,11 @@ case class ScoreCalculatorView(
         )
 
         val totalLabel = new Text("TOTALE")
-        totalLabel.font = Font.font("Arial", FontWeight.Normal, 11)
+        totalLabel.font = Font.font("Palatino", FontWeight.Normal, 11)
         totalLabel.fill = Color.Gray
 
         val totalScoreText = new Text(totalScore.toString)
-        totalScoreText.font = Font.font("Arial", FontWeight.Bold, 26)
+        totalScoreText.font = Font.font("Palatino", FontWeight.Bold, 26)
         totalScoreText.fill = Color.DarkGreen
 
         children.addAll(totalLabel, totalScoreText)
@@ -190,7 +187,7 @@ case class ScoreCalculatorView(
       }
 
       val scoreText = new Text(score)
-      scoreText.font = Font.font("Arial", FontWeight.Bold, 14)
+      scoreText.font = Font.font("Palatino", FontWeight.Bold, 14)
       scoreText.fill = Color.DarkSlateGray
 
       children.add(scoreText)
@@ -224,11 +221,11 @@ case class ScoreCalculatorView(
       )
 
       val nameText = new Text("---")
-      nameText.font = Font.font("Arial", FontWeight.Bold, 16)
+      nameText.font = Font.font("Palatino", FontWeight.Bold, 16)
       nameText.fill = Color.Gray
 
       val emptyText = new Text("Slot Libero")
-      emptyText.font = Font.font("Arial", 12)
+      emptyText.font = Font.font("Palatino", 12)
       emptyText.fill = Color.Gray
 
       children.addAll(nameText, emptyText)

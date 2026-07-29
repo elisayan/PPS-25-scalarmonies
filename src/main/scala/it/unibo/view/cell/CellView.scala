@@ -4,6 +4,7 @@ import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.token.TokenView
 import scalafx.Includes._
+import scalafx.scene.Cursor
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
@@ -42,7 +43,7 @@ case class CellView(
     relocate(pos._1, pos._2)
     label.text = s""
     label.fill = Color.Black
-    label.font = Font.font("Arial", 12)
+    label.font = Font.font("Palatino", 12)
     label.mouseTransparent = true
     placeTokenView()
 
@@ -87,5 +88,6 @@ case class CellView(
     tv.mouseTransparent = true
     tv
 
+  this.cursor = Cursor.Hand
   setHexagon()
   highlight(highlighted)

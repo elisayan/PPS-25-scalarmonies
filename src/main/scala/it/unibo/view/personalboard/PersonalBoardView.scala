@@ -69,3 +69,12 @@ case class PersonalBoardView(
     }
 
   cells.foreach(c => children.add(c))
+
+  private val maxPixelX =
+    pixelPositions.map(_._1).maxOption.getOrElse(200.0) + 40.0
+  private val maxPixelY =
+    pixelPositions.map(_._2).maxOption.getOrElse(200.0) + 45.0
+  this.prefWidth = maxPixelX
+  this.minWidth = maxPixelX
+  this.prefHeight = maxPixelY
+  this.minHeight = maxPixelY

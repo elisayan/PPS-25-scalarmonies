@@ -6,14 +6,18 @@ import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
 import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout._
 import scalafx.scene.paint.Color
+import scalafx.scene.text.Font
+import scalafx.scene.text.FontWeight
 
 class PlayerAreaView(
     boardView: PersonalBoardView,
     cards: List[Node],
     completedCards: List[Node],
     playerName: String,
+    isStartingPlayer: Boolean = false,
     maxCardSlots: Int = 4
 ) extends VBox:
 
@@ -21,8 +25,10 @@ class PlayerAreaView(
     if i < cards.size then cards(i)
     else
       new StackPane:
-        prefWidth = 90
-        prefHeight = 140
+        prefWidth = 110
+        prefHeight = 150
+        minWidth = 110
+        minHeight = 150
         style = "-fx-background-color: rgba(180,180,180,0.35); " +
           "-fx-border-color: rgba(130,130,130,0.4); " +
           "-fx-border-width: 1.5; " +
@@ -36,9 +42,14 @@ class PlayerAreaView(
 
   private val boardContainer = new HBox:
     alignment = Pos.Center
+    VBox.setVgrow(this, Priority.Always)
     children.add(boardView)
 
-  private val nameLabel = new Label(playerName):
+  private val nameLabel = new Label(
+    if isStartingPlayer then s"$playerName (1°)"
+    else playerName
+  ):
+    font = Font.font("Palatino", FontWeight.Bold, 15.0)
     style =
       "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"
     alignment = Pos.Center
@@ -48,8 +59,10 @@ class PlayerAreaView(
     completedCards.foreach(card => children.add(card))
 
   private val disabledEffect = new ColorAdjust:
-    brightness = -0.4
-    saturation = -0.6
+    brightness = -0.1
+    saturation = -0.2
+
+  private val activeGlow = new DropShadow(20.0, Color.LightGreen)
 
   prefWidth = 500
   padding = Insets(12)
@@ -62,9 +75,9 @@ class PlayerAreaView(
   )
 
   children.addAll(
+    nameLabel,
     cardsContainer,
     boardContainer,
-    nameLabel,
     completedCardsContainer
   )
 
@@ -72,5 +85,9 @@ class PlayerAreaView(
 
   def setDisabledArea(disabled: Boolean): Unit =
     this.disable = disabled
-    if disabled then this.effect = disabledEffect
-    else this.effect = null
+    if disabled then
+      this.effect = disabledEffect
+      this.opacity = 0.7
+    else
+      this.effect = activeGlow
+      this.opacity = 1.0

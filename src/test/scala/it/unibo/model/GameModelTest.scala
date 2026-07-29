@@ -252,7 +252,6 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     }
 
   it should "reject selecting an animal card if it has no completed habitats" in:
-    val model = GameModel(players) // Plancia vuota (senza montagna in (0,0))
     val modelWithDeck = GameModel(players, deck = List(testCard))
     val afterCard = modelWithDeck.takeAnimalCard(CardSlot)
     val cardTaken = afterCard.currentPlayer.activeCards.head

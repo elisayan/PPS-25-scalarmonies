@@ -7,7 +7,6 @@ import it.unibo.model.card.AnimalCard
 import it.unibo.model.personalboard.BoardSide
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.personalboard.PersonalBoard
-import it.unibo.model.scorecalculator.ScoreCalculator
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.GameView
 import it.unibo.view.homepage.HomeView
@@ -163,7 +162,6 @@ object GameController:
       stage.maximized = true
 
     override def onEndGame(players: List[Player]): Unit =
-      val calculator = ScoreCalculator()
-      val endGameView = ScoreCalculatorView(players, calculator)
+      val endGameView = ScoreCalculatorView(players)
       stage.scene.value.setRoot(endGameView)
       stage.maximized = true
