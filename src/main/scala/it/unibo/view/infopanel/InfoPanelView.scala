@@ -1,9 +1,9 @@
 package it.unibo.view.infopanel
 
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Label
 import scalafx.scene.control.ScrollPane
-import scalafx.scene.layout.VBox
+import scalafx.scene.layout.{Priority, VBox}
 import scalafx.scene.text.Font
 import scalafx.scene.text.FontWeight
 import scalafx.scene.text.Text
@@ -24,18 +24,31 @@ class InfoPanelView:
     "#d4ac0d"
   )
 
-  val root: ScrollPane = new ScrollPane:
+  private val scrollPane: ScrollPane = new ScrollPane:
     content = logBox
     fitToWidth = true
-    prefWidth = 300
-    prefHeight = 500
     hbarPolicy = ScrollPane.ScrollBarPolicy.Never
     vbarPolicy = ScrollPane.ScrollBarPolicy.AsNeeded
+    style = "-fx-background-color: transparent; -fx-background-insets: 0;"
+    VBox.setVgrow(this, Priority.Always)
 
+  private val headerLabel = new Label("Game Log:"):
+    font = Font.font("System", FontWeight.Bold, 12)
+    maxWidth = Double.MaxValue
+    alignment = Pos.Center
     style = """
-      -fx-background-color: transparent;
-      -fx-background-insets: 0;
+      -fx-background-color: #dcd3c1;
+      -fx-text-fill: #2c3e50;
+      -fx-padding: 8 10 8 10;
+      -fx-border-color: #c8bca6;
+      -fx-border-width: 0 0 1 0;
       """
+
+  val root: VBox = new VBox(0):
+    prefWidth = 300
+    prefHeight = 500
+    style = "-fx-background-color: #fcfbf7; -fx-border-color: #e2d8c5; -fx-border-width: 0 0 0 1;"
+    children = Seq(headerLabel, scrollPane)
 
   def addEntry(playerName: String, message: String, playerId: Int): Unit =
     val color = colors(playerId % colors.size)

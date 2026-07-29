@@ -122,9 +122,7 @@ class GameView(controller: GameController) extends GridPane:
     padding = Insets(1)
     alignment = Pos.CenterLeft
     background = new Background(
-      Array(
-        new BackgroundFill(Color.LightGrey, new CornerRadii(5), Insets.Empty)
-      )
+      Array(new BackgroundFill(Color.web("#e8e4d8"), new CornerRadii(8), Insets.Empty))
     )
 
   private val gameplayColumn: VBox = new VBox(12):
