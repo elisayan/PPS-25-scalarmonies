@@ -50,6 +50,37 @@ object PersonalBoard:
     else
       Some((board.heightBound, board.widthBound, board.totalCells, board.cells))
 
+  extension (board: PersonalBoard)
+
+    def coordsWithTerrain(token: TerrainToken): Set[Coordinate] =
+      board.cells.collect {
+        case (coord, cell) if cell.topToken.contains(token) => coord
+      }.toSet
+
+    def findConnectedGroups(coords: Set[Coordinate]): List[Set[Coordinate]] =
+      @scala.annotation.tailrec
+      def buildGroup(
+          group: Set[Coordinate],
+          remaining: Set[Coordinate]
+      ): (Set[Coordinate], Set[Coordinate]) =
+        val (connected, farAway) =
+          remaining.partition(c => c.allNeighbours.exists(group.contains))
+        if connected.isEmpty then (group, farAway)
+        else buildGroup(group ++ connected, farAway)
+
+      @scala.annotation.tailrec
+      def loop(
+          unprocessed: Set[Coordinate],
+          acc: List[Set[Coordinate]]
+      ): List[Set[Coordinate]] =
+        if unprocessed.isEmpty then acc
+        else
+          val (group, remaining) =
+            buildGroup(Set(unprocessed.head), unprocessed.tail)
+          loop(remaining, group :: acc)
+
+      loop(coords, Nil)
+
   private case class PersonalBoardImpl(
       override val heightBound: Int,
       override val widthBound: Int,

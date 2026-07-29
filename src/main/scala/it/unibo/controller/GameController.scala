@@ -163,7 +163,6 @@ object GameController:
       stage.maximized = true
 
     override def onEndGame(players: List[Player]): Unit =
-      val calculator = ScoreCalculator()
-      val endGameView = ScoreCalculatorView(players, calculator)
+      val endGameView = ScoreCalculatorView(players)
       stage.scene.value.setRoot(endGameView)
       stage.maximized = true

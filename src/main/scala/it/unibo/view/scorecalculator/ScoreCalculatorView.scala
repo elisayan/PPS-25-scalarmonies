@@ -26,7 +26,6 @@ import scalafx.scene.text.Text
 
 case class ScoreCalculatorView(
     playerBoards: List[Player],
-    calculator: ScoreCalculator,
     pos: (Double, Double) = (0.0, 0.0)
 ) extends HBox:
 
@@ -54,7 +53,7 @@ case class ScoreCalculatorView(
       else children.add(createEmptyLane())
 
   private def createActiveLane(player: Player, board: PersonalBoard): VBox =
-    val (totalScore, details) = calculator.calculateDetailedScore(
+    val (totalScore, details) = ScoreCalculator.calculateDetailedScore(
       board,
       player.activeCards ::: player.completedCards
     )
@@ -93,7 +92,6 @@ case class ScoreCalculatorView(
         vgap = 12.0
         alignment = Pos.Center
 
-        // Affiancati i token Forest e Ground nella prima riga
         add(
           createTerrainBox(
             Seq(
@@ -150,7 +148,6 @@ case class ScoreCalculatorView(
         GridPane.setColumnSpan(animalBox, 2)
         add(animalBox, 0, 5)
 
-      // Permette alla griglia di espandersi verticalmente quando la finestra è massimizzata
       VBox.setVgrow(scoresGrid, Priority.Always)
 
       val totalBox: VBox = new VBox():
