@@ -5,10 +5,12 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
-import scalafx.scene.effect.{ColorAdjust, DropShadow}
-import scalafx.scene.layout.*
+import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.layout._
 import scalafx.scene.paint.Color
-import scalafx.scene.text.{Font, FontWeight}
+import scalafx.scene.text.Font
+import scalafx.scene.text.FontWeight
 
 class PlayerAreaView(
     boardView: PersonalBoardView,
@@ -87,5 +89,5 @@ class PlayerAreaView(
       this.effect = disabledEffect
       this.opacity = 0.7
     else
-        this.effect = activeGlow
-        this.opacity = 1.0
+      this.effect = activeGlow
+      this.opacity = 1.0

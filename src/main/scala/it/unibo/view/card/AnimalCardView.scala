@@ -7,11 +7,12 @@ import it.unibo.model.token.TerrainToken
 import it.unibo.view.utils.ImageCache
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
-import scalafx.scene.{Cursor, Node}
+import scalafx.scene.Cursor
+import scalafx.scene.Node
 import scalafx.scene.control.Label
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.*
+import scalafx.scene.layout._
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
@@ -107,7 +108,8 @@ private object CardComponents:
                 s"-fx-background-color: $bg; -fx-border-color: #2c3e50; -fx-border-style: $bStyle;"
             ,
             new Label(pts.toString):
-              style = s"-fx-font-weight: bold; -fx-font-size: ${fontSize}; -fx-text-fill: #333333;"
+              style =
+                s"-fx-font-weight: bold; -fx-font-size: $fontSize; -fx-text-fill: #333333;"
           )
 
   def habitatBox(
@@ -121,7 +123,7 @@ private object CardComponents:
       svg: String
   ): Node =
     new Pane:
-      prefWidth = w; prefHeight = h;
+      prefWidth = w; prefHeight = h
       style = "-fx-background-color: transparent;"
       children = hab.requirements
         .sortBy(r => HexMath.y(r.offset, dY))
@@ -135,21 +137,21 @@ private object CardComponents:
               req.offset,
               dY
             ) - (hexH / 2.0)
-            val tokens = (0 until req.height).map: i =>
+            val tokens: IndexedSeq[Region] = (0 until req.height).map: i =>
               val scale = 1.0 - (i * CardTheme.ConScale)
               val col =
                 if req.terrain == TerrainToken.Forest && i < req.height - 1 then
                   "#8b5a2b"
                 else CardTheme.tokenColor(req.terrain)
               new Region:
-                prefWidth = hexW * scale; prefHeight = hexH * scale;
-                maxWidth = hexW * scale; maxHeight = hexH * scale;
+                prefWidth = hexW * scale; prefHeight = hexH * scale
+                maxWidth = hexW * scale; maxHeight = hexH * scale
                 style =
                   s"-fx-background-color: $col; -fx-shape: \"$svg\"; -fx-border-color: #2c3e50;"
-            val animal = if req.offset == Coordinate(0, 0) then
+            val animal: Seq[Region] = if req.offset == Coordinate(0, 0) then
               val cS = hexW * 0.35
               Seq(new Region:
-                prefWidth = cS; prefHeight = cS; maxWidth = cS; maxHeight = cS;
+                prefWidth = cS; prefHeight = cS; maxWidth = cS; maxHeight = cS
                 style =
                   "-fx-background-color: #e6b981; -fx-border-color: #5e3a18; -fx-border-width: 2px;"
               )
@@ -179,11 +181,11 @@ object AnimalCardView:
     new HBox:
       padding = Insets(pad)
       spacing = spaceW
-      minWidth = cardWidth;
-      prefWidth = cardWidth;
+      minWidth = cardWidth
+      prefWidth = cardWidth
       maxWidth = cardWidth
-      minHeight = cardHeight;
-      prefHeight = cardHeight;
+      minHeight = cardHeight
+      prefHeight = cardHeight
       maxHeight = cardHeight
       style =
         s"-fx-background-color: ${CardTheme.extractCardBg(card.habitat)}; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 8;" +

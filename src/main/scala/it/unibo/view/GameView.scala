@@ -11,7 +11,8 @@ import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
 import scalafx.animation.PauseTransition
-import scalafx.geometry.{Insets, Pos, VPos}
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.control.ScrollPane
 import scalafx.scene.effect.DropShadow
@@ -122,7 +123,13 @@ class GameView(controller: GameController) extends GridPane:
     padding = Insets(1)
     alignment = Pos.CenterLeft
     background = new Background(
-      Array(new BackgroundFill(Color.web("#e8e4d8"), new CornerRadii(8), Insets.Empty))
+      Array(
+        new BackgroundFill(
+          Color.web("#e8e4d8"),
+          new CornerRadii(8),
+          Insets.Empty
+        )
+      )
     )
 
   private val gameplayColumn: VBox = new VBox(12):

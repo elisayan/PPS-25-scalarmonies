@@ -1,9 +1,11 @@
 package it.unibo.view.infopanel
 
-import scalafx.geometry.{Insets, Pos}
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
 import scalafx.scene.control.Label
 import scalafx.scene.control.ScrollPane
-import scalafx.scene.layout.{Priority, VBox}
+import scalafx.scene.layout.Priority
+import scalafx.scene.layout.VBox
 import scalafx.scene.text.Font
 import scalafx.scene.text.FontWeight
 import scalafx.scene.text.Text
@@ -47,7 +49,8 @@ class InfoPanelView:
   val root: VBox = new VBox(0):
     prefWidth = 300
     prefHeight = 500
-    style = "-fx-background-color: #fcfbf7; -fx-border-color: #e2d8c5; -fx-border-width: 0 0 0 1;"
+    style =
+      "-fx-background-color: #fcfbf7; -fx-border-color: #e2d8c5; -fx-border-width: 0 0 0 1;"
     children = Seq(headerLabel, scrollPane)
 
   def addEntry(playerName: String, message: String, playerId: Int): Unit =
