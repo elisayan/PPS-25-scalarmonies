@@ -15,25 +15,88 @@ import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
 
+/** Defines the controller responsible for handling user interactions. */
 trait GameController:
+
+  /** @return the current game model. */
   def currentModel: GameModel
+
+  /** @return the identifier of the current player. */
   def currentPlayerId: Int
+
+  /** @return the current turn state. */
   def currentTurnState: TurnState
+
+  /** Handles the selection of a terrain token slot.
+    * @param slot
+    *   the selected slot.
+    */
   def onTakeTokens(slot: Int): Unit
+
+  /** Handles the selection of a terrain token.
+    * @param token
+    *   the selected terrain token.
+    */
   def onSelectToken(token: TerrainToken): Unit
+
+  /** Handles the placement of the selected terrain token.
+    * @param coordinate
+    *   the target coordinate.
+    */
   def onPlaceToken(coordinate: Coordinate): Unit
+
+  /** Handles the end of the current turn. */
   def onEndTurn(): Unit
+
+  /** Handles the selection of an animal card.
+    * @param slot
+    *   the selected slot.
+    */
   def onTakeAnimalCard(slot: Int): Unit
+
+  /** Handles the selection of an active animal card.
+    * @param card
+    *   the selected animal card.
+    */
   def onSelectActiveCard(card: AnimalCard): Unit
+
+  /** Handles a click on a board cell.
+    * @param coordinate
+    *   the selected coordinate.
+    */
   def onCellClicked(coordinate: Coordinate): Unit
+
+  /** Handles the cancellation of the current turn. */
   def onCancelTurn(): Unit
+
+  /** Starts the application. */
   def start(): Unit
+
+  /** Starts a new game.
+    * @param names
+    *   the player names.
+    * @param side
+    *   the selected board side.
+    */
   def onStartGame(names: List[String], side: BoardSide): Unit
+
+  /** Handles the end of the game.
+    * @param players
+    *   the players with their final game state.
+    */
   def onEndGame(players: List[Player]): Unit
 
 object GameController:
 
-  def apply(model: GameModel, stage: JFXApp3.PrimaryStage): GameController =
+  /** Creates a new game controller.
+    * @param model
+    *   the initial game model.
+    * @param stage
+    *   the application's primary stage.
+    * @return
+    *   a new game controller.
+    */
+  def apply(model: GameModel, stage: PrimaryStage): GameController =
     GameControllerImpl(model, stage)
 
   private class GameControllerImpl(

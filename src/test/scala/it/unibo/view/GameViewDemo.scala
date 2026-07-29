@@ -8,7 +8,6 @@ import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
-import it.unibo.model.token.TerrainToken.{Building, Field, Water}
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 
@@ -17,7 +16,6 @@ object GameViewDemo extends JFXApp3:
   override def start(): Unit =
     stage = new JFXApp3.PrimaryStage:
       title = "Harmonies Game"
-      fullScreen = true
 
       val forestHabitat = Habitat(
         List(
@@ -37,35 +35,29 @@ object GameViewDemo extends JFXApp3:
           "Orso",
           forestHabitat,
           List(4, 7, 12, 16),
-          imageId = "default.png"
         ),
         AnimalCard(
           "Lontra",
           waterHabitat,
           List(3, 6, 10, 15),
-          imageId = "default.png"
         ),
         AnimalCard(
           "Cervo",
           forestHabitat,
           List(3, 7, 11, 16),
-          imageId = "default.png"
         ),
         AnimalCard(
           "Volpe",
           forestHabitat,
           List(5, 8, 12, 18),
-          imageId = "default.png"
         ),
         AnimalCard(
           "Gufo",
           waterHabitat,
           List(4, 9, 14, 20),
-          imageId = "default.png"
         )
       )
 
-      // 2. GIOCATORI
       val player1 = Player(
         id = 1,
         name = "Player 1",

@@ -2,7 +2,7 @@ package it.unibo.view.card
 
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
-import scalafx.scene.layout.{StackPane, HBox}
+import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color
 import scalafx.geometry.{Insets, Pos}
 
@@ -25,8 +25,6 @@ object AnimalCardViewDemo extends JFXApp3:
       habitat = mockHabitat,
       points = List(4, 7, 12, 16, 22)
     )
-    def fakeFun(slot: Int): Unit =
-      println("ciao")
     val cardWithOneCube = emptyCard.placeCube.getOrElse(emptyCard)
     val emptyCardNode = AnimalCardView(emptyCard)
     val updatedCardNode = AnimalCardView(cardWithOneCube)

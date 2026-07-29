@@ -10,30 +10,128 @@ import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator
 
+/** Defines the game model and its public operations. */
 trait GameModel:
+
+  /** @return the player who starts the game. */
   def startingPlayer: Player
+
+  /** @return the player whose turn is currently active. */
   def currentPlayer: Player
+
+  /** @return the current turn state. */
   def turnState: TurnState
+
+  /** @return the terrain tokens currently in the player's hand. */
   def tokensInHand: List[TerrainToken]
+
+  /** @return the number of tokens remaining in the pouch. */
   def pouchSize: Int
+
+  /** @return true if the game has ended. */
   def isGameOver: Boolean
+
+  /** Draws a set of terrain tokens from the selected slot.
+    * @param slot
+    *   the selected slot.
+    * @return
+    *   the updated game model.
+    */
   def takeTokens(slot: Int): GameModel
+
+  /** @return the currently selected terrain token, if any. */
   def selectedToken: Option[TerrainToken]
+
+  /** Selects a terrain token.
+    * @param token
+    *   the token to select.
+    * @return
+    *   the updated game model.
+    */
   def selectToken(token: TerrainToken): GameModel
+
+  /** Takes an animal card from the selected slot.
+    * @param slot
+    *   the selected slot.
+    * @return
+    *   the updated game model.
+    */
   def takeAnimalCard(slot: Int): GameModel
+
+  /** Places the selected terrain token.
+    * @param coordinate
+    *   the target coordinate.
+    * @return
+    *   the updated game model.
+    */
   def placeToken(coordinate: Coordinate): GameModel
+
+  /** Ends the current player's turn.
+    * @return
+    *   the updated game model.
+    */
   def endTurn(): GameModel
+
+  /** Returns the valid positions for placing a terrain token.
+    * @param token
+    *   the selected terrain token.
+    * @return
+    *   the list of valid coordinates.
+    */
   def highlightedCells(token: TerrainToken): List[Coordinate]
+
+  /** @return the currently selected animal card, if any. */
   def selectedAnimalCard: Option[AnimalCard]
+
+  /** Selects an animal card.
+    * @param card
+    *   the card to select.
+    * @return
+    *   the updated game model.
+    */
   def selectAnimalCard(card: AnimalCard): GameModel
+
+  /** Returns the valid positions for placing an animal cube.
+    * @param card
+    *   the selected animal card.
+    * @return
+    *   the list of valid coordinates.
+    */
   def highlightedAnimalCells(card: AnimalCard): List[Coordinate]
+
+  /** Places an animal cube.
+    * @param coordinate
+    *   the target coordinate.
+    * @return
+    *   the updated game model.
+    */
   def placeAnimalCube(coordinate: Coordinate): GameModel
+
+  /** Cancels the current turn.
+    * @return
+    *   the restored game model.
+    */
   def cancelTurn(): GameModel
+
+  /** @return all players in the game. */
   def getPlayers: List[Player]
+
+  /** @return the central board. */
   def centralBoard: CentralBoard
+
+  /** @return a message describing the available actions. */
   def availableActionsMessage: String
 
 object GameModel:
+
+  /** Creates a game model with the given players.
+    * @param players
+    *   the players participating in the game.
+    * @param deck
+    *   the initial animal deck.
+    * @return
+    *   a new game model.
+    */
   def apply(
       players: List[Player],
       deck: List[AnimalCard] = AnimalDeckFactory.createShuffledDeck()
@@ -50,6 +148,14 @@ object GameModel:
       turnState = TurnState.WaitingForAction
     )
 
+  /** Creates a game model for testing purposes.
+    * @param players
+    *   the players participating in the game.
+    * @param forceEmptyPouch
+    *   whether to start with an empty pouch.
+    * @return
+    *   a new game model.
+    */
   def apply(players: List[Player], forceEmptyPouch: Boolean): GameModel =
     val pouch = if forceEmptyPouch then Pouch(List()) else Pouch.initialPouch()
     val (board, updatedPouch, updatedDeck) =
