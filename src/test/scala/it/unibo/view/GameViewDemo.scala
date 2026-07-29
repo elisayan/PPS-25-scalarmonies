@@ -16,7 +16,6 @@ object GameViewDemo extends JFXApp3:
   override def start(): Unit =
     stage = new JFXApp3.PrimaryStage:
       title = "Harmonies Game"
-      fullScreen = true
 
       val forestHabitat = Habitat(
         List(
