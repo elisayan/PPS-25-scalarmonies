@@ -13,6 +13,7 @@ import it.unibo.view.token.TokenView
 import scalafx.animation.PauseTransition
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
+import scalafx.scene.Cursor
 import scalafx.scene.control.Button
 import scalafx.scene.control.ScrollPane
 import scalafx.scene.effect.DropShadow
@@ -47,6 +48,7 @@ class GameView(controller: GameController) extends GridPane:
     font = Font.font("Palatino", FontWeight.Bold, 14.0)
     padding = Insets(3, 8, 3, 8)
     minWidth = 80
+    cursor = Cursor.Hand
     textFill = Color.White
     background = new Background(
       Array(new BackgroundFill(Color.Red, new CornerRadii(5), Insets.Empty))
@@ -68,6 +70,7 @@ class GameView(controller: GameController) extends GridPane:
     font = Font.font("Palatino", FontWeight.Bold, 14.0)
     padding = Insets(3, 8, 3, 8)
     minWidth = 80
+    cursor = Cursor.Hand
     textFill = Color.White
     background = new Background(
       Array(new BackgroundFill(Color.Green, new CornerRadii(5), Insets.Empty))

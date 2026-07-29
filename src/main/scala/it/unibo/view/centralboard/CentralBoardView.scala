@@ -5,6 +5,7 @@ import it.unibo.view.card.AnimalCardView
 import it.unibo.view.token.TokenView
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
+import scalafx.scene.Cursor
 import scalafx.scene.control.Label
 import scalafx.scene.image.Image
 import scalafx.scene.image.ImageView
@@ -81,6 +82,7 @@ case class CentralBoardView(
         maxHeight = 40
         pickOnBounds = true
         onMouseClicked = _ => onTokenClicked(slot)
+        cursor = Cursor.Hand
 
       tokens.zipWithIndex.foreach:
         case (token, index) =>
