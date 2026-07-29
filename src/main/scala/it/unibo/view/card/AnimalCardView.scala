@@ -7,7 +7,7 @@ import it.unibo.model.token.TerrainToken
 import it.unibo.view.utils.ImageCache
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
-import scalafx.scene.Node
+import scalafx.scene.{Cursor, Node}
 import scalafx.scene.control.Label
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.ImageView
@@ -188,6 +188,7 @@ object AnimalCardView:
       style =
         s"-fx-background-color: ${CardTheme.extractCardBg(card.habitat)}; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 8;" +
           "-fx-background-radius: 8;"
+      this.cursor = Cursor.Hand
       prefWidth = cardWidth; prefHeight = cardHeight
       effect = new DropShadow(5.0, 2.0, 2.0, Color.color(0, 0, 0, 0.3))
       children = Seq(

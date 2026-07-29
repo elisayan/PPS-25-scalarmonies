@@ -2,6 +2,7 @@ package it.unibo.view.token
 
 import it.unibo.model.token.TerrainToken
 import it.unibo.view.utils.ImageCache
+import scalafx.scene.Cursor
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.StackPane
@@ -21,4 +22,5 @@ case class TokenView(token: TerrainToken, onSelect: TerrainToken => Unit)
   tokenImage.effect = new DropShadow(3.0, 1.0, 1.0, Color.color(0, 0, 0, 0.4))
   children.add(tokenImage)
 
+  this.cursor = Cursor.Hand
   onMouseClicked = _ => onSelect(token)
