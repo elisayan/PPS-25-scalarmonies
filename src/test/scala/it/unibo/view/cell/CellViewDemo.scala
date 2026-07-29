@@ -5,10 +5,9 @@ import it.unibo.model.GameModel
 import it.unibo.model.cell.Cell
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.token.TerrainToken.*
-import it.unibo.view.token.TokenView
 import scalafx.scene.Scene
 import scalafx.application.JFXApp3
-import scalafx.scene.layout.{Pane, StackPane}
+import scalafx.scene.layout.StackPane
 
 object CellViewDemo extends JFXApp3:
 
