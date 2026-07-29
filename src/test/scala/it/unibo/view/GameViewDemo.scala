@@ -34,27 +34,27 @@ object GameViewDemo extends JFXApp3:
         AnimalCard(
           "Orso",
           forestHabitat,
-          List(4, 7, 12, 16),
+          List(4, 7, 12, 16)
         ),
         AnimalCard(
           "Lontra",
           waterHabitat,
-          List(3, 6, 10, 15),
+          List(3, 6, 10, 15)
         ),
         AnimalCard(
           "Cervo",
           forestHabitat,
-          List(3, 7, 11, 16),
+          List(3, 7, 11, 16)
         ),
         AnimalCard(
           "Volpe",
           forestHabitat,
-          List(5, 8, 12, 18),
+          List(5, 8, 12, 18)
         ),
         AnimalCard(
           "Gufo",
           waterHabitat,
-          List(4, 9, 14, 20),
+          List(4, 9, 14, 20)
         )
       )
 
