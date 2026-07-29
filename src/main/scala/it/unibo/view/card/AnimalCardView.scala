@@ -9,21 +9,23 @@ import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Node
 import scalafx.scene.control.Label
+import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout._
+import scalafx.scene.layout.*
+import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 
 private object CardTheme:
   val PadRatio = 0.055
   val RightW = 0.25
   val SpacingW = 0.05
-  val ImgH = 0.64
-  val HabH = 0.32
+  val ImgH = 0.52
+  val HabH = 0.38
   val CubeSize = 0.10
   val DeltaX = 0.23
   val ConScale = 0.22
   val HabOffsetX = 0.05
-  val HabOffsetY = -0.03
+  val HabOffsetY = 0.04
 
   def tokenColor(t: TerrainToken): String = t match
     case TerrainToken.Water    => "#aaddff"
@@ -81,15 +83,15 @@ private object CardComponents:
       baseCubeS: Double
   ): Node =
     val count = card.points.length
-    val (cubeS, vSpacing, inSpacing) =
-      if count > 4 then (baseCubeS * 0.85, 4.0, 4.0)
-      else (baseCubeS, 8.0, 10.0)
+    val (cubeS, vSpacing, inSpacing, fontSize) =
+      if count > 4 then (baseCubeS * 0.65, 1.0, 1.0, 9)
+      else (baseCubeS * 0.75, 2.0, 2.0, 10)
     new VBox:
       prefWidth = w
       prefHeight = h
       alignment = Pos.TopCenter
       spacing = vSpacing
-      padding = Insets(10, 0, 0, 0)
+      padding = Insets(4, 0, 0, 0)
       children = card.points.zipWithIndex.reverse.map: (pts, idx) =>
         val isPlaced = idx < card.placedCubes
         val bg = if isPlaced then "rgba(0,0,0,0.12)" else "#a52a2a"
@@ -105,7 +107,7 @@ private object CardComponents:
                 s"-fx-background-color: $bg; -fx-border-color: #2c3e50; -fx-border-style: $bStyle;"
             ,
             new Label(pts.toString):
-              style = "-fx-font-weight: bold; -fx-text-fill: #333333;"
+              style = s"-fx-font-weight: bold; -fx-font-size: ${fontSize}; -fx-text-fill: #333333;"
           )
 
   def habitatBox(
@@ -157,8 +159,8 @@ private object CardComponents:
 object AnimalCardView:
   def apply(
       card: AnimalCard,
-      cardWidth: Double = 120.0,
-      cardHeight: Double = 160.0
+      cardWidth: Double = 110.0,
+      cardHeight: Double = 150.0
   ): Node =
     val pad = cardWidth * CardTheme.PadRatio
     val usableW = cardWidth - (pad * 2)
@@ -177,9 +179,17 @@ object AnimalCardView:
     new HBox:
       padding = Insets(pad)
       spacing = spaceW
+      minWidth = cardWidth;
+      prefWidth = cardWidth;
+      maxWidth = cardWidth
+      minHeight = cardHeight;
+      prefHeight = cardHeight;
+      maxHeight = cardHeight
       style =
-        s"-fx-background-color: ${CardTheme.extractCardBg(card.habitat)}; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 8;"
+        s"-fx-background-color: ${CardTheme.extractCardBg(card.habitat)}; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 8;" +
+          "-fx-background-radius: 8;"
       prefWidth = cardWidth; prefHeight = cardHeight
+      effect = new DropShadow(5.0, 2.0, 2.0, Color.color(0, 0, 0, 0.3))
       children = Seq(
         new VBox:
           prefWidth = leftW

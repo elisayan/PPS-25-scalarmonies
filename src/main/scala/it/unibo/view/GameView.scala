@@ -11,8 +11,7 @@ import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
 import scalafx.animation.PauseTransition
-import scalafx.geometry.Insets
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos, VPos}
 import scalafx.scene.control.Button
 import scalafx.scene.control.ScrollPane
 import scalafx.scene.effect.DropShadow
@@ -37,7 +36,7 @@ class GameView(controller: GameController) extends GridPane:
   private var errorTimer: Option[PauseTransition] = None
 
   private val systemMessageBar: HBox = new HBox():
-    alignment = Pos.Center
+    alignment = Pos.CenterLeft
     padding = Insets(5)
     background = new Background(
       Array(new BackgroundFill(Color.Beige, new CornerRadii(5), Insets.Empty))
@@ -86,13 +85,21 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private val topBarContainer: HBox = new HBox(10):
-    alignment = Pos.Center
+    alignment = Pos.CenterLeft
+    minHeight = 45.0
+    prefHeight = 45.0
+    maxHeight = 45.0
+    padding = Insets(5, 15, 5, 15)
     HBox.setHgrow(systemMessageBar, Priority.Always)
     children = Seq(systemMessageBar, cancelTurnButton, endTurnButton)
 
   private val commonMarketBar: HBox = new HBox():
     alignment = Pos.Center
+    minHeight = 180.0
+    prefHeight = 180.0
+    maxHeight = 180.0
     padding = Insets(10)
+    pickOnBounds = false
     background = new Background(
       Array(new BackgroundFill(Color.Wheat, new CornerRadii(5), Insets.Empty))
     )
@@ -100,11 +107,12 @@ class GameView(controller: GameController) extends GridPane:
   private val playersContainer: FlowPane = new FlowPane():
     hgap = 30.0
     vgap = 30.0
-    padding = Insets(1)
+    padding = Insets(15, 15, 5, 15)
 
   private val playersScrollPane: ScrollPane = new ScrollPane():
     fitToWidth = true
     fitToHeight = true
+    minHeight = 0.0
     hbarPolicy = ScrollPane.ScrollBarPolicy.Never
     vbarPolicy = ScrollPane.ScrollBarPolicy.AsNeeded
     content = playersContainer
@@ -118,6 +126,10 @@ class GameView(controller: GameController) extends GridPane:
         new BackgroundFill(Color.LightGrey, new CornerRadii(5), Insets.Empty)
       )
     )
+
+  private val gameplayColumn: VBox = new VBox(12):
+    children = Seq(topBarContainer, commonMarketBar, playersScrollPane)
+    VBox.setVgrow(playersScrollPane, Priority.Always)
 
   private val infoPanelView = new InfoPanelView()
 
@@ -208,7 +220,7 @@ class GameView(controller: GameController) extends GridPane:
     )
 
   private def initLayout(): Unit =
-    padding = Insets(10)
+    padding = Insets(5, 10, 10, 10)
     hgap = 5.0
     vgap = 5.0
 
@@ -220,22 +232,11 @@ class GameView(controller: GameController) extends GridPane:
       percentWidth = 13.0
     columnConstraints.addAll(colGameplay, colTokenHand, colInfoPanel)
 
-    val rowSystemMessage = new RowConstraints():
-      percentHeight = 5.0
-    val rowCommonMarket = new RowConstraints():
-      percentHeight = 31.0
-    val rowPlayersZone = new RowConstraints():
-      percentHeight = 64.0
-    rowConstraints.addAll(rowSystemMessage, rowCommonMarket, rowPlayersZone)
-
-    add(topBarContainer, 0, 0)
-    add(commonMarketBar, 0, 1)
-    add(playersScrollPane, 0, 2)
-
-    GridPane.setRowSpan(personalTokenSidebar, 3)
+    val mainRow = new RowConstraints():
+      vgrow = Priority.Always
+    rowConstraints.add(mainRow)
+    add(gameplayColumn, 0, 0)
     add(personalTokenSidebar, 1, 0)
-
-    GridPane.setRowSpan(infoPanelView.root, 3)
     add(infoPanelView.root, 2, 0)
 
   def updateState(model: GameModel): Unit =

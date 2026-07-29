@@ -53,6 +53,7 @@ class InfoPanelView:
       )
       style = "-fx-fill:#222222;"
 
+    val bgColor = if logBox.children.size % 2 == 0 then "#ffffff" else "#f9f9f9"
     val eventBox = new TextFlow:
       padding = Insets(6, 10, 6, 10)
       children.addAll(
@@ -60,12 +61,11 @@ class InfoPanelView:
         messageText
       )
 
-      style = """
-        -fx-background-color:white;
-        -fx-background-radius:2;
-        -fx-border-radius:2;
-        -fx-border-color:#e2d8c5;
-        -fx-border-width:1;
+      style = s"""
+        -fx-background-color: $bgColor;
+        -fx-background-radius: 5;
+        -fx-border-color: #e2d8c5;
+        -fx-border-width: 0 0 1 0;
         """
 
       maxWidth = 280
