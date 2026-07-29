@@ -10,11 +10,11 @@ enum TerrainToken:
 
 object TerrainToken:
   /** Returns the color associated with a terrain token.
-   * @param token
-   *  the terrain token.
-   * @return
-   *  the corresponding [[TokenColor]].
-   */
+    * @param token
+    *   the terrain token.
+    * @return
+    *   the corresponding [[TokenColor]].
+    */
   def colorOf(token: TerrainToken): TokenColor = token match
     case TerrainToken.Water    => TokenColor.Blue
     case TerrainToken.Mountain => TokenColor.Grey

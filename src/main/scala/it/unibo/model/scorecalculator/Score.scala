@@ -1,6 +1,7 @@
 package it.unibo.model.scorecalculator
 
-/** Represents the game scoring domain, modeling non-negative victory points accumulated by a player.
+/** Represents the game scoring domain, modeling non-negative victory points
+  * accumulated by a player.
   */
 object Score:
 
