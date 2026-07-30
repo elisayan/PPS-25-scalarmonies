@@ -11,13 +11,14 @@ import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
 import it.unibo.view.utils.ImageCache
-import scalafx.Includes.jfxDialogPane2sfx
 import scalafx.animation.PauseTransition
 import scalafx.geometry.GeometryIncludes.jfxBounds2sfx
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Cursor
-import scalafx.scene.control.{Alert, Button, ScrollPane, Tooltip}
+import scalafx.scene.control.Button
+import scalafx.scene.control.ScrollPane
+import scalafx.scene.control.Tooltip
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.Background
@@ -137,9 +138,8 @@ class GameView(controller: GameController) extends GridPane:
       showDelay = Duration(100.0)
       hideDelay = Duration(100.0)
       showDuration = Duration.Indefinite
-      style =
-        "-fx-background-color: transparent; -fx-padding: 0; " +
-          "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 8, 0, 0, 3);"
+      style = "-fx-background-color: transparent; -fx-padding: 0; " +
+        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 8, 0, 0, 3);"
 
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.CenterLeft
@@ -148,7 +148,8 @@ class GameView(controller: GameController) extends GridPane:
     maxHeight = 45.0
     padding = Insets(5, 15, 5, 15)
     HBox.setHgrow(systemMessageBar, Priority.Always)
-    children = Seq(systemMessageBar, cancelTurnButton, endTurnButton, rulesButton)
+    children =
+      Seq(systemMessageBar, cancelTurnButton, endTurnButton, rulesButton)
 
   private val commonMarketBar: HBox = new HBox():
     alignment = Pos.Center
