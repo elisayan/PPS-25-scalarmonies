@@ -82,7 +82,7 @@ case class ScoreCalculatorView(
 
     val completedCards = player.completedCards ::: player.activeCards
     val cardScores: List[Int] =
-      completedCards.map(c => c.computeScore(board).toInt)
+      completedCards.map(c => c.computeScore(Some(board)).toInt)
     val totalAnimalsPts = cardScores.sum
 
     new VBox():

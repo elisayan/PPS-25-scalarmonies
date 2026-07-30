@@ -14,4 +14,4 @@ trait Scorable:
     * @return
     *   the calculated Score
     */
-  def computeScore(board: PersonalBoard): Score
+  def computeScore(board: Option[PersonalBoard] = None): Score
