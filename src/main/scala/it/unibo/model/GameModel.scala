@@ -115,7 +115,7 @@ trait GameModel:
   def cancelTurn(): GameModel
 
   /** @return all players in the game. */
-  def getPlayers: List[Player]
+  def allPlayers: List[Player]
 
   /** @return the central board. */
   def centralBoard: CentralBoard
@@ -384,7 +384,7 @@ object GameModel:
         case Some(snapshot) => snapshot.copy(turnSnapshot = None)
         case None           => this
 
-    override def getPlayers: List[Player] =
+    override def allPlayers: List[Player] =
       players
 
     override def availableActionsMessage: String =

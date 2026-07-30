@@ -169,7 +169,7 @@ class GameView(controller: GameController) extends GridPane:
       )
     else
       val player =
-        controller.currentModel.getPlayers.find(p => message.startsWith(p.name))
+        controller.currentModel.allPlayers.find(p => message.startsWith(p.name))
       player.foreach { p =>
         val text = message.stripPrefix(p.name).trim
         infoPanelView.addEntry(
@@ -259,7 +259,7 @@ class GameView(controller: GameController) extends GridPane:
       else if playableCards.size == 1 then
         model.highlightedAnimalCells(playableCards.head)
       else List()
-    val areas = model.getPlayers.map(p =>
+    val areas = model.allPlayers.map(p =>
       val playerHighlightedCells =
         if p == model.currentPlayer then highlighted
         else List()
