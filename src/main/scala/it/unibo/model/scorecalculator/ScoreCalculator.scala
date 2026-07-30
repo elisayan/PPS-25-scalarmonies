@@ -53,7 +53,9 @@ object ScoreCalculator:
     }
 
     val animalScore =
-      cards.foldLeft(Score.zero)((acc, card) => acc + card.computeScore(Some(board)))
+      cards.foldLeft(Score.zero)((acc, card) =>
+        acc + card.computeScore(Some(board))
+      )
 
     val detailedMap = terrainMap + ("Animal Cards" -> animalScore)
     val totalScore = detailedMap.values.reduce(_ + _)
