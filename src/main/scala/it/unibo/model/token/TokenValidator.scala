@@ -9,9 +9,11 @@ import it.unibo.model.token.TerrainToken._
 object TokenValidator:
 
   private val MaxStackHeight = 3
-  private val findCoordinates = (board: PersonalBoard, predicate: Cell => Boolean) => board.cells.collect {
-    case (coordinate, cell) if predicate(cell) => coordinate
-  }.toList
+  private val findCoordinates =
+    (board: PersonalBoard, predicate: Cell => Boolean) =>
+      board.cells.collect {
+        case (coordinate, cell) if predicate(cell) => coordinate
+      }.toList
 
   /** Checks whether a terrain token can be placed on a cell.
     * @param token
