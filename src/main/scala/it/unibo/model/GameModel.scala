@@ -261,8 +261,12 @@ object GameModel:
       if !highlightedCells(token).contains(coordinate) then
         throw IllegalStateException("Piazzamento token invalido")
 
-      val updatedBoard = currentPlayer.board.placeToken(token, coordinate)
-      val updatedPlayer = currentPlayer.copy(board = updatedBoard.get)
+      val updatedBoard = currentPlayer.board
+        .placeToken(token, coordinate)
+        .getOrElse(
+          throw IllegalStateException("Piazzamento token invalido")
+        )
+      val updatedPlayer = currentPlayer.copy(board = updatedBoard)
       val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
       val index = tokensInHand.indexOf(token)
 
