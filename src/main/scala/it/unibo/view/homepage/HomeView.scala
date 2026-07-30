@@ -1,26 +1,29 @@
 package it.unibo.view.homepage
 
 import it.unibo.model.personalboard.BoardSide
-import scalafx.geometry.{Insets, Pos}
+import scalafx.geometry.Insets
+import scalafx.geometry.Pos
 import scalafx.scene.Parent
-import scalafx.scene.control.*
-import scalafx.scene.layout.*
+import scalafx.scene.control._
+import scalafx.scene.layout._
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
-import scalafx.scene.text.{Font, FontWeight}
+import scalafx.scene.text.Font
+import scalafx.scene.text.FontWeight
 
 object HomeView:
 
   def apply(onGameStart: (List[String], BoardSide) => Unit): Parent =
 
-    val allTextFields: List[TextField] = (1 to 4).map: i =>
-      new TextField:
-        promptText = s"Nome Giocatore $i"
-        maxWidth = 260
-        style =
-          "-fx-font-size: 14px; -fx-padding: 9px; -fx-background-radius: 6px; " +
-            "-fx-border-color: #d5cfc0; -fx-border-radius: 6px;"
-    .toList
+    val allTextFields: List[TextField] = (1 to 4)
+      .map: i =>
+        new TextField:
+          promptText = s"Nome Giocatore $i"
+          maxWidth = 260
+          style =
+            "-fx-font-size: 14px; -fx-padding: 9px; -fx-background-radius: 6px; " +
+              "-fx-border-color: #d5cfc0; -fx-border-radius: 6px;"
+      .toList
 
     var activeTextFields: List[TextField] = List.empty
     val playerNamesBox = new VBox(10):
@@ -42,11 +45,13 @@ object HomeView:
     val sideA = new RadioButton("Lato A (Fiumi - Consigliato)"):
       toggleGroup = sideGroup
       selected = true
-      style = "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+      style =
+        "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
 
     val sideB = new RadioButton("Lato B (Isole - Avanzato)"):
       toggleGroup = sideGroup
-      style = "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+      style =
+        "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
 
     val sideExplanation = new Label(
       "• Lato A: Punti per il Fiume blu più lungo.\n• Lato B: Punti per le Isole di terra separate dall'acqua."
@@ -93,15 +98,23 @@ object HomeView:
                 font = Font.font("Palatino", FontWeight.Bold, 13)
                 style = "-fx-text-fill: #333333;"
               ,
-              createBadge(if mandatory then "OBBLIGATORIO" else "FACOLTATIVO", mandatory)
+              createBadge(
+                if mandatory then "OBBLIGATORIO" else "FACOLTATIVO",
+                mandatory
+              )
             )
           ,
           new Label(desc):
             wrapText = true
-            style = "-fx-font-size: 13px; -fx-text-fill: #555555; -fx-padding: 0 0 0 10;"
+            style =
+              "-fx-font-size: 13px; -fx-text-fill: #555555; -fx-padding: 0 0 0 10;"
         )
 
-    def terrainLegendRow(name: String, colorHexes: Seq[String], desc: String): VBox =
+    def terrainLegendRow(
+        name: String,
+        colorHexes: Seq[String],
+        desc: String
+    ): VBox =
       val circles = colorHexes.map: hex =>
         new Circle:
           radius = 6.0
@@ -126,7 +139,8 @@ object HomeView:
           ,
           new Label(desc):
             wrapText = true
-            style = "-fx-font-size: 13px; -fx-text-fill: #555555; -fx-padding: 0 0 0 20;"
+            style =
+              "-fx-font-size: 13px; -fx-text-fill: #555555; -fx-padding: 0 0 0 20;"
         )
 
     val setupCard = new VBox(18):
@@ -134,10 +148,9 @@ object HomeView:
       padding = Insets(25, 30, 25, 30)
       prefWidth = 380
       maxWidth = 400
-      style =
-        "-fx-background-color: #ffffff; -fx-background-radius: 12px; " +
-          "-fx-border-color: #dcd3c1; -fx-border-width: 1px; -fx-border-radius: 12px; " +
-          "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 4);"
+      style = "-fx-background-color: #ffffff; -fx-background-radius: 12px; " +
+        "-fx-border-color: #dcd3c1; -fx-border-width: 1px; -fx-border-radius: 12px; " +
+        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 4);"
       children = Seq(
         new Label("SCALARMONIES"):
           font = Font.font("Palatino", FontWeight.Bold, 30)
@@ -148,7 +161,8 @@ object HomeView:
           alignment = Pos.Center
           children = Seq(
             new Label("Numero di Giocatori:"):
-              style = "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
+              style =
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
             ,
             numPlayersCombo
           )
@@ -157,7 +171,8 @@ object HomeView:
           alignment = Pos.Center
           children = Seq(
             new Label("Nomi Giocatori:"):
-              style = "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
+              style =
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
             ,
             playerNamesBox
           )
@@ -166,7 +181,8 @@ object HomeView:
           alignment = Pos.CenterLeft
           children = Seq(
             new Label("Scegli la Plancia di Gioco:"):
-              style = "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
+              style =
+                "-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;"
             ,
             sidesBox
           )
@@ -178,15 +194,16 @@ object HomeView:
     val tutorialHeader = new VBox(4):
       padding = Insets(16, 20, 14, 20)
       alignment = Pos.CenterLeft
-      style =
-        "-fx-background-color: #f8f6f0; -fx-border-color: #dcd3c1; " +
-          "-fx-border-width: 0 0 1 0; -fx-background-radius: 12 12 0 0;"
+      style = "-fx-background-color: #f8f6f0; -fx-border-color: #dcd3c1; " +
+        "-fx-border-width: 0 0 1 0; -fx-background-radius: 12 12 0 0;"
       children = Seq(
         new Label("TUTORIAL HARMONIES"):
           font = Font.font("Palatino", FontWeight.Bold, 18)
           style = "-fx-text-fill: #2c3e50;"
         ,
-        new Label("Guida rapida allo svolgimento del turno, regole di gioco e punteggi"):
+        new Label(
+          "Guida rapida allo svolgimento del turno, regole di gioco e punteggi"
+        ):
           style = "-fx-font-size: 12px; -fx-text-fill: #666666;"
       )
 
@@ -312,12 +329,11 @@ object HomeView:
       prefWidth = 480
       maxWidth = 540
       maxHeight = Double.MaxValue
-      style =
-        "-fx-background-color: #ffffff; -fx-background-radius: 12px; " +
-          "-fx-border-color: #dcd3c1; -fx-border-width: 1px; -fx-border-radius: 12px; " +
-          "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 4);"
+      style = "-fx-background-color: #ffffff; -fx-background-radius: 12px; " +
+        "-fx-border-color: #dcd3c1; -fx-border-width: 1px; -fx-border-radius: 12px; " +
+        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 4);"
       children = Seq(tutorialHeader, tutorialScrollPane)
-    
+
     val rootLayout = new HBox(35):
       alignment = Pos.Center
       padding = Insets(30)
