@@ -260,13 +260,21 @@ class GameModelTest extends AnyFlatSpec with Matchers:
       afterCard.selectAnimalCard(cardTaken)
     }
 
-  it should "allow placing animal cube before taking tokens" in:
+  it should "place an animal cube correctly before taking tokens" in:
     val model = modelWithCards(List(testCard))
     val afterCard = model.takeAnimalCard(CardSlot)
     val cardTaken = afterCard.currentPlayer.activeCards.head
-
     val afterSelect = afterCard.selectAnimalCard(cardTaken)
-    noException should be thrownBy afterSelect.placeAnimalCube(Coordinate(0, 0))
+
+    val updated =
+      afterSelect.placeAnimalCube(Coordinate(0, 0))
+
+    updated.currentPlayer.board
+      .cells(Coordinate(0, 0))
+      .hasAnimal shouldBe true
+
+    updated.currentPlayer.activeCards.head.placedCubes shouldBe 1
+    updated.selectedAnimalCard shouldBe empty
 
   it should "allow placing animal cube when turn is complete" in:
     val model = modelWithCards(List(testCard))

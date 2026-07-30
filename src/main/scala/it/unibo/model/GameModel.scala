@@ -6,6 +6,7 @@ import it.unibo.model.card.AnimalDeckFactory
 import it.unibo.model.card.HabitatMatcher
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalboard.Coordinate
+import it.unibo.model.personalboard.PersonalBoard
 import it.unibo.model.pouch.Pouches.Pouch
 import it.unibo.model.token.TerrainToken
 import it.unibo.model.token.TokenValidator
@@ -157,9 +158,10 @@ object GameModel:
     *   a new game model.
     */
   def apply(players: List[Player], forceEmptyPouch: Boolean): GameModel =
-    val pouch = if forceEmptyPouch then Pouch(List()) else Pouch.initialPouch()
+    val pouch =
+      if forceEmptyPouch then Pouch(List.empty) else Pouch.initialPouch()
     val (board, updatedPouch, updatedDeck) =
-      CentralBoard.empty.fill(pouch, List())
+      CentralBoard.empty.fill(pouch, List.empty)
     GameModelImpl(
       players = players,
       currentPlayerIndex = 0,
@@ -177,7 +179,7 @@ object GameModel:
       deck: List[AnimalCard],
       turnSnapshot: Option[GameModelImpl] = None,
       override val turnState: TurnState,
-      override val tokensInHand: List[TerrainToken] = List(),
+      override val tokensInHand: List[TerrainToken] = List.empty,
       override val selectedToken: Option[TerrainToken] = None,
       override val selectedAnimalCard: Option[AnimalCard] = None,
       hasTakenCardThisTurn: Boolean = false,
@@ -296,7 +298,7 @@ object GameModel:
         centralBoard = refilledBoard,
         pouch = updatedPouch,
         deck = updatedDeck,
-        tokensInHand = List(),
+        tokensInHand = List.empty,
         turnState = TurnState.WaitingForAction,
         turnSnapshot = None,
         hasTakenCardThisTurn = false,
@@ -340,8 +342,12 @@ object GameModel:
       if !highlightedAnimalCells(card).contains(coordinate) then
         throw IllegalStateException("Posizione non valida per questo habitat")
 
-      val updatedBoard = currentPlayer.board.placeAnimalOnCell(coordinate).get
-      val updatedCard = card.placeCube.get
+      val (updatedBoard, updatedCard) =
+        updateAnimalPlacement(currentPlayer, card, coordinate).getOrElse(
+          throw IllegalStateException(
+            "Piazzamento animale non valido"
+          )
+        )
 
       val (newActive, newCompleted) =
         if updatedCard.placedCubes == updatedCard.maxCubes then
@@ -399,8 +405,17 @@ object GameModel:
         s"${currentPlayer.name} non ha azioni disponibili (termina il turno)"
       else s"${currentPlayer.name} " + actions.mkString(" oppure ")
 
+    private def updateAnimalPlacement(
+        player: Player,
+        card: AnimalCard,
+        coordinate: Coordinate
+    ): Option[(PersonalBoard, AnimalCard)] =
+      for
+        updatedBoard <- player.board.placeAnimalOnCell(coordinate)
+        updatedCard <- card.placeCube
+      yield (updatedBoard, updatedCard)
+
     private def hasPlayerAlmostFullBoard: Boolean =
       players.exists { player =>
-        val emptyCells = player.board.cells.values.count(!_.hasTokens)
-        emptyCells <= 2
+        player.board.cells.values.count(!_.hasTokens) <= 2
       }
