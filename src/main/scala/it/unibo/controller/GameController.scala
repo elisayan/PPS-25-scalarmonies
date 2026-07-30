@@ -113,6 +113,32 @@ object GameController:
       refreshView(s"Errore: ${e.getMessage}")
       view.showTemporaryError(s"Mossa illegale: ${e.getMessage}")
 
+    private def executeAction(action: GameModel => GameModel)(
+        onSuccess: GameModel => Unit
+    ): Unit =
+      try
+        model = action(model)
+        onSuccess(model)
+      catch case e: IllegalStateException => handleError(e)
+
+    private def handleAutomaticAnimalPlacement(
+        coordinate: Coordinate,
+        playerName: String
+    ): Unit =
+      val playableCards = model.currentPlayer.activeCards.filter(card =>
+        model.highlightedAnimalCells(card).contains(coordinate)
+      )
+      playableCards match
+        case card :: Nil =>
+          executeAction(
+            _.selectAnimalCard(card)
+              .placeAnimalCube(coordinate)
+          ) { updatedModel =>
+            refreshView(s"$playerName posiziona un cubo animale")
+            view.updateState(updatedModel)
+          }
+        case _ => ()
+
     override def currentModel: GameModel = model
 
     override def currentPlayerId: Int = model.currentPlayer.id
@@ -120,94 +146,88 @@ object GameController:
     override def currentTurnState: TurnState = model.turnState
 
     override def onTakeTokens(slot: Int): Unit =
-      try
-        val playerName = model.currentPlayer.name
-        model = model.takeTokens(slot)
-        val tokenNames = model.tokensInHand.map(_.toString).mkString(", ")
+      val playerName = model.currentPlayer.name
+
+      executeAction(_.takeTokens(slot)) { updatedModel =>
+        val tokenNames =
+          updatedModel.tokensInHand
+            .map(_.toString)
+            .mkString(", ")
         refreshView(s"$playerName prende $tokenNames")
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+        view.updateState(updatedModel)
+      }
 
     override def onSelectToken(token: TerrainToken): Unit =
-      try
-        model = model.selectToken(token)
-        refreshView(s"${model.currentPlayer.name} seleziona $token")
-        view.updateState(model)
-
-      catch case e: IllegalStateException => handleError(e)
+      executeAction(_.selectToken(token)) { updatedModel =>
+        refreshView(s"${updatedModel.currentPlayer.name} seleziona $token")
+        view.updateState(updatedModel)
+      }
 
     override def onPlaceToken(coordinate: Coordinate): Unit =
-      try
-        val playerName = model.currentPlayer.name
-        val name = model.tokensInHand.headOption.map(_.toString).getOrElse("?")
-        model = model.placeToken(coordinate)
-        val level = model.currentPlayer.board.cells(coordinate).getTokens.size
-        refreshView(s"$playerName posiziona $name al livello $level")
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+      val playerName = model.currentPlayer.name
+      val tokenName = model.selectedToken.map(_.toString).getOrElse("?")
+
+      executeAction(_.placeToken(coordinate)) { updatedModel =>
+        val level =
+          updatedModel.currentPlayer.board.cells(coordinate).getTokens.size
+        refreshView(s"$playerName posiziona $tokenName al livello $level")
+        view.updateState(updatedModel)
+      }
 
     override def onEndTurn(): Unit =
       try
         model = model.endTurn()
-        if model.isGameOver then onEndGame(model.getPlayers)
+        if model.isGameOver then onEndGame(model.allPlayers)
         else
           refreshView(s"HEADER:${model.currentPlayer.name}")
           view.updateState(model)
       catch case e: IllegalStateException => handleError(e)
 
     override def onTakeAnimalCard(slot: Int): Unit =
-      try
-        val playerName = model.currentPlayer.name
-        val cardPosition = model.currentPlayer.activeCards.size + 1
-        model = model.takeAnimalCard(slot)
-        val cardName = model.currentPlayer.activeCards.last.name
+      val playerName = model.currentPlayer.name
+      val cardPosition = model.currentPlayer.activeCards.size + 1
+
+      executeAction(_.takeAnimalCard(slot)) { updatedModel =>
+        val cardName = updatedModel.currentPlayer.activeCards.last.name
         refreshView(
-          s"$playerName prende la carta $cardName e la porta nel suo posto $cardPosition"
+          s"$playerName prende la carta $cardName " + s"e la porta nel suo posto $cardPosition"
         )
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+        view.updateState(updatedModel)
+      }
 
     override def onSelectActiveCard(card: AnimalCard): Unit =
-      try
-        if model.selectedAnimalCard.contains(card) then return
-        model = model.selectAnimalCard(card)
-        refreshView(
-          s"${model.currentPlayer.name} sceglie la carta ${card.name}"
-        )
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+      if !model.selectedAnimalCard.contains(card) then
+        executeAction(_.selectAnimalCard(card)) { updatedModel =>
+          refreshView(
+            s"${updatedModel.currentPlayer.name} " + s"sceglie la carta ${card.name}"
+          )
+          view.updateState(updatedModel)
+        }
 
     override def onCellClicked(coordinate: Coordinate): Unit =
-      try
-        val playerName = model.currentPlayer.name
-        if model.selectedToken.isDefined then
-          model = model.placeToken(coordinate)
-          refreshView(s"$playerName posiziona un token")
-        else if model.selectedAnimalCard.isDefined then
-          model = model.placeAnimalCube(coordinate)
-          refreshView(s"$playerName posiziona un cubo animale")
-        else
-          val playableCards = model.currentPlayer.activeCards.filter(c =>
-            model.highlightedAnimalCells(c).nonEmpty
-          )
-          if playableCards.size == 1 && model
-              .highlightedAnimalCells(playableCards.head)
-              .contains(coordinate)
-          then
-            model = model.selectAnimalCard(playableCards.head)
-            model = model.placeAnimalCube(coordinate)
+      val playerName = model.currentPlayer.name
+
+      (model.selectedToken, model.selectedAnimalCard) match
+        case (Some(_), _) =>
+          executeAction(_.placeToken(coordinate)) { updatedModel =>
+            refreshView(s"$playerName posiziona un token")
+            view.updateState(updatedModel)
+          }
+        case (_, Some(_)) =>
+          executeAction(_.placeAnimalCube(coordinate)) { updatedModel =>
             refreshView(s"$playerName posiziona un cubo animale")
-          else return
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+            view.updateState(updatedModel)
+          }
+        case _ =>
+          handleAutomaticAnimalPlacement(coordinate, playerName)
 
     override def onCancelTurn(): Unit =
-      try
-        val playerName = model.currentPlayer.name
-        model = model.cancelTurn()
+      val playerName = model.currentPlayer.name
+
+      executeAction(_.cancelTurn()) { updatedModel =>
         refreshView(s"$playerName annulla il turno")
-        view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+        view.updateState(updatedModel)
+      }
 
     override def start(): Unit =
       val homeView = HomeView(onStartGame)
