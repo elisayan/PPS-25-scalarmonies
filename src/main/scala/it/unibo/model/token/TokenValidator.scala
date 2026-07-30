@@ -31,10 +31,9 @@ object TokenValidator:
           !cell.hasTokens || (height == 1 && cell.topToken.contains(Ground))
         case Building =>
           !cell.hasTokens || (height == 1 && cell.topToken.exists {
-              case Mountain | Ground | Building => true
-              case _                            => false
-            }
-          )
+            case Mountain | Ground | Building => true
+            case _                            => false
+          })
 
   /** Returns all valid placement coordinates for a terrain token.
     * @param token

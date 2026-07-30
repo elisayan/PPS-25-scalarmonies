@@ -149,7 +149,7 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val cell = Cell(List(Building, Building))
     TokenValidator.canPlace(Building, cell) shouldBe false
   }
-  
+
   // Max stack height
   it should "reject any placement when the cell already has 3 tokens" in {
     val cell = Cell(List(Mountain, Mountain, Mountain))
