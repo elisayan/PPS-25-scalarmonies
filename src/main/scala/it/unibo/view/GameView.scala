@@ -10,13 +10,17 @@ import it.unibo.view.infopanel.InfoPanelView
 import it.unibo.view.personalboard.PersonalBoardView
 import it.unibo.view.playerarea.PlayerAreaView
 import it.unibo.view.token.TokenView
+import it.unibo.view.utils.ImageCache
 import scalafx.animation.PauseTransition
+import scalafx.geometry.GeometryIncludes.jfxBounds2sfx
 import scalafx.geometry.Insets
 import scalafx.geometry.Pos
 import scalafx.scene.Cursor
 import scalafx.scene.control.Button
 import scalafx.scene.control.ScrollPane
+import scalafx.scene.control.Tooltip
 import scalafx.scene.effect.DropShadow
+import scalafx.scene.image.ImageView
 import scalafx.scene.layout.Background
 import scalafx.scene.layout.BackgroundFill
 import scalafx.scene.layout.ColumnConstraints
@@ -88,6 +92,55 @@ class GameView(controller: GameController) extends GridPane:
       )
     )
 
+  private val rulesButton: Button = new Button("?"):
+    font = Font.font("Palatino", FontWeight.Bold, 14.0)
+    padding = Insets(3, 8, 3, 8)
+    minWidth = 32
+    textFill = Color.White
+    focusTraversable = false
+    cursor = scalafx.scene.Cursor.Hand
+    background = new Background(
+      Array(
+        new BackgroundFill(
+          Color.web("#2980b9"),
+          new CornerRadii(16),
+          Insets.Empty
+        )
+      )
+    )
+
+    onAction = _ =>
+      val tip = this.tooltip.value
+      if tip != null then
+        val bounds = this.localToScreen(this.boundsInLocal.value)
+        tip.show(this, bounds.minX, bounds.maxY + 4)
+
+    onMouseExited = _ =>
+      val tip = this.tooltip.value
+      if tip != null then tip.hide()
+
+  private def createRulesTooltip(model: GameModel): Tooltip =
+    val currentSide = model.startingPlayer.board.side
+
+    val imagePath = currentSide match
+      case it.unibo.model.personalboard.BoardSide.SideA =>
+        "/rules/promemoria_latoA.png"
+      case it.unibo.model.personalboard.BoardSide.SideB =>
+        "/rules/promemoria_latoB.png"
+
+    val imgView = new ImageView(ImageCache.getImage(imagePath)):
+      fitWidth = 230.0
+      preserveRatio = true
+      smooth = true
+
+    new Tooltip():
+      graphic = imgView
+      showDelay = Duration(100.0)
+      hideDelay = Duration(100.0)
+      showDuration = Duration.Indefinite
+      style = "-fx-background-color: transparent; -fx-padding: 0; " +
+        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 8, 0, 0, 3);"
+
   private val topBarContainer: HBox = new HBox(10):
     alignment = Pos.CenterLeft
     minHeight = 45.0
@@ -95,7 +148,8 @@ class GameView(controller: GameController) extends GridPane:
     maxHeight = 45.0
     padding = Insets(5, 15, 5, 15)
     HBox.setHgrow(systemMessageBar, Priority.Always)
-    children = Seq(systemMessageBar, cancelTurnButton, endTurnButton)
+    children =
+      Seq(systemMessageBar, cancelTurnButton, endTurnButton, rulesButton)
 
   private val commonMarketBar: HBox = new HBox():
     alignment = Pos.Center
@@ -277,6 +331,8 @@ class GameView(controller: GameController) extends GridPane:
         controller.onTakeTokens
       )
     )
+    updateSystemMessageBar(model.availableActionsMessage)
+    rulesButton.tooltip = createRulesTooltip(model)
     updateSystemMessageBar(model.availableActionsMessage)
 
   def showTemporaryError(

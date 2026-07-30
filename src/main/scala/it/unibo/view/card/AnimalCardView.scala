@@ -149,7 +149,7 @@ private object CardComponents:
                 style =
                   s"-fx-background-color: $col; -fx-shape: \"$svg\"; -fx-border-color: #2c3e50;"
             val animal: Seq[Region] = if req.offset == Coordinate(0, 0) then
-              val cS = hexW * 0.35
+              val cS = hexW * 0.30
               Seq(new Region:
                 prefWidth = cS; prefHeight = cS; maxWidth = cS; maxHeight = cS
                 style =
