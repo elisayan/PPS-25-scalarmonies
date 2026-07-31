@@ -29,7 +29,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
   ): GameModel =
     val positions =
       TokenValidator
-        .validPositions(token, model.currentPlayer.board)
+        .validPositions(token)(using model.currentPlayer.board)
         .filterNot(_ == Coordinate(0, 0))
     if positions.isEmpty then model
     else
@@ -89,7 +89,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
     val afterTake = model.takeTokens(1)
     val firstToken = afterTake.tokensInHand.head
     val validCoord = TokenValidator
-      .validPositions(firstToken, afterTake.currentPlayer.board)
+      .validPositions(firstToken)(using afterTake.currentPlayer.board)
       .head
     val afterSelect = afterTake.selectToken(firstToken)
     val afterPlace = afterSelect.placeToken(validCoord)
@@ -184,10 +184,7 @@ class GameModelTest extends AnyFlatSpec with Matchers:
         val selected = current.selectToken(token)
         val coord =
           TokenValidator
-            .validPositions(
-              token,
-              selected.currentPlayer.board
-            )
+            .validPositions(token)(using selected.currentPlayer.board)
             .head
 
         selected.placeToken(coord)

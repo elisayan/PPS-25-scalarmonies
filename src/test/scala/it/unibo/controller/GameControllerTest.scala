@@ -37,8 +37,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
     controller.onSelectToken(token)
     val coord =
       TokenValidator
-        .validPositions(
-          token,
+        .validPositions(token)(using
           controller.currentModel.currentPlayer.board
         )
         .head
@@ -52,8 +51,7 @@ class GameControllerTest extends AnyFlatSpec with Matchers:
       controller.onSelectToken(token)
       val coord =
         TokenValidator
-          .validPositions(
-            token,
+          .validPositions(token)(using
             controller.currentModel.currentPlayer.board
           )
           .head

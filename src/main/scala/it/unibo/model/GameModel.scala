@@ -188,6 +188,8 @@ object GameModel:
 
     private val MaxAnimalCards = 4
 
+    private given currentBoard: PersonalBoard = currentPlayer.board
+
     override def startingPlayer: Player = players.head
 
     override def currentPlayer: Player = players(currentPlayerIndex)
@@ -215,12 +217,12 @@ object GameModel:
           )
 
     override def selectToken(token: TerrainToken): GameModel =
-      if !tokensInHand.contains(token) then
-        throw IllegalStateException("Token non disponibile")
-      this.copy(
-        selectedToken = Some(token),
-        selectedAnimalCard = None
-      )
+      tokensInHand
+        .find(_ == token)
+        .map(_ =>
+          this.copy(selectedToken = Some(token), selectedAnimalCard = None)
+        )
+        .getOrElse(throw IllegalStateException("Token non disponibile"))
 
     override def takeAnimalCard(slot: Int): GameModel =
       if hasTakenCardThisTurn then
@@ -311,7 +313,7 @@ object GameModel:
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
       val physicallyValid =
-        TokenValidator.validPositions(token, currentPlayer.board)
+        TokenValidator.validPositions(token)
 
       val blockedCells: Set[Coordinate] = currentPlayer.activeCards
         .filter(_.placedCubes > 0)
@@ -380,9 +382,7 @@ object GameModel:
       )
 
     override def cancelTurn(): GameModel =
-      turnSnapshot match
-        case Some(snapshot) => snapshot.copy(turnSnapshot = None)
-        case None           => this
+      turnSnapshot.map(_.copy(turnSnapshot = None)).getOrElse(this)
 
     override def allPlayers: List[Player] =
       players

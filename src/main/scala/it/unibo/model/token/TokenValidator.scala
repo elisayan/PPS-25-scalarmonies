@@ -48,8 +48,7 @@ object TokenValidator:
     * @return
     *   the list of valid coordinates.
     */
-  def validPositions(
-      token: TerrainToken,
+  def validPositions(token: TerrainToken)(using
       board: PersonalBoard
   ): List[Coordinate] =
     findCoordinates(board, canPlace(token, _))

@@ -168,7 +168,7 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val board = PersonalBoard(SideA)
     val b = board.placeToken(Mountain, neighbour).get
     val b2 = b.placeToken(Water, farNeighbour).get
-    val result = TokenValidator.validPositions(Mountain, b2)
+    val result = TokenValidator.validPositions(Mountain)(using b2)
     result should contain(origin)
     result should contain(neighbour)
     result should not contain farNeighbour
@@ -180,7 +180,7 @@ class TokenValidatorTest extends AnyFlatSpec with Matchers:
     val board2 = PersonalBoard(SideA)
     val b = board2.placeToken(Water, origin).get
     val b2 = b.placeToken(Field, neighbour).get
-    val result = TokenValidator.validPositions(Building, b2)
+    val result = TokenValidator.validPositions(Building)(using b2)
     result should not contain origin
     result should not contain neighbour
   }
