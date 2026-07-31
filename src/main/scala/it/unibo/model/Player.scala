@@ -22,3 +22,17 @@ case class Player(
     activeCards: List[AnimalCard] = List(),
     completedCards: List[AnimalCard] = List()
 )
+
+object Player:
+
+  /** Adds domain-specific operations to [[Player]]. */
+  extension (player: Player)
+    /** Checks whether the player has reached the maximum number of active
+      * animal cards.
+      * @param limit
+      *   the maximum number of active cards.
+      * @return
+      *   true if the player cannot take another animal card.
+      */
+    def hasReachedAnimalCardLimit(limit: Int): Boolean =
+      player.activeCards.size >= limit

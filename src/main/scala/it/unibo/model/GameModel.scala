@@ -229,9 +229,9 @@ object GameModel:
         throw IllegalStateException(
           "Player ha gia scelto una carta Animale questo turno"
         )
-      if currentPlayer.activeCards.size >= MaxAnimalCards then
+      if currentPlayer.hasReachedAnimalCardLimit(MaxAnimalCards) then
         throw IllegalStateException(
-          "Player ha già il numero di carte Animale massimo"
+          "Player ha già il numero massimo di carte Animale"
         )
 
       centralBoard.takeCard(slot) match
