@@ -13,10 +13,9 @@ object HabitatMatcher:
           cell.topToken.contains(req.terrain) && cell.height == req.height
 
     def findMatches(habitat: Habitat): Set[HabitatMatch] =
-      val matches = for
+      for
         rotation <- habitat.allRotations
         origin <- board.cells.keys
         if board.isMatch(origin, rotation)
         involvedCells = rotation.requirements.map(req => origin + req.offset).toSet
       yield HabitatMatch(origin, involvedCells)
-      matches
