@@ -30,3 +30,8 @@ case class Habitat(requirements: List[CellRequirement]):
 
   def allRotations: Set[Habitat] =
     List.iterate(this, 6)(_.rotate60).toSet
+
+object HabitatDSL:
+  extension (coord: Coordinate)
+    def req(terrain: TerrainToken, height: Int): CellRequirement =
+      CellRequirement(coord, terrain, height)
