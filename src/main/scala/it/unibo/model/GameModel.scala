@@ -199,21 +199,20 @@ object GameModel:
       isLastRound && currentPlayerIndex == 0
 
     override def takeTokens(slot: Int): GameModel =
-      if turnState != TurnState.WaitingForAction then
-        throw IllegalStateException(
-          "Non puoi scegliere i tokens nello stato corrente"
-        )
-
-      centralBoard.takeTokens(slot) match
-        case None =>
-          throw IllegalStateException(s"Slot $slot è vuoto o invalido")
-        case Some((tokens, updatedBoard)) =>
-          this.copy(
-            centralBoard = updatedBoard,
-            tokensInHand = tokens,
-            turnState = TurnState.ActionDone,
-            turnSnapshot = turnSnapshot.orElse(Some(this))
-          )
+      requireState(
+        TurnState.WaitingForAction,
+        "Non puoi scegliere i tokens nello stato corrente"
+      ):
+        centralBoard.takeTokens(slot) match
+          case None =>
+            throw IllegalStateException(s"Slot $slot è vuoto o invalido")
+          case Some((tokens, updatedBoard)) =>
+            this.copy(
+              centralBoard = updatedBoard,
+              tokensInHand = tokens,
+              turnState = TurnState.ActionDone,
+              turnSnapshot = turnSnapshot.orElse(Some(this))
+            )
 
     override def selectToken(token: TerrainToken): GameModel =
       if !tokensInHand.contains(token) then
@@ -250,65 +249,63 @@ object GameModel:
           )
 
     override def placeToken(coordinate: Coordinate): GameModel =
-      if turnState != TurnState.ActionDone then
-        throw IllegalStateException(
-          "Non puoi posizionare token nello stato corrente"
+      requireState(
+        TurnState.ActionDone,
+        "Non puoi posizionare token nello stato corrente"
+      ):
+        val token = selectedToken.getOrElse(
+          throw IllegalStateException("Prima di questa azione scegliere un token")
         )
 
-      val token = selectedToken.getOrElse(
-        throw IllegalStateException("Prima di questa azione scegliere un token")
-      )
-
-      if !highlightedCells(token).contains(coordinate) then
-        throw IllegalStateException("Piazzamento token invalido")
-
-      val updatedBoard = currentPlayer.board
-        .placeToken(token, coordinate)
-        .getOrElse(
+        if !highlightedCells(token).contains(coordinate) then
           throw IllegalStateException("Piazzamento token invalido")
+
+        val updatedBoard = currentPlayer.board
+          .placeToken(token, coordinate)
+          .getOrElse(
+            throw IllegalStateException("Piazzamento token invalido")
+          )
+        val updatedPlayer = currentPlayer.copy(board = updatedBoard)
+        val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
+        val index = tokensInHand.indexOf(token)
+
+        val remainingTokens = tokensInHand.patch(index, Nil, 1)
+
+        val newState =
+          if remainingTokens.isEmpty then TurnState.TurnComplete
+          else TurnState.ActionDone
+
+        this.copy(
+          players = updatedPlayers,
+          tokensInHand = remainingTokens,
+          selectedToken = None,
+          turnState = newState
         )
-      val updatedPlayer = currentPlayer.copy(board = updatedBoard)
-      val updatedPlayers = players.updated(currentPlayerIndex, updatedPlayer)
-      val index = tokensInHand.indexOf(token)
-
-      val remainingTokens = tokensInHand.patch(index, Nil, 1)
-
-      val newState =
-        if remainingTokens.isEmpty then TurnState.TurnComplete
-        else TurnState.ActionDone
-
-      this.copy(
-        players = updatedPlayers,
-        tokensInHand = remainingTokens,
-        selectedToken = None,
-        turnState = newState
-      )
 
     override def endTurn(): GameModel =
-      if turnState != TurnState.TurnComplete then
-        throw IllegalStateException(
-          "Non puoi terminare il turno prima di aver piazzato tutti i tokens"
+      requireState(
+        TurnState.TurnComplete,
+        "Non puoi terminare il turno prima di aver piazzato tutti i tokens"
+      ):
+        val nextIndex = (currentPlayerIndex + 1) % players.size
+        val (refilledBoard, updatedPouch, updatedDeck) =
+          centralBoard.fill(pouch, deck)
+
+        val endConditionTriggered =
+          updatedPouch.isEmpty || hasPlayerAlmostFullBoard
+        val nextIsLastRound = isLastRound || endConditionTriggered
+
+        this.copy(
+          currentPlayerIndex = nextIndex,
+          centralBoard = refilledBoard,
+          pouch = updatedPouch,
+          deck = updatedDeck,
+          tokensInHand = List.empty,
+          turnState = TurnState.WaitingForAction,
+          turnSnapshot = None,
+          hasTakenCardThisTurn = false,
+          isLastRound = nextIsLastRound
         )
-
-      val nextIndex = (currentPlayerIndex + 1) % players.size
-      val (refilledBoard, updatedPouch, updatedDeck) =
-        centralBoard.fill(pouch, deck)
-
-      val endConditionTriggered =
-        updatedPouch.isEmpty || hasPlayerAlmostFullBoard
-      val nextIsLastRound = isLastRound || endConditionTriggered
-
-      this.copy(
-        currentPlayerIndex = nextIndex,
-        centralBoard = refilledBoard,
-        pouch = updatedPouch,
-        deck = updatedDeck,
-        tokensInHand = List.empty,
-        turnState = TurnState.WaitingForAction,
-        turnSnapshot = None,
-        hasTakenCardThisTurn = false,
-        isLastRound = nextIsLastRound
-      )
 
     override def highlightedCells(token: TerrainToken): List[Coordinate] =
       val physicallyValid =
@@ -424,3 +421,11 @@ object GameModel:
       players.exists { player =>
         player.board.cells.values.count(!_.hasTokens) <= 2
       }
+
+    private def requireState(
+                              expected: TurnState,
+                              errorMessage: String
+                            )(action: => GameModel): GameModel =
+      if turnState != expected then
+        throw IllegalStateException(errorMessage)
+      else action
