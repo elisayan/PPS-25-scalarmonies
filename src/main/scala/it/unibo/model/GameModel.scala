@@ -4,6 +4,7 @@ import it.unibo.model.TurnState.ActionDone
 import it.unibo.model.card.AnimalCard
 import it.unibo.model.card.AnimalDeckFactory
 import it.unibo.model.card.HabitatMatcher
+import it.unibo.model.card.HabitatMatcher.findMatches
 import it.unibo.model.centralboard.CentralBoards.CentralBoard
 import it.unibo.model.personalboard.Coordinate
 import it.unibo.model.personalboard.PersonalBoard
@@ -316,7 +317,7 @@ object GameModel:
       val blockedCells: Set[Coordinate] = currentPlayer.activeCards
         .filter(_.placedCubes > 0)
         .flatMap(card =>
-          HabitatMatcher.findMatches(currentPlayer.board, card.habitat)
+          currentPlayer.board.findMatches(card.habitat)
         )
         .flatMap(m => m.involvedCells + m.origin)
         .toSet
@@ -333,8 +334,8 @@ object GameModel:
       this.copy(selectedAnimalCard = Some(card), selectedToken = None)
 
     override def highlightedAnimalCells(card: AnimalCard): List[Coordinate] =
-      HabitatMatcher
-        .findMatches(currentPlayer.board, card.habitat)
+      currentPlayer.board
+        .findMatches(card.habitat)
         .map(_.origin)
         .toList
 
