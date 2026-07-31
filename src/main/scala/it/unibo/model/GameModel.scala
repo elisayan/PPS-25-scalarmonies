@@ -395,14 +395,14 @@ object GameModel:
         )("scegli una carta animale"),
         Option.when(
           currentPlayer.activeCards
-            .exists(c => c.placedCubes < c.maxCubes)
+            .exists(c => c.placedCubes < c.maxCubes && highlightedAnimalCells(c).nonEmpty)
         )("posiziona cubo animale"),
         Option.when(turnState == ActionDone && tokensInHand.nonEmpty)(
           "posiziona token"
         ),
         Option.when(
           turnState == TurnState.TurnComplete && hasTakenCardThisTurn
-        )("Nessuna azione possibile rimasta")
+        )("nessuna azione possibile rimasta")
       ).flatten
 
       if actions.isEmpty then
