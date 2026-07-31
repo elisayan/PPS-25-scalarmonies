@@ -254,7 +254,9 @@ object GameModel:
         "Non puoi posizionare token nello stato corrente"
       ):
         val token = selectedToken.getOrElse(
-          throw IllegalStateException("Prima di questa azione scegliere un token")
+          throw IllegalStateException(
+            "Prima di questa azione scegliere un token"
+          )
         )
 
         if !highlightedCells(token).contains(coordinate) then
@@ -313,9 +315,7 @@ object GameModel:
 
       val blockedCells: Set[Coordinate] = currentPlayer.activeCards
         .filter(_.placedCubes > 0)
-        .flatMap(card =>
-          currentPlayer.board.findMatches(card.habitat)
-        )
+        .flatMap(card => currentPlayer.board.findMatches(card.habitat))
         .flatMap(m => m.involvedCells + m.origin)
         .toSet
 
@@ -393,7 +393,9 @@ object GameModel:
         )("scegli una carta animale"),
         Option.when(
           currentPlayer.activeCards
-            .exists(c => c.placedCubes < c.maxCubes && highlightedAnimalCells(c).nonEmpty)
+            .exists(c =>
+              c.placedCubes < c.maxCubes && highlightedAnimalCells(c).nonEmpty
+            )
         )("posiziona cubo animale"),
         Option.when(turnState == ActionDone && tokensInHand.nonEmpty)(
           "posiziona token"
@@ -423,9 +425,8 @@ object GameModel:
       }
 
     private def requireState(
-                              expected: TurnState,
-                              errorMessage: String
-                            )(action: => GameModel): GameModel =
-      if turnState != expected then
-        throw IllegalStateException(errorMessage)
+        expected: TurnState,
+        errorMessage: String
+    )(action: => GameModel): GameModel =
+      if turnState != expected then throw IllegalStateException(errorMessage)
       else action

@@ -82,9 +82,9 @@ object AnimalCard:
     override def placedCubes: Int = maxCubes - cubesRemaining
 
     override def currentPoints: Int = placedCubes match
-      case p if p <= 0 => 0
+      case p if p <= 0            => 0
       case p if p > points.length => points.last
-      case p => points(p - 1)
+      case p                      => points(p - 1)
 
     override def placeCube: Option[AnimalCard] =
       if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))

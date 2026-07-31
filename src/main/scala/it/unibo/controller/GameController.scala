@@ -176,8 +176,7 @@ object GameController:
 
     override def onEndTurn(): Unit =
       executeAction(_.endTurn()): updatedModel =>
-        if updatedModel.isGameOver then
-          onEndGame(updatedModel.allPlayers)
+        if updatedModel.isGameOver then onEndGame(updatedModel.allPlayers)
         else
           refreshView(s"HEADER:${updatedModel.currentPlayer.name}")
           view.updateState(updatedModel)

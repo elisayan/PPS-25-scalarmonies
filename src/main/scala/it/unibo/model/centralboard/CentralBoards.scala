@@ -34,9 +34,9 @@ object CentralBoards:
           case None       => true
 
       def fill(
-                pouch: Pouch,
-                deck: List[AnimalCard]
-              ): (CentralBoard, Pouch, List[AnimalCard]) =
+          pouch: Pouch,
+          deck: List[AnimalCard]
+      ): (CentralBoard, Pouch, List[AnimalCard]) =
         val (nextTokens, nextPouch) = SlotIds.foldLeft((b.tokenSlots, pouch)):
           case ((currentSlots, currentPouch), slotId) =>
             if currentSlots.get(slotId).exists(_.isEmpty) then
@@ -55,15 +55,15 @@ object CentralBoards:
         (OfferState(nextTokens, nextCards), nextPouch, nextDeck)
 
       def takeTokens(slot: Int): Option[(List[TerrainToken], CentralBoard)] =
-        for
-          tokens <- b.tokenSlots.get(slot).filter(_.nonEmpty)
+        for tokens <- b.tokenSlots.get(slot).filter(_.nonEmpty)
         yield
           val updatedTokens = b.tokenSlots.updated(slot, List.empty)
           (tokens, OfferState(updatedTokens, b.cardSlots))
 
       def takeCard(slot: Int): Option[(AnimalCard, CentralBoard)] =
         for
-          _    <- Option.when(SlotIds.contains(slot) && !b.isCardSlotEmpty(slot))(())
+          _ <- Option
+            .when(SlotIds.contains(slot) && !b.isCardSlotEmpty(slot))(())
           card <- b.cardSlots(slot)
         yield
           val updatedCards = b.cardSlots.updated(slot, None)

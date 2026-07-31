@@ -26,7 +26,9 @@ class AnimalDeckFactoryTest extends AnyFunSuite:
     deck should not equal deck2
     deck should contain theSameElementsAs deck2
 
-  test("createShuffledDeck invocato con lo stesso seme deve garantire riproducibilità (Trasparenza Referenziale)"):
+  test(
+    "createShuffledDeck invocato con lo stesso seme deve garantire riproducibilità (Trasparenza Referenziale)"
+  ):
     val deterministicDeck1 = AnimalDeckFactory.createShuffledDeck(seed = 42L)
     val deterministicDeck2 = AnimalDeckFactory.createShuffledDeck(seed = 42L)
     deterministicDeck1 shouldEqual deterministicDeck2
