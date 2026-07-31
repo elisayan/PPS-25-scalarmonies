@@ -5,6 +5,7 @@ import org.scalatest.matchers.should.Matchers.*
 import it.unibo.model.personalboard.{Coordinate, PersonalBoard}
 import it.unibo.model.personalboard.BoardSide.SideA
 import it.unibo.model.token.TerrainToken.{Forest, Water, Mountain, Field}
+import it.unibo.model.card.HabitatMatcher.*
 
 class HabitatMatcherTest extends AnyFunSuite:
   private val testHabitat = Habitat(
@@ -24,26 +25,14 @@ class HabitatMatcherTest extends AnyFunSuite:
   test(
     "isMatch deve ritornare true se la plancia soddisfa l'habitat altrimenti falso"
   ):
-    HabitatMatcher.isMatch(
-      boardWithFreeTarget,
-      Coordinate(0, 0),
-      testHabitat
-    ) shouldBe true
-    HabitatMatcher.isMatch(
-      boardWithFreeTarget,
-      Coordinate(2, 1),
-      testHabitat
-    ) shouldBe false
-    HabitatMatcher.isMatch(
-      boardWithFreeTarget,
-      Coordinate(10, 10),
-      testHabitat
-    ) shouldBe false
+    boardWithFreeTarget.isMatch(Coordinate(0, 0), testHabitat) shouldBe true
+    boardWithFreeTarget.isMatch(Coordinate(2, 1), testHabitat) shouldBe false
+    boardWithFreeTarget.isMatch(Coordinate(10, 10), testHabitat) shouldBe false
 
   test(
     "findMatches deve ritornare l'insieme esatto di HabitatMatch validi sulla plancia"
   ):
-    val matches = HabitatMatcher.findMatches(boardWithFreeTarget, testHabitat)
+    val matches = boardWithFreeTarget.findMatches(testHabitat)
     matches should have size 1
     val foundMatch = matches.head
     foundMatch.origin shouldBe Coordinate(0, 0)
@@ -59,16 +48,10 @@ class HabitatMatcherTest extends AnyFunSuite:
         CellRequirement(Coordinate(0, 2), Field, 1)
       )
     )
-    HabitatMatcher.findMatches(
-      boardWithFreeTarget,
-      impossibleHabitat
-    ) shouldBe empty
+    boardWithFreeTarget.findMatches(impossibleHabitat) shouldBe empty
 
   test("findMatches deve ritornare Set vuoto se la cella bersaglio è occupata"):
-    HabitatMatcher.findMatches(
-      boardWithOccupiedTarget,
-      testHabitat
-    ) shouldBe empty
+    boardWithOccupiedTarget.findMatches(testHabitat) shouldBe empty
 
   test("findMatches test su SideA (rotazioni, traslazioni e altezze errate)"):
     val complexHabitat = Habitat(
@@ -100,7 +83,9 @@ class HabitatMatcherTest extends AnyFunSuite:
       .placeToken(Water, Coordinate(2, -3))
       .get
       .placeToken(Mountain, Coordinate(0, -2))
-    val matches = HabitatMatcher.findMatches(largeBoard.get, complexHabitat)
+      .get
+
+    val matches = largeBoard.findMatches(complexHabitat)
     matches should have size 2
     matches
       .map(_.origin) should contain allOf (Coordinate(0, 0), Coordinate(-2, -1))

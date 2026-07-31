@@ -37,14 +37,14 @@ object CentralBoards:
           pouch: Pouch,
           deck: List[AnimalCard]
       ): (CentralBoard, Pouch, List[AnimalCard]) =
-        val (nextTokens, nextPouch) = SlotIds.foldLeft((b.tokenSlots, pouch)) {
+        val (nextTokens, nextPouch) = SlotIds.foldLeft((b.tokenSlots, pouch)):
           case ((currentSlots, currentPouch), slotId) =>
             if currentSlots.get(slotId).exists(_.isEmpty) then
               val (drawnTokens, updatedPouch) = currentPouch.draw(TokensPerSlot)
               (currentSlots.updated(slotId, drawnTokens), updatedPouch)
             else (currentSlots, currentPouch)
-        }
-        val (nextCards, nextDeck) = SlotIds.foldLeft((b.cardSlots, deck)) {
+
+        val (nextCards, nextDeck) = SlotIds.foldLeft((b.cardSlots, deck)):
           case ((currentCards, currentDeck), slotId) =>
             if currentCards(slotId).isEmpty && currentDeck.nonEmpty then
               (
@@ -52,22 +52,22 @@ object CentralBoards:
                 currentDeck.tail
               )
             else (currentCards, currentDeck)
-        }
         (OfferState(nextTokens, nextCards), nextPouch, nextDeck)
 
       def takeTokens(slot: Int): Option[(List[TerrainToken], CentralBoard)] =
-        if !SlotIds.contains(slot) || b.isTokenSlotEmpty(slot) then None
-        else
-          val tokens = b.tokenSlots(slot)
+        for tokens <- b.tokenSlots.get(slot).filter(_.nonEmpty)
+        yield
           val updatedTokens = b.tokenSlots.updated(slot, List.empty)
-          Some((tokens, OfferState(updatedTokens, b.cardSlots)))
+          (tokens, OfferState(updatedTokens, b.cardSlots))
 
       def takeCard(slot: Int): Option[(AnimalCard, CentralBoard)] =
-        if !SlotIds.contains(slot) || b.isCardSlotEmpty(slot) then None
-        else
-          val card = b.cardSlots(slot).get
+        for
+          _ <- Option
+            .when(SlotIds.contains(slot) && !b.isCardSlotEmpty(slot))(())
+          card <- b.cardSlots(slot)
+        yield
           val updatedCards = b.cardSlots.updated(slot, None)
-          Some((card, OfferState(b.tokenSlots, updatedCards)))
+          (card, OfferState(b.tokenSlots, updatedCards))
 
       def availableCards: Map[Int, AnimalCard] =
         b.cardSlots.collect { case (id, Some(card)) => id -> card }

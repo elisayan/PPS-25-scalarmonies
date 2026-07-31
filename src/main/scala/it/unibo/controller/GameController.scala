@@ -175,13 +175,11 @@ object GameController:
       }
 
     override def onEndTurn(): Unit =
-      try
-        model = model.endTurn()
-        if model.isGameOver then onEndGame(model.allPlayers)
+      executeAction(_.endTurn()): updatedModel =>
+        if updatedModel.isGameOver then onEndGame(updatedModel.allPlayers)
         else
-          refreshView(s"HEADER:${model.currentPlayer.name}")
-          view.updateState(model)
-      catch case e: IllegalStateException => handleError(e)
+          refreshView(s"HEADER:${updatedModel.currentPlayer.name}")
+          view.updateState(updatedModel)
 
     override def onTakeAnimalCard(slot: Int): Unit =
       val playerName = model.currentPlayer.name

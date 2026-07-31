@@ -81,15 +81,14 @@ object AnimalCard:
 
     override def placedCubes: Int = maxCubes - cubesRemaining
 
-    override def currentPoints: Int =
-      val placed = placedCubes
-      if placed <= 0 then 0
-      else if placed > points.length then points.last
-      else points(placed - 1)
+    override def currentPoints: Int = placedCubes match
+      case p if p <= 0            => 0
+      case p if p > points.length => points.last
+      case p                      => points(p - 1)
 
     override def placeCube: Option[AnimalCard] =
       if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))
       else None
 
-    override def computeScore(board: PersonalBoard): Score =
+    override def computeScore(board: Option[PersonalBoard]): Score =
       Score(currentPoints)
