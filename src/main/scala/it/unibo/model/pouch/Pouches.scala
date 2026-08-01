@@ -4,8 +4,7 @@ import it.unibo.model.token.TerrainToken
 
 import scala.util.Random
 
-/** Encapsulates the Pouch logic and state
-  */
+/** Encapsulates the immutable Pouch domain logic and token distribution. */
 object Pouches:
   private val MountainWaterToken = 23
   private val GroundToken = 21
@@ -16,7 +15,7 @@ object Pouches:
   object Pouch:
     /** Creates a pouch from a custom list of tokens.
       * @param tokens
-      *   initial tokens to insert.
+      *   initial tokens.
       * @param seed
       *   random seed for deterministic testing.
       * @return
@@ -28,8 +27,7 @@ object Pouches:
     ): Pouch =
       Random(seed).shuffle(tokens)
 
-    /** Generates the standard initial pouch for a match, containing the exact
-      * token distribution (120 tokens total).
+    /** Generates the standard 120-token initial game pouch.
       * @param seed
       *   random seed for shuffling.
       * @return
@@ -48,11 +46,11 @@ object Pouches:
       Pouch(tokenDistribution, seed)
 
     extension (p: Pouch)
-      /** Purely extracts a given amount of tokens from the pouch.
+      /** Purely draws tokens from the pouch.
         * @param amount
         *   number of tokens to draw.
         * @return
-        *   a tuple containing the drawn tokens and the updated [[Pouch]].
+        *   drawn tokens and updated [[Pouch]].
         */
       def draw(amount: Int): (List[TerrainToken], Pouch) =
         p.splitAt(amount)
