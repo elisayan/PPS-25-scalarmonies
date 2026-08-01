@@ -361,9 +361,7 @@ def validPositions(token: TerrainToken)(using board: PersonalBoard): List[Coordi
 Per evitare di propagare esplicitamente la plancia del giocatore lungo tutta la catena di chiamate, l’implementazione sfrutta le _Contextual Abstractions_ tramite using e given.
 Il metodo `validPositions` dichiara infatti la dipendenza da una `PersonalBoard` come parametro contestuale:
 ```scala
-def validPositions(token: TerrainToken)(using
-    board: PersonalBoard
-): List[Coordinate] =
+def validPositions(token: TerrainToken)(using board: PersonalBoard): List[Coordinate] =
   findCoordinates(board, canPlace(token, _))
 ```
 Nel `GameModel` la plancia del giocatore corrente viene resa disponibile come valore contestuale:
@@ -401,6 +399,9 @@ Dopo ogni piazzamento il model aggiorna il numero di token rimanenti nella mano 
 Infine, nello stato `TurnComplete`, il giocatore non può più eseguire ulteriori azioni e può solamente terminare il turno. 
 L’operazione di fine turno aggiorna la plancia centrale, passa il controllo al giocatore successivo e riporta il `TurnState` a `WaitingForAction`, avviando un nuovo ciclo.
 
+La Figura seguente mostra la macchina a stati finiti che descrive le transizioni del turno.
+![UML State Machine Diagram of the turn lifecycle](resources/turn_state_diagram.png)
+
 ### Player
 Il giocatore è rappresentato dalla `case class Player`, che raccoglie tutte le informazioni necessarie per descrivere lo stato di un partecipante durante la partita.
 ```scala
@@ -437,6 +438,3 @@ if currentPlayer.hasReachedAnimalCardLimit(MaxAnimalCards) then
   )
 ```
 Questa soluzione rende il codice riutilizzabile in altre parti dell'applicazione.
-
-### Game Controller
-
