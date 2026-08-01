@@ -1,6 +1,114 @@
 # Implementation
 
 ## Oluwatobi Daniel Ariyo
+### Cell
+La cella rappresenta l'elemento base e indivisibile che compone la PersonalBoard. 
+Il suo scopo principale è quello di fungere da contenitore fisico per la costruzione del paesaggio, ospitando al suo interno sia la pila di TerrainToken sia l'eventuale cubo animale piazzato dal giocatore.
+Per garantire la massima integrità del modello di dominio ed evitare mutazioni indesiderate, la classe Cell è stata progettata come una case class immutabile. 
+Ogni operazione di modifica della cella restituisce una nuova cella aggiornata, favorendo un approccio funzionale.
+```scala
+case class Cell(
+                 private val tokens: List[TerrainToken] = List(),
+                 hasAnimal: Boolean = false
+               )
+```
+
+### Coordinate
+
+La modellazione della plancia di gioco (PersonalBoard) richiede la gestione di una griglia a tassellatura esagonale.
+Il trait Coordinate stabilisce il contratto per la rappresentazione di posizioni bidimensionali $(x, y)$, mettendo a disposizione le operazioni algebriche e le primitive spaziali per la navigazione sulla griglia.
+```scala
+trait Coordinate:
+  def x: Int
+  def y: Int
+  def +(other: Coordinate): Coordinate
+  def -(other: Coordinate): Coordinate
+  def *(other: Coordinate): Coordinate
+  def rotate60: Coordinate
+```
+Per nascondere i dettagli di basso livello e separare l'interfaccia dall'implementazione, l'interfaccia pubblica è definita dal trait Coordinate, mentre la struttura concreta è racchiusa all'interno della case class privata CoordinateImpl.
+La creazione delle istanze è centralizzata nell'oggetto companion Coordinate tramite il factory method apply:
+```scala
+object Coordinate:
+  private case class CoordinateImpl(override val x: Int, override val y: Int)
+    extends Coordinate
+```
+L'orientamento degli esagoni prevede sei direzioni di adiacenza (Nord, Sud, Nord-Est, Nord-Ovest, Sud-Est, Sud-Ovest). 
+Il trait fornisce direttamente i metodi con implementazione di default per calcolare i vicini tramite offset definiti:
+```scala
+def northNeighbour: Coordinate = Coordinate(x, y + 2)
+def southNeighbour: Coordinate = Coordinate(x, y - 2)
+def northEasternNeighbour: Coordinate = Coordinate(x + 2, y + 1)
+def northWesternNeighbour: Coordinate = Coordinate(x - 2, y + 1)
+def southEasternNeighbour: Coordinate = Coordinate(x + 2, y - 1)
+def southWesternNeighbour: Coordinate = Coordinate(x - 2, y - 1)
+```
+Il metodo allNeighbours aggrega le sei direzioni in un Set[Coordinate], consentendo di implementare il controllo di adiacenza isNeighbour in modo snello e dichiarativo:
+```scala
+override def allNeighbours: Set[Coordinate] =
+  Set(
+    northNeighbour,
+    southNeighbour,
+    northEasternNeighbour,
+    northWesternNeighbour,
+    southEasternNeighbour,
+    southWesternNeighbour
+  )
+
+override def isNeighbour(other: Coordinate): Boolean =
+  allNeighbours.contains(other)
+```
+### Personal Board
+La PersonalBoard rappresenta la plancia di gioco individuale di ciascun giocatore.
+Essa è formata da una serie di celle esagonali, `Cell` con ognuna una propria coordinata, `Coordinate`.
+Il regolamento di gioco prevede due differenti configurazioni di plancia (SideA e SideB), caratterizzate da dimensioni e numero di celle differenti. 
+Questa variabilità è stata modellata tramite l'enumerazione BoardSide
+```scala
+enum BoardSide:
+  case SideA
+  case SideB
+```
+La creazione della plancia è incapsulata nell'oggetto companion PersonalBoard, che agisce da Factory. La funzione privata generateHexGrid calcola dinamicamente le coordinate valide per la tassellatura esagonale:
+```scala
+private def generateHexGrid(
+                             widthBound: Int,
+                             heightBound: Int
+                           ): Map[Coordinate, Cell] =
+val validCoordinates = for
+  x <- -widthBound to widthBound if x % 2 == 0
+  y <- -heightBound to heightBound
+  if (x / 2).abs % 2 == y.abs % 2
+yield Coordinate(x, y)
+validCoordinates.map(c => c -> Cell(List())).toMap
+```
+Attraverso una for-comprehension, vengono filtrate unicamente le coppie cartesiane (x, y) che soddisfano i vincoli di parità del sistema esagonale.
+La struttura concreta della plancia è definita dalla case class privata PersonalBoardImpl, non accessibile dall'esterno del modulo.
+Tutte le operazioni di interrogazione e modifica dello stato applicano la gestione difensiva tramite il tipo Option
+
+I metodi placeToken e placeAnimalOnCell effettuano le mutazioni senza alterare la plancia corrente,
+ma restituendo un Option[PersonalBoard] contenente la copia aggiornata
+```scala
+override def placeToken(
+                         token: TerrainToken,
+                         c: Coordinate
+                       ): Option[PersonalBoard] =
+  if isValid(c) then
+    cells.get(c) match
+      case Some(currentCell) =>
+        val updatedCell = currentCell.placeToken(token)
+        val updatedCells = cells + (c -> updatedCell)
+        Some(copy(cells = updatedCells))
+      case None => None
+  else None
+```
+I metodi come getNorthernNeighbour, getSouthEasternNeighbour, ecc., verificano preventivamente la validità della coordinata adiacente tramite il predicato isValid(c), restituendo None in caso di fuori bordo:
+```scala
+override def getNorthernNeighbour(c: Coordinate): Option[Cell] =
+  if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
+```
+
+
+
 
 ## Filippo Ferretti
 
