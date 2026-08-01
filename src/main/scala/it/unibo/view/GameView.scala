@@ -305,11 +305,13 @@ class GameView(controller: GameController) extends GridPane:
     val playableCards = model.currentPlayer.activeCards.filter(c =>
       model.highlightedAnimalCells(c).nonEmpty
     )
-    val highlighted: List[Coordinate] = (model.selectedToken, model.selectedAnimalCard, playableCards) match
-      case (Some(token), _, _)          => model.highlightedCells(token)
-      case (_, Some(card), _)           => model.highlightedAnimalCells(card)
-      case (None, None, singleCard :: Nil) => model.highlightedAnimalCells(singleCard)
-      case _                            => List.empty
+    val highlighted: List[Coordinate] =
+      (model.selectedToken, model.selectedAnimalCard, playableCards) match
+        case (Some(token), _, _) => model.highlightedCells(token)
+        case (_, Some(card), _)  => model.highlightedAnimalCells(card)
+        case (None, None, singleCard :: Nil) =>
+          model.highlightedAnimalCells(singleCard)
+        case _ => List.empty
     val areas = model.allPlayers.map(p =>
       val playerHighlightedCells =
         if p == model.currentPlayer then highlighted
