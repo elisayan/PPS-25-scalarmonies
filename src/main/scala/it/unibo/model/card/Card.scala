@@ -5,61 +5,58 @@ import it.unibo.model.scorecalculator.Scorable
 import it.unibo.model.scorecalculator.Score
 import it.unibo.model.scorecalculator.Score.Score
 
-/** Represents the general concept of a Card within the game.
+/** Represents a generic playing card in the game
   */
 sealed trait Card
 
-/** Represents an Animal Card, responsible for managing animal cubes and
-  * calculating points. The instance is purely immutable: any state modification
-  * generates a new card.
+/** Represents an immutable Animal Card managing animal cube progression and
+  * score calculation
   */
 trait AnimalCard extends Card with Scorable:
-  /** @return The name of the animal. */
+  /** @return the animal's name */
   def name: String
 
-  /** @return The habitat pattern required by the card. */
+  /** @return The habitat pattern required by the card */
   def habitat: Habitat
 
   /** @return
-    *   The progression of victory points obtainable, indexed by placed cubes.
+    *   The progression of victory points obtainable, indexed by placed cubes
     */
   def points: List[Int]
 
   /** @return
-    *   the id of the image of the card
+    *   the image resource identifier
     */
   def imageId: String
 
-  /** @return The maximum number of animal cubes this card can hold. */
+  /** @return The maximum number of animal cubes this card can hold */
   def maxCubes: Int
 
-  /** @return The number of animal cubes currently taken/placed. */
+  /** @return The number of animal cubes currently placed */
   def placedCubes: Int
 
   /** @return
-    *   The victory points currently guaranteed based on the placed cubes.
+    *   The victory points currently guaranteed based on the placed cubes
     */
   def currentPoints: Int
 
-  /** Attempts to take and place an animal cube from the card.
+  /** Attempts to place an animal cube from the card
     * @return
-    *   A `Some` containing the new instance of the card with updated cubes, or
-    *   `None` if the card has already exhausted its available cubes.
+    *   `Some` updated card if cubes remain, `None` otherwise
     */
   def placeCube: Option[AnimalCard]
 
 object AnimalCard:
-  /** Creates a new instance of an Animal Card ready for the game (with zero
-    * cubes placed).
+  /** Creates a new [[AnimalCard]] ready for play with zero cubes placed.
     * @param name
-    *   The name of the animal.
+    *   The animal's name
     * @param habitat
     *   The required habitat structure.
     * @param points
     *   The list of victory points (the length of the list defines the maximum
     *   number of cubes).
-    * @return
-    *   A new immutable instance of [[AnimalCard]].
+    * @param imageId
+    *   resource name for rendering
     */
   def apply(
       name: String,
@@ -90,5 +87,5 @@ object AnimalCard:
       if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))
       else None
 
-    override def computeScore(board: Option[PersonalBoard]): Score =
+    override def computeScore(board: PersonalBoard): Score =
       Score(currentPoints)
