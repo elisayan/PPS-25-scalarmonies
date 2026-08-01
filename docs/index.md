@@ -14,9 +14,9 @@ L'obiettivo è costruire habitat efficienti, soddisfare il maggior numero possib
 - [Design di dettaglio](detailed-design.md)-->
 
 - [Implementazione](implementation.md)
+- 
+- [Testing](testing.md)
 
-<!-- - [Testing](testing.md)
-
-- [Retrospettiva](retrospective.md)-->
+<!-- - [Retrospettiva](retrospective.md)-->
 
 - [Process backlog](process-backlog.md)
