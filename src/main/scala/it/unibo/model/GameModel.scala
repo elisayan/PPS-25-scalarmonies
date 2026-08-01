@@ -123,6 +123,13 @@ trait GameModel:
   /** @return a message describing the available actions. */
   def availableActionsMessage: String
 
+  /** Returns a message indicating if the game is in its final round.
+   *
+   * @return
+   * an `Option` containing a notification message if `isLastRound` is true, or `None` otherwise.
+   */
+  def lastRoundMessage: Option[String]
+
 object GameModel:
 
   /** Creates a game model with the given players.
@@ -196,6 +203,12 @@ object GameModel:
 
     override def isGameOver: Boolean =
       isLastRound && currentPlayerIndex == 0
+
+    override def lastRoundMessage: Option[String] =
+      if isLastRound then
+        Some("Ultimo round in corso! La partita terminerà alla fine del giro corrente.")
+      else
+        None
 
     override def takeTokens(slot: Int): GameModel =
       if turnState != TurnState.WaitingForAction then

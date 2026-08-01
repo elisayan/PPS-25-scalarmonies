@@ -111,7 +111,7 @@ object GameController:
 
     private def handleError(e: IllegalStateException): Unit =
       refreshView(s"Errore: ${e.getMessage}")
-      view.showTemporaryError(s"Mossa illegale: ${e.getMessage}")
+      view.showTemporaryInfoMessage(s"Mossa illegale: ${e.getMessage}")
 
     private def executeAction(action: GameModel => GameModel)(
         onSuccess: GameModel => Unit
@@ -181,6 +181,7 @@ object GameController:
         else
           refreshView(s"HEADER:${model.currentPlayer.name}")
           view.updateState(model)
+          model.lastRoundMessage.foreach(msg => view.showTemporaryInfoMessage(msg))
       catch case e: IllegalStateException => handleError(e)
 
     override def onTakeAnimalCard(slot: Int): Unit =
