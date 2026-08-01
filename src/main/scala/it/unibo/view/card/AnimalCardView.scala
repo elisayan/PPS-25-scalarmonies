@@ -46,8 +46,8 @@ private object CardTheme:
 
   def extractCardBg(h: Habitat): String =
     h.requirements
-      .find(_.offset == Coordinate(0, 0))
-      .map(r => bgColor(r.terrain))
+      .collectFirst:
+        case req if req.offset == Coordinate(0, 0) => bgColor(req.terrain)
       .getOrElse("#ffffff")
 
 private object HexMath:

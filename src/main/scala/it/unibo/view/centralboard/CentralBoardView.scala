@@ -27,12 +27,13 @@ case class CentralBoardView(
   private val cardsContainer = new HBox:
     spacing = 10
     alignment = Pos.Center
-
-  board.availableCards.foreach:
-    case (slot, card) =>
-      val cardView = AnimalCardView(card)
-      cardView.onMouseClicked = _ => onCardClicked(slot)
-      cardsContainer.children.add(cardView)
+    children = board.availableCards
+      .map:
+        case (slot, card) =>
+          val cardView = AnimalCardView(card)
+          cardView.onMouseClicked = _ => onCardClicked(slot)
+          cardView
+      .toSeq
 
   private val tokensContainer = new StackPane:
     prefWidth = 200
