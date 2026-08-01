@@ -87,15 +87,52 @@ Ogni operazione valida restituisce una nuova istanza aggiornata del model attrav
 
 Lo stato `WaitingForAction` rappresenta l’inizio del turno. In questa fase il giocatore può prendere una carta animale, 
 purché non ne abbia già presa una durante lo stesso turno e non abbia raggiunto il numero massimo di carte attive. 
-Può inoltre scegliere uno degli slot di token presenti nella plancia centrale.
+Può inoltre scegliere uno degli slot di `TerrainToken` disponibili sulla plancia centrale.
 Il prelievo dei token viene eseguito tramite il metodo `takeTokens` ed è consentito esclusivamente nello stato `WaitingForAction`:
+
+Nello stato `ActionDone` il giocatore può selezionare e posizionare i token appena ottenuti sulla propria `PersonalBoard`. 
+Se non ha ancora preso una carta animale durante il turno corrente, può ancora effettuare tale operazione. 
+Dopo ogni piazzamento il model aggiorna il numero di token rimanenti nella mano del giocatore; quando tutti i token sono stati collocati, il turno passa automaticamente allo stato `TurnComplete`.
+
+Infine, nello stato `TurnComplete`, il giocatore non può più eseguire ulteriori azioni e può solamente terminare il turno. 
+L’operazione di fine turno aggiorna la plancia centrale, passa il controllo al giocatore successivo e riporta il `TurnState` a `WaitingForAction`, avviando un nuovo ciclo.
+
+### Player
+Il giocatore è rappresentato dalla `case class Player`, che raccoglie tutte le informazioni necessarie per descrivere lo stato di un partecipante durante la partita.
 ```scala
-if turnState != TurnState.WaitingForAction then
+case class Player(
+    id: Int,
+    name: String,
+    board: PersonalBoard,
+    activeCards: List[AnimalCard] = List.empty,
+    completedCards: List[AnimalCard] = List.empty
+)
+```
+Ogni giocatore mantiene:
+- la propria `PersonalBoard`;
+- l'insieme delle carte animale ancora in gioco (`activeCards`);
+- le carte completate (`completedCards`).
+La struttura risulta una rappresentazione compatta dello stato del giocatore, lasciando la logica di gioco al `GameModel`.
+
+#### Extension Methods
+Per evitare di inserire nella `case class` metodi legati a specifiche regole del gioco, è stato utilizzato un _extension method_.
+```scala
+object Player:
+
+  extension (player: Player)
+
+    def hasReachedAnimalCardLimit(limit: Int): Boolean =
+      player.activeCards.size >= limit
+```
+L’_extension method_ aggiunge un nuovo comportamento al tipo `Player` senza modificarne la definizione originale, mantenendo separata la rappresentazione dei dati dalla logica applicativa.
+Nel `GameModel` il controllo diventa quindi:
+```scala
+if currentPlayer.hasReachedAnimalCardLimit(MaxAnimalCards) then
   throw IllegalStateException(
-    "Non puoi scegliere i tokens nello stato corrente"
+    "Player ha già il numero massimo di carte animale"
   )
 ```
-
+Questa soluzione rende il codice riutilizzabile in altre parti dell'applicazione.
 
 ### Game Controller
 
