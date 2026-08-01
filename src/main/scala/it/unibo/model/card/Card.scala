@@ -87,5 +87,5 @@ object AnimalCard:
       if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))
       else None
 
-    override def computeScore(board: Option[PersonalBoard]): Score =
+    override def computeScore(board: PersonalBoard): Score =
       Score(currentPoints)

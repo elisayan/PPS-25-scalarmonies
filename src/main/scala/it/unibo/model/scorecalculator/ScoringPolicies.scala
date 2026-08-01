@@ -51,8 +51,8 @@ trait TerrainScoring extends Scorable:
     * @return
     *   the calculated Score
     */
-  override def computeScore(board: Option[PersonalBoard]): Score = compute(
-    board.get
+  override def computeScore(board: PersonalBoard): Score = compute(
+    board
   )
 
   /** Computes the score for the specific terrain type on the given board.
