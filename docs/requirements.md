@@ -123,9 +123,10 @@ Il sistema deve:
 
 ## 4. Requisiti Non Funzionali (NFR)
 
-* **Robustezza (Gestione Errori):** Il motore logico non deve lanciare eccezioni a runtime per stati invalidi, ma gestirli puramente a livello funzionale tramite `Either`, `Option` o `Try`.
-* **Testabilità:** La logica del dominio deve essere isolata dalla UI e coperta da test unitari automatizzati.
-* **Performance** L'interfaccia utente deve fornire un feedback reattivo. Nella modalità opzionale singleplayer, il calcolo delle mosse dell'avversario virtuale non deve bloccare il thread della UI.
+* **[NFR-1] Affidabilità e Tolleranza agli Errori (Reliability):** Il sistema deve essere resiliente rispetto a input errati o azioni di gioco non valide (es. tentativo di piazzare un token al di fuori dei limiti della plancia o in violazione delle regole di adiacenza). Il motore di gioco non deve mai andare in crash o terminare in modo anomalo, ma impedire l'azione e mantenere lo stato coerente.
+* **[NFR-2] Determinismo e Verificabilità (Testability & Reproducibility):** Qualsiasi meccanica di gioco basata sull'aleatorietà (come l'estrazione dei token dal sacchetto o il mescolamento dei mazzi) deve poter essere parametrizzata e resa deterministica. Deve essere possibile riprodurre l'esatta sequenza di eventi di una partita per garantire la verificabilità dei test automatici di regressione.
+* **[NFR-3] Integrità e Consistenza dello Stato (State Integrity):** Lo stato della partita (punteggi, configurazione delle plance, turni) deve essere protetto da corruzioni accidentali o modifiche non autorizzate. L'interrogazione o la consultazione dello stato da parte dell'utente o dei sistemi di ispezione non deve mai alterare l'andamento della partita.
+* **[NFR-4] Reattività (Responsiveness & Performance):** Il sistema deve rispondere alle interazioni dell'utente (selezione di token, piazzamento sulla plancia, aggiornamento della classifica) con tempi di latenza brevi, garantendo un'esperienza di gioco fluida senza blocchi della presentazione visiva.
 
 ## 5. Requisiti Di Implementazione (IR)
 
