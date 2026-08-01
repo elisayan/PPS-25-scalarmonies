@@ -49,12 +49,12 @@ object ScoreCalculator:
       cards: List[AnimalCard]
   ): (Score, Map[String, Score]) =
     val terrainMap: Map[String, Score] = terrainScorers.map {
-      case (label, scorer) => label -> scorer.computeScore(Some(board))
+      case (label, scorer) => label -> scorer.computeScore(board)
     }
 
     val animalScore =
       cards.foldLeft(Score.zero)((acc, card) =>
-        acc + card.computeScore(Some(board))
+        acc + card.computeScore(board)
       )
 
     val detailedMap = terrainMap + ("Animal Cards" -> animalScore)
