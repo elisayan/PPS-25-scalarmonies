@@ -10,7 +10,7 @@ case class Cell(
                  hasAnimal: Boolean = false
                )
 ```
-### Coordinate
+#### Coordinate
 La PersonalBoard si basa su una griglia a tassellatura esagonale. Il trait `Coordinate` definisce il contratto per le posizioni bidimensionali (x, y), fornendo le operazioni algebriche e le primitive spaziali per la navigazione sulla griglia.
 ```scala
 trait Coordinate:
@@ -161,13 +161,13 @@ classDiagram
 }
 
 %% Relazioni
-PersonalBoard <|.. PersonalBoardImpl : implementa
-Coordinate <|.. CoordinateImpl : implementa
+PersonalBoard <|.. PersonalBoardImpl : implements
+Coordinate <|.. CoordinateImpl : implements
 
-PersonalBoardImpl "1" *-- "1" BoardSide : definita da
-PersonalBoardImpl "1" *-- "*" Coordinate : posizioni (chiavi)
-PersonalBoardImpl "1" *-- "*" Cell : contenuto (valori)
-Cell "1" --o "*" TerrainToken : contiene
+PersonalBoardImpl "1" *-- "1" BoardSide : configured by
+PersonalBoardImpl "1" *-- "*" Coordinate : indexed by
+PersonalBoardImpl "1" *-- "*" Cell : formed by
+Cell "1" --o "*" TerrainToken : contains
 ```
 
 ### Calcolo del punteggio
@@ -202,7 +202,7 @@ L'astrazione per tutte le entità o regole in grado di calcolare un punteggio è
 trait Scorable:
   def computeScore(board: PersonalBoard): Score
 ```
-Per la valutazione delle diverse tipologie di terreno, il trait TerrainScoring fa da ponte tra il contratto generale Scorable e la valutazione concreta della plancia:
+Per la valutazione delle diverse tipologie di terreno, il trait TerrainScoring fa da ponte tra il contratto generale Scorable e la valutazione concreta della plancia. Grazie all'uso del pattern mixin, la logica di calcolo del punteggio viene 'miscelata' direttamente nelle classi interessate, garantendo modularità ed evitando vincoli di ereditarietà rigida.
 ```scala
 trait TerrainScoring extends Scorable:
 
@@ -251,57 +251,55 @@ classDiagram
 
     class ScoreCalculator {
         <<trait>>
-        +calculateTotalScore(board: PersonalBoard, strategies: List~TerrainScoring~) ScoreResult
-        +calculateSingleTerrainScore(board: PersonalBoard, strategy: TerrainScoring) Int
+        calculateScore(personalBoard: PersonalBoard,cards: List[AnimalCard]) Score
+        calculateDetailedScore(board: PersonalBoard,cards: List[AnimalCard]) :  (Score, Map[String, Score])
     }
 
     class ScoreCalculatorImpl {
-        +calculateTotalScore(board: PersonalBoard, strategies: List~TerrainScoring~) ScoreResult
     }
 
-    class ScoreResult {
-<<class>>
-+terrainScores: Map~TerrainType, Int~
-+totalScore: Int
-}
 
 class TerrainScoring {
 <<trait>>
-+terrainType: TerrainType
-+calculateScore(board: PersonalBoard) Int
+    computeScore(board: PersonalBoard) Score
 }
 
-class FieldScoring {
-<<object>>
-+terrainType: TerrainType
-+calculateScore(board: PersonalBoard) Int
+class FieldsScoring {
+    <<object>>
+
 }
 
-class ForestScoring {
-<<object>>
-+terrainType: TerrainType
-+calculateScore(board: PersonalBoard) Int
+class ForestsScoring {
+    <<object>>
 }
 
-class RiverScoring {
-<<object>>
-+terrainType: TerrainType
-+calculateScore(board: PersonalBoard) Int
+class WaterScoring {
+    <<object>>
 }
+
+class BuildingsScoring { 
+    <<object>>
+}
+
+class MountainsScoring { 
+    <<object>> 
+    }
+    
 
 class PersonalBoard {
 <<trait>>
 }
 
 %% Relazioni
-ScoreCalculator <|.. ScoreCalculatorImpl : implementa
-TerrainScoring <|.. FieldScoring : implementa
-TerrainScoring <|.. ForestScoring : implementa
-TerrainScoring <|.. RiverScoring : implementa
+ScoreCalculator <|.. ScoreCalculatorImpl : implements
+TerrainScoring <|.. FieldsScoring : implements
+TerrainScoring <|.. ForestsScoring : implements
+TerrainScoring <|.. WaterScoring : implements
+TerrainScoring <|.. BuildingsScoring: implements
+TerrainScoring <|.. MountainsScoring: implements
 
-ScoreCalculatorImpl ..> TerrainScoring : usa
-ScoreCalculatorImpl ..> PersonalBoard : analizza
-ScoreCalculatorImpl ..> ScoreResult : genera
+ScoreCalculatorImpl ..> TerrainScoring : uses
+ScoreCalculatorImpl ..> PersonalBoard : analyzes
 
 ```
 
