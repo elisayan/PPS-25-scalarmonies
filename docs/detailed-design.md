@@ -12,6 +12,9 @@ classDiagram
     }
 
     class GameModelImpl {
+        +placeToken(coordinate: Coordinate) GameModel
+        +takeAnimalCard(slot: Int) GameModel
+        +selectToken(token: TerrainToken) GameModel
         
     }
 
@@ -23,19 +26,29 @@ classDiagram
     }
 
     class CentralBoard {
+        takeCard(slot: Int) Option[(AnimalCard, CentralBoard)]
     }
 
     class Pouch {
+        +draw(amount: Int) (List[TerrainToken], Pouch)
     }
 
     class Player {
+        +id: Int
+        +name: String
+        board: PersonalBoard
+        activeCards: List[AnimalCard]
+        completedCards: List[AnimalCard]
     }
 
     class Card {
+        +name: String
+        +habitat: Habitat
     }
 
     class PersonalBoard {
         <<trait>>
+        placeAnimalOnCell(c: Coordinate) Option[PersonalBoard]
     }
 
     class PersonalBoardImpl {
@@ -47,10 +60,12 @@ classDiagram
         SideB
     }
 
-    class Coordinate {
+    class Coordinate { 
+        +isNeighbour(other: Coordinate) Boolean
     }
 
     class Cell {
+        +placeToken(token: TerrainToken) Cell
     }
 
     class TerrainToken {
