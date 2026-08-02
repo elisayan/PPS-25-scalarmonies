@@ -188,63 +188,14 @@ Questo approccio offre tre vantaggi progettuali:
 
 Il seguente diagramma di sequenza mostra come il controller gestisce l'esecuzione di un'azione (es. piazzamento token) ed eventuali errori.
 
-```mermaid
-sequenceDiagram
-autonumber
-actor User as Giocatore
-participant View as GameView
-participant Ctrl as GameController
-participant Model as GameModel
-
-    User->>View: Click su Cella per posizionare un Token
-    View->>Ctrl: onPlaceToken(coordinate)
-    
-    rect rgb(240, 248, 255)
-        Note over Ctrl,Model: executeAction(action)(onSuccess)
-        Ctrl->>Model: action(currentModel)
-        
-        alt Transizione Valida
-            Model-->>Ctrl: newModel (nuova istanza)
-            Ctrl->>Ctrl: model = newModel
-            Ctrl->>View: updateState(newModel)
-            Ctrl->>View: refreshView(logMessage)
-        else Mossa Illegale (IllegalStateException)
-            Model-->>Ctrl: throw IllegalStateException
-            Ctrl->>View: showTemporaryError(message)
-            Note over Ctrl,View: Il model corrente resta invariato
-        end
-    end
-```
-
+![UML Sequence Diagram of GameController](resources/controller_seq_diagram.png)
 #### 3. Orchestrazione delle Scene e Flusso di Partita
 Il controller amministra la grafica dell'intera applicazione, regolando la transizione tra le tre viste fondamentali senza reciproche dipendenze dirette tra di esse:
 * **Bootstrap (start):** Inizializza l'applicazione mostrando la schermata di configurazione (HomeView) e passando la callback onStartGame.
 * **Gameplay (onStartGame):** Crea la lista dei giocatori e l'istanza iniziale di GameModel, impostando GameView come radice della scena. 
 * **Terminazione (onEndTurn -> onEndGame):** A ogni fine turno, verifica la condizione d'arresto (`model.isGameOver`); se soddisfatta, sostituisce la vista di gioco con ScoreCalculatorView per il calcolo e la visualizzazione del punteggio finale
 
-```mermaid
-stateDiagram-v2
-    [*] --> Configuration : start() / Init Stage
-
-    Configuration --> Gameplay : onStartGame(names, side)
-
-    state Gameplay {
-        [*] --> WaitingForAction
-        WaitingForAction --> ActionDone : takeTokens()/ placeToken()/ takeCard()/ placeAnimalCube()
-        ActionDone --> TurnComplete : [nessuna azione rimasta]
-        TurnComplete --> WaitingForAction : onEndTurn() [model.isGameOver == false]
-    }
-
-    Gameplay --> GameOver : onEndTurn() [model.isGameOver == true]
-
-    state GameOver {
-        [*] --> ComputingScore : Scorable.computeScore()
-        ComputingScore --> ShowingResults : Visualizzazione per categoria
-    }
-
-    GameOver --> [*]
-```
-
+![UML State Diagram of GameController](resources/controller_state_diagram.png)
 # View
 
 La **View** costituisce il livello di presentazione del sistema, realizzata avvalendosi della libreria grafica **ScalaFX**.
@@ -260,44 +211,7 @@ Per evitare strutture monolitiche e facilitare la manutenzione, l'interfaccia di
 
 Il seguente diagramma delle classi illustra la gerarchia composizionale della vista di gioco e le relazioni tra i componenti:
 
-```mermaid
-classDiagram
-    direction TB
-    class GameView {
-        +updateState(model: GameModel)
-        +refresh(model: GameModel, logMessage: String)
-    }
-    class PlayerAreaView {
-        -playerName: String
-        +setDisabledArea(disabled: Boolean)
-    }
-    class PersonalBoardView {
-        -cells: List[CellView]
-    }
-    class CellView {
-        -coordinate: Coordinate
-        -onCellClicked: Coordinate => Unit
-    }
-    class CentralBoardView {
-        -onCardClicked: Int => Unit
-        -onTokenClicked: Int => Unit
-    }
-    class InfoPanelView {
-        +addEntry(playerName, message, playerId)
-    }
-    class AnimalCardView
-    class TokenView
-
-    GameView *-- "1..4" PlayerAreaView : aggrega
-    GameView *-- "1" CentralBoardView : aggrega
-    GameView *-- "1" InfoPanelView : aggrega
-    PlayerAreaView *-- "1" PersonalBoardView : contiene
-    PlayerAreaView *-- "*" AnimalCardView : mostra
-    PersonalBoardView *-- "*" CellView : compone griglia
-    CellView *-- "*" TokenView : impila
-    CentralBoardView *-- "*" AnimalCardView : offre
-    CentralBoardView *-- "*" TokenView : offre
-```
+![UML Class Diagram of GameView](resources/game_view_diagram.png)
 
 #### 2. Disaccoppiamento Funzionale tramite Callbacks
 
@@ -323,29 +237,7 @@ Quando il controller completa una transizione di turno valida, invoca il metodo 
 La GameView estrae dallo snapshot le informazioni rilevanti e propaga in modo discendente l'aggiornamento a tutte le sotto-viste.
 Questo design garantisce che l'interfaccia grafica sia sempre una rappresentazione fedele e coerente dello stato corrente del model.
 
-```mermaid
-flowchart LR
-subgraph Input [1. Evento Utente / Callback]
-direction TB
-CV[CellView / TokenView] -->|onCellClicked| GV[GameView]
-GV -->|controller.onCellClicked| CTRL[GameController]
-end
-
-    subgraph Mutation [2. Transizione di Stato]
-        CTRL -->|executeAction| GM[GameModel Immutabile]
-        GM -->|newModel| CTRL
-    end
-
-    subgraph Output [3. Proiezione]
-        direction TB
-        CTRL -->|updateState newModel| GV_OUT[GameView]
-        GV_OUT -->|propaga stato| PAV[PlayerAreaView]
-        GV_OUT -->|propaga stato| CBV[CentralBoardView]
-        GV_OUT -->|propaga log| IPV[InfoPanelView]
-    end
-
-    Input --> Mutation --> Output
-```
+![UML Flowchart Diagram of GameView](resources/game_view_seq_diagram.png)
 
 #### 4. Isolamento delle Viste nel Ciclo di Vita
 L'interfaccia dell'applicazione è disaccoppiata in tre macro-schermate principali, ciascuna responsabile di una specifica fase del ciclo di vita del gioco:
