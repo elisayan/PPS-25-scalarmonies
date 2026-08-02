@@ -22,7 +22,7 @@ All'interno delle dinamiche logiche e strutturali di *Harmonies*, i componenti c
 
 * **Promemoria (Reminder Card):** Funge da riferimento rapido e scheda riassuntiva delle regole di punteggio. Mostra visivamente come i diversi tipi di terreno (alberi, montagne, campi, ecc.) si connettono e si evolvono in altezza per generare punti alla fine della partita.
 
-* **Terrain Tokens:** Sono gli elementi costruttivi fondamentali del gioco. Rappresentano i vari tipi di habitat naturali (come foreste, montagne, acqua, campi o edifici) che i giocatori combinano e impilano sulla propria plancia per dare forma al territorio.
+* **Dischi Terreno (Terrain Tokens):** Sono gli elementi costruttivi fondamentali del gioco. Rappresentano i vari tipi di habitat naturali (come foreste, montagne, acqua, campi o edifici) che i giocatori combinano e impilano sulla propria plancia per dare forma al territorio.
 
 * **Cubi Animale (Animal Cubes):** Agiscono come marcatori di popolamento. Vengono inizialmente posizionati sulle carte animale e si spostano sulla plancia personale del giocatore non appena l'habitat corrispondente soddisfa i requisiti di configurazione geometrica richiesti.
 
