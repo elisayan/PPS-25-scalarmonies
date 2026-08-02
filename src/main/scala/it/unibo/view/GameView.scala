@@ -334,7 +334,7 @@ class GameView(controller: GameController) extends GridPane:
     rulesButton.tooltip = createRulesTooltip(model)
     updateSystemMessageBar(model.availableActionsMessage)
 
-  def showTemporaryError(
+  def showTemporaryInfoMessage(
       errorMessage: String = "Mossa illegale! Controllare le regole",
       durationSeconds: Int = 3
   ): Unit =
