@@ -38,59 +38,8 @@ Al fine di analizzare il sistema sia sotto l'aspetto statico che dinamico, la st
 
 L'obiettivo è definire in modo rigoroso le relazioni intercorrenti tra le principali entità del dominio e mappare l'insieme delle azioni che un giocatore può compiere durante il proprio turno.
 
-```mermaid
-classDiagram
-    Card <|-- AnimalCard 
-    Card <|-- SpiritNatureCard 
-    
-    Cube <|-- AnimalCube 
-    Cube <|-- SpiritNatureCube
+![Domain Diagram](resources/domain_diagram.png)
 
-    Player "1" -- "0..1" Card : draws
-    Player "1" -- "*" TerrainToken : places
-    Player "1" -- "1" Board : has
-    Board "1" -- "1..*" Cell : made of
-    
-    Card "1" -- "1" Habitat : has
-    Habitat "*" -- "2..3" TerrainToken : composed of
-    
-    Cell "0..*" -- "0..*" TerrainToken : hosts
-    Cell "0..*" -- "1" Cube : hosts
-
-    class Player {
-        
-    }
-    class Board {
-        
-    }
-    class Card {
-        
-    }
-    class AnimalCard {
-        
-    }
-    class SpiritNatureCard {
-        
-    }
-    class Habitat {
-        
-    }
-    class TerrainToken {
-        
-    }
-    class Cell {
-        
-    }
-    class Cube {
-        
-    }
-    class AnimalCube {
-        
-    }
-    class SpiritNatureCube {
-        
-    }
-```
 ## 3. Requisiti Funzionali
 
 ### 3.1 Requisiti Utente (FR-U)
