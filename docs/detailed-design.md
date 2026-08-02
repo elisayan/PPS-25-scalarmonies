@@ -19,7 +19,7 @@ Le operazioni di piazzamento dei tasselli (`placeToken`) e dei cubi animale (`pl
 ## Coordinate e Cell
 La gestione dello spazio e dei contenitori fisici della plancia è affidata alla coppia `Coordinate` e `Cell`.
 
-`Coordinate` costituisce l'astrazione per la rappresentazione delle posizioni bidimensionali $(x, y)$ su griglia esagonale. È modellata come un `trait` astratto con implementazione privata `CoordinateImpl`. Il trait incapsula l'aritmetica vettoriale (`+`, `-`, `*`), la rotazione a $60^\circ$ (`rotate60`) e la navigazione verso i sei vicini adiacenti (`northNeighbour`, `southEasternNeighbour`, ecc.), isolando la plancia da qualsiasi calcolo geometrico di basso livello.
+`Coordinate` costituisce l'astrazione per la rappresentazione delle posizioni bidimensionali _(x, y)_ su griglia esagonale. È modellata come un `trait` astratto con implementazione privata `CoordinateImpl`. Il trait incapsula l'aritmetica vettoriale (`+`, `-`, `*`), la rotazione a _60°_ (`rotate60`) e la navigazione verso i sei vicini adiacenti (`northNeighbour`, `southEasternNeighbour`, ecc.), isolando la plancia da qualsiasi calcolo geometrico di basso livello.
 
 `Cell` rappresenta la singola posizione esagonale sulla plancia e funge da contenitore sia per la pila di tasselli terreno (`TerrainToken`), sia per l'eventuale cubo animale. La classe è modellata come una `case class` immutabile in cui i terreni sovrapposti sono gestiti come una lista LIFO (*Last-In, First-Out*). L'accesso al terreno affiorante (`topToken`) e il posizionamento degli animali (`occupyWithAnimal`) sfruttano il tipo `Option` per validare lo stato ed evitare mosse non consentite (es. piazzare animali su celle vuote o già occupate).
 
