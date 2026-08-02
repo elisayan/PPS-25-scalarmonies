@@ -12,7 +12,7 @@ L'obiettivo è costruire habitat efficienti, soddisfare il maggior numero possib
 
 - [Design architetturale](architecture-design.md)
 
-<!-- - [Design di dettaglio](detailed-design.md)-->
+- [Design di dettaglio](detailed-design.md)
 
 - [Implementazione](implementation.md)
 
