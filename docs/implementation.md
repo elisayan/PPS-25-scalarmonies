@@ -5,10 +5,7 @@
 #### Cell
 La cella è l'elemento atomico della `PersonalBoard` e funge da contenitore per la pila di `TerrainToken` e l'eventuale cubo animale. Per preservare l'integrità del dominio, Cell è modellata come una case class immutabile: ogni modifica restituisce una nuova istanza aggiornata, coerentemente con il paradigma funzionale.
 ```scala
-case class Cell(
-                 private val tokens: List[TerrainToken] = List(),
-                 hasAnimal: Boolean = false
-               )
+case class Cell(private val tokens: List[TerrainToken] = List(), hasAnimal: Boolean = false)
 ```
 #### Coordinate
 La PersonalBoard si basa su una griglia a tassellatura esagonale. Il trait `Coordinate` definisce il contratto per le posizioni bidimensionali (x, y), fornendo le operazioni algebriche e le primitive spaziali per la navigazione sulla griglia.
@@ -21,7 +18,7 @@ trait Coordinate:
   def *(other: Coordinate): Coordinate
   def rotate60: Coordinate
 ```
-Per nascondere i dettagli di basso livello e separare l'interfaccia dall'implementazione, l'interfaccia pubblica è definita dal trait Coordinate, mentre la struttura concreta è racchiusa all'interno della case class privata CoordinateImpl.
+Per nascondere i dettagli di basso livello e separare l'interfaccia dall'implementazione, l'interfaccia pubblica è definita dal trait `Coordinate`, mentre la struttura concreta è racchiusa all'interno della case class privata `CoordinateImpl`.
 La creazione delle istanze è centralizzata nell'oggetto companion Coordinate tramite il factory method apply:
 ```scala
 object Coordinate:
@@ -38,7 +35,7 @@ def northWesternNeighbour: Coordinate = Coordinate(x - 2, y + 1)
 def southEasternNeighbour: Coordinate = Coordinate(x + 2, y - 1)
 def southWesternNeighbour: Coordinate = Coordinate(x - 2, y - 1)
 ```
-Il metodo allNeighbours aggrega le sei direzioni in un Set[`Coordinate`], consentendo di implementare il controllo di adiacenza isNeighbour in modo snello e dichiarativo:
+Il metodo allNeighbours aggrega le sei direzioni in un `Set[Coordinate]`, consentendo di implementare il controllo di adiacenza isNeighbour in modo snello e dichiarativo:
 ```scala
 override def allNeighbours: Set[Coordinate] =
   Set(
@@ -64,7 +61,7 @@ enum BoardSide:
   case SideB
 ```
 La creazione della plancia è incapsulata nel companion object PersonalBoard, che agisce da Factory. 
-Durante l'istanziazione, invoca il metodo privato generateHexGrid, il quale determina le coordinate valide della tassellatura esagonale filtrando, tramite for-comprehension, unicamente le coppie cartesiane (x, y) che rispettano i vincoli di parità esagonali. 
+Durante l'istanziazione, invoca il metodo privato `generateHexGrid`, il quale determina le coordinate valide della tassellatura esagonale filtrando, tramite for-comprehension, unicamente le coppie cartesiane (x, y) che rispettano i vincoli di parità esagonali. 
 La struttura concreta della plancia è definita dalla case class privata PersonalBoardImpl.
 ```scala
 private def generateHexGrid(
@@ -86,14 +83,11 @@ def apply(side: BoardSide): PersonalBoard = side match
     PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3), side)
 
 ```
-Tutte le operazioni di interrogazione e modifica dello stato applicano la gestione difensiva tramite il tipo Option
-I metodi come placeToken e placeAnimalOnCell effettuano le mutazioni senza alterare la plancia corrente,
-ma restituendo un Option[`PersonalBoard`] contenente la copia aggiornata
+Tutte le operazioni di interrogazione e modifica dello stato applicano la gestione difensiva tramite il tipo Option.
+I metodi come `placeToken` e `placeAnimalOnCell` effettuano le mutazioni senza alterare la plancia corrente,
+ma restituendo un `Option[PersonalBoard]` contenente la copia aggiornata
 ```scala
-override def placeToken(
-                         token: TerrainToken,
-                         c: Coordinate
-                       ): Option[PersonalBoard] =
+override def placeToken(token: TerrainToken, c: Coordinate): Option[PersonalBoard] =
   if isValid(c) then
     cells.get(c) match
       case Some(currentCell) =>
@@ -103,7 +97,7 @@ override def placeToken(
       case None => None
   else None
 ```
-I metodi come getNorthernNeighbour, getSouthEasternNeighbour, ecc., verificano preventivamente la validità della coordinata adiacente tramite il predicato isValid(c), restituendo None in caso di fuori bordo:
+I metodi come `getNorthernNeighbour`, `getSouthEasternNeighbour`, ecc., verificano preventivamente la validità della coordinata adiacente tramite il predicato `isValid(c)`, restituendo `None` in caso di fuori bordo:
 ```scala
 override def getNorthernNeighbour(c: Coordinate): Option[Cell] =
   if isValid(c.northNeighbour) then cells.get(c.northNeighbour) else None
@@ -115,8 +109,8 @@ private def isValid(c: Coordinate): Boolean = cells.contains(c)
 
 ### Calcolo del punteggio
 
-La fase finale della partita richiede la valutazione dettagliata dei punti vittoria accumulati da ciascun giocatore sulla propria PersonalBoard e tramite le carte animale completate.
-Per evitare l'utilizzo di interi generici e prevenire stati non validi (come punteggi negativi), la rappresentazione dei punti vittoria è stata modellata tramite un Opaque Type
+La fase finale della partita richiede la valutazione dettagliata dei punti vittoria accumulati da ciascun giocatore sulla propria `PersonalBoard` e tramite le carte animale completate.
+Per evitare l'utilizzo di interi generici e prevenire stati non validi (come punteggi negativi), la rappresentazione dei punti vittoria è stata modellata tramite un `Opaque Type`
 ```scala
 object Score:
 
@@ -128,7 +122,7 @@ value
 
 val zero: Score = 0
 ```
-Tramite gli extension method, il tipo Score espone operazioni algebriche sicure:
+Tramite gli extension method, il `type Score `espone operazioni algebriche sicure:
 ```scala
 extension (s: Score)
 
@@ -140,12 +134,12 @@ extension (s: Score)
 
   def toInt: Int = s
 ```
-L'astrazione per tutte le entità o regole in grado di calcolare un punteggio è definita dal trait Scorable:
+L'astrazione per tutte le entità o regole in grado di calcolare un punteggio è definita dal trait `Scorable`:
 ```scala
 trait Scorable:
   def computeScore(board: PersonalBoard): Score
 ```
-Per la valutazione delle diverse tipologie di terreno, il trait TerrainScoring fa da ponte tra il contratto generale Scorable e la valutazione concreta della plancia. Grazie all'uso del pattern mixin, la logica di calcolo del punteggio viene 'miscelata' direttamente nelle classi interessate, garantendo modularità ed evitando vincoli di ereditarietà rigida.
+Per la valutazione delle diverse tipologie di terreno, il trait `TerrainScoring` fa da ponte tra il contratto generale `Scorable` e la valutazione concreta della plancia. Grazie all'uso del pattern mixin, la logica di calcolo del punteggio viene 'miscelata' direttamente nelle classi interessate, garantendo modularità ed evitando vincoli di ereditarietà rigida.
 ```scala
 trait TerrainScoring extends Scorable:
 
@@ -154,7 +148,7 @@ override def computeScore(board: Option[PersonalBoard]): Score = compute(board)
 def compute(board: PersonalBoard): Score
 ```
 
-Ciascuna tipologia di terreno adotta logiche di calcolo del punteggio specifiche e indipendenti. Per gestire questa variabilità è stato applicato lo Strategy Pattern: ogni tipo di terreno implementa l'interfaccia TerrainScoring all'interno di un oggetto dedicato, garantendo un'elevata modularità e la semplice estensibilità con nuove regole.
+Ciascuna tipologia di terreno adotta logiche di calcolo del punteggio specifiche e indipendenti. Per gestire questa variabilità è stato applicato lo Strategy Pattern: ogni tipo di terreno implementa l'interfaccia `TerrainScoring` all'interno di un oggetto dedicato, garantendo un'elevata modularità e la semplice estensibilità con nuove regole.
 Di seguito alcuni esempi di calcolo: 
 
 - Fields(campi) in cui ogni gruppo composto da almeno due token attribuisce 5 punti:
