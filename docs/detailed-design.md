@@ -174,6 +174,10 @@ trait GameController:
 L'implementazione concreta (GameControllerImpl) è incapsulata all'interno del companion object tramite un metodo factory (apply).
 In questo modo, la View interagisce solo con l'interfaccia astratta, ignorando i dettagli dello stato mutabile interno.
 
+La comunicazione tra logica di controllo e presentazione si basa su una netta separazione delle responsabilità e sull'iniezione delle dipendenze:
+* **Input (View $\to$ Controller):** La componente di presentazione (GameView) riceve l'interfaccia GameController nel proprio costruttore per inoltrare reattivamente gli eventi dell'utente (es. click su una cella tramite onCellClicked). La View non possiede alcuna logica decisionale né conosce le regole del gioco.
+* **Output (Controller $\to$ View):** L'implementazione interna del controller mantiene un riferimento alla View attiva, pilotandone il rendering deterministico e ordinando l'aggiornamento grafico (`view.updateState(newModel)`) solo a seguito di una transizione di stato avvenuta con successo.
+
 #### 2. Esecuzione Funzionale delle Azioni e Gestione degli Errori
 Poiché GameModel è immutabile e lancia eccezioni (IllegalStateException) nel caso in cui una mossa violi le regole del turno o di impilamento, il controller centralizza l'esecuzione delle mutazioni di stato tramite l'esecuzione della higher-order function `executeAction`:
 ```scala
@@ -183,6 +187,9 @@ private def executeAction(action: GameModel => GameModel)(onSuccess: GameModel =
     onSuccess(model)
   catch case e: IllegalStateException => handleError(e)
 ```
+
+Mentre il dominio del gioco è un puro sistema di funzioni senza effetti collaterali, l'istanza privata private var model: GameModel del controller rappresenta l'unico punto di mutabilità controllata dell'intera applicazione.
+L'assegnamento model = newModel avviene solo all'interno di executeAction, garantendo che lo stato dell'applicazione non possa mai disallinearsi o subire modifiche concorrenti non tracciate.
 
 Questo approccio offre tre vantaggi progettuali:
 * **Isolamento delle mutazioni:** La funzione di transizione di stato (action: GameModel => GameModel) viene applicata in un unico punto controllato.
@@ -214,7 +221,7 @@ participant Model as GameModel
         else Mossa Illegale (IllegalStateException)
             Model-->>Ctrl: throw IllegalStateException
             Ctrl->>View: showTemporaryError(message)
-            Note over Ctrl,View: Il modello corrente resta invariato
+            Note over Ctrl,View: Il model corrente resta invariato
         end
     end
 ```
