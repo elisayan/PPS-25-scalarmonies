@@ -146,11 +146,11 @@ trait GameController:
   def onEndTurn(): Unit
 ```
 
-L'implementazione concreta (GameControllerImpl) è incapsulata all'interno del companion object tramite un metodo factory (apply).
+L'implementazione concreta (`GameControllerImpl`) è incapsulata all'interno del companion object tramite un metodo factory (apply).
 In questo modo, la View interagisce solo con l'interfaccia astratta, ignorando i dettagli dello stato mutabile interno.
 
 La comunicazione tra logica di controllo e presentazione si basa su una netta separazione delle responsabilità e sull'iniezione delle dipendenze:
-* **Input (View $\to$ Controller):** La componente di presentazione (GameView) riceve l'interfaccia GameController nel proprio costruttore per inoltrare reattivamente gli eventi dell'utente (es. click su una cella tramite onCellClicked). La View non possiede alcuna logica decisionale né conosce le regole del gioco.
+* **Input (View $\to$ Controller):** La componente di presentazione (`GameView`) riceve l'interfaccia `GameController` nel proprio costruttore per inoltrare reattivamente gli eventi dell'utente (es. click su una cella tramite onCellClicked). La View non possiede alcuna logica decisionale né conosce le regole del gioco.
 * **Output (Controller $\to$ View):** L'implementazione interna del controller mantiene un riferimento alla View attiva, pilotandone il rendering deterministico e ordinando l'aggiornamento grafico (`view.updateState(newModel)`) solo a seguito di una transizione di stato avvenuta con successo.
 
 #### 2. Esecuzione Funzionale delle Azioni e Gestione degli Errori
@@ -163,8 +163,8 @@ private def executeAction(action: GameModel => GameModel)(onSuccess: GameModel =
   catch case e: IllegalStateException => handleError(e)
 ```
 
-Mentre il dominio del gioco è un puro sistema di funzioni senza effetti collaterali, l'istanza privata private var model: GameModel del controller rappresenta l'unico punto di mutabilità controllata dell'intera applicazione.
-L'assegnamento model = newModel avviene solo all'interno di executeAction, garantendo che lo stato dell'applicazione non possa mai disallinearsi o subire modifiche concorrenti non tracciate.
+Mentre il dominio del gioco è un puro sistema di funzioni senza effetti collaterali, l'istanza privata model del controller rappresenta l'unico punto di mutabilità controllata dell'intera applicazione.
+L'aggiornamento del model avviene solo all'interno di executeAction, garantendo che lo stato dell'applicazione non possa mai disallinearsi o subire modifiche concorrenti non tracciate.
 
 Questo approccio offre tre vantaggi progettuali:
 * **Isolamento delle mutazioni:** La funzione di transizione di stato (action: GameModel => GameModel) viene applicata in un unico punto controllato.
@@ -203,9 +203,9 @@ participant Model as GameModel
 
 #### 3. Orchestrazione delle Scene e Flusso di Partita
 Il controller amministra la grafica dell'intera applicazione, regolando la transizione tra le tre viste fondamentali senza reciproche dipendenze dirette tra di esse:
-* **Bootstrap (start):** Inizializza l'applicazione mostrando la schermata di configurazione (HomeView) e passando la callback onStartGame.
-* **Gameplay (onStartGame):** Crea la lista dei giocatori e l'istanza iniziale di GameModel, impostando GameView come radice della scena. 
-* **Terminazione (onEndTurn -> onEndGame):** A ogni fine turno, verifica la condizione d'arresto (`model.isGameOver`); se soddisfatta, sostituisce la vista di gioco con ScoreCalculatorView per il calcolo e la visualizzazione del punteggio finale
+* **Bootstrap (start):** Inizializza l'applicazione mostrando la schermata di configurazione (`HomeView`) e passando la callback `onStartGame`.
+* **Gameplay (onStartGame):** Crea la lista dei giocatori e l'istanza iniziale di `GameModel`, impostando `GameView` come radice della scena. 
+* **Terminazione (onEndTurn -> onEndGame):** A ogni fine turno, verifica la condizione d'arresto (`model.isGameOver`); se soddisfatta, sostituisce la vista di gioco con `ScoreCalculatorView` per il calcolo e la visualizzazione del punteggio finale.
 
 ```mermaid
 stateDiagram-v2
@@ -304,8 +304,8 @@ case class CellView(
 
 In accordo con l'architettura funzionale del model, la View non conserva uno stato locale mutabile relativo alle regole o all'avanzamento della partita.
 L'aggiornamento dell'interfaccia si basa sul principio di proiezione deterministica dello stato:
-Quando il controller completa una transizione di turno valida, invoca il metodo `view.updateState(newModel)`, passando la nuova istanza immutabile di GameModel.
-La GameView estrae dallo snapshot le informazioni rilevanti e propaga in modo discendente l'aggiornamento a tutte le sotto-viste.
+Quando il controller completa una transizione di turno valida, invoca il metodo `view.updateState(newModel)`, passando la nuova istanza immutabile di `GameModel`.
+La `GameView` estrae dallo snapshot le informazioni rilevanti e propaga in modo discendente l'aggiornamento a tutte le sotto-viste.
 Questo design garantisce che l'interfaccia grafica sia sempre una rappresentazione fedele e coerente dello stato corrente del model.
 
 ```mermaid
@@ -338,4 +338,4 @@ L'interfaccia dell'applicazione è disaccoppiata in tre macro-schermate principa
 * **GameView:** Rappresenta l'ambiente del gameplay attivo.
 * **ScoreCalculatorView:** Costituisce la schermata di terminazione della partita, calcolando e mostrando la ripartizione del punteggio finale per ogni singola categoria di terreno e per le carte animale in uno stile di riepilogo tabellare.
 
-Le tre schermate sono classi del tutto indipendenti e non comunicano tra loro: la transizione da un contesto all'altro è governata unicamente dallo stage manager del GameController.  
+Le tre schermate sono classi del tutto indipendenti e non comunicano tra loro: la transizione da un contesto all'altro è governata unicamente dallo stage manager del `GameController`.  
