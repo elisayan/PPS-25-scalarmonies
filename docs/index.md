@@ -18,6 +18,6 @@ L'obiettivo è costruire habitat efficienti, soddisfare il maggior numero possib
 
 - [Testing](testing.md)
 
-<!-- - [Retrospettiva](`retrospective.md`)-->
+- [Retrospettiva](retrospective.md)
 
 - [Process backlog](process-backlog.md)
