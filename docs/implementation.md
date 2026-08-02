@@ -111,64 +111,7 @@ override def getNorthernNeighbour(c: Coordinate): Option[Cell] =
 private def isValid(c: Coordinate): Boolean = cells.contains(c)
 ```
 
-```mermaid
-classDiagram
-    direction TB
-
-    class PersonalBoard {
-        <<trait>>
-        +placeToken(token: TerrainToken, c: Coordinate) Option~PersonalBoard~
-        +placeAnimalOnCell(c: Coordinate) Option~PersonalBoard~
-        +isValid(c: Coordinate) Boolean
-        +getNorthernNeighbour(c: Coordinate) Option~Cell~
-    }
-
-    class PersonalBoardImpl {
-        -cells: Map~Coordinate, Cell~
-        -side: BoardSide
-    }
-
-    class BoardSide {
-        <<enumeration>>
-        SideA
-        SideB
-    }
-
-    class Cell {
-        -tokens: List~TerrainToken~
-        +hasAnimal: Boolean
-        +placeToken(token: TerrainToken) Cell
-    }
-
-    class Coordinate {
-        <<trait>>
-        +x: Int
-        +y: Int
-        +plus(other: Coordinate) Coordinate
-        +minus(other: Coordinate) Coordinate
-        +rotate60() Coordinate
-        +allNeighbours() Set~Coordinate~
-        +isNeighbour(other: Coordinate) Boolean
-    }
-
-    class CoordinateImpl {
-        -x: Int
-        -y: Int
-    }
-
-    class TerrainToken {
-<<enumeration>>
-}
-
-%% Relazioni
-PersonalBoard <|.. PersonalBoardImpl : implements
-Coordinate <|.. CoordinateImpl : implements
-
-PersonalBoardImpl "1" *-- "1" BoardSide : configured by
-PersonalBoardImpl "1" *-- "*" Coordinate : indexed by
-PersonalBoardImpl "1" *-- "*" Cell : formed by
-Cell "1" --o "*" TerrainToken : contains
-```
+![UML Class Diagram of Personal Board](resources/personal_board_diagram.png)
 
 ### Calcolo del punteggio
 
@@ -244,65 +187,7 @@ object BuildingsScoring extends TerrainScoring:
 ```
 
 
-```mermaid
-
-classDiagram
-    direction TB
-
-    class ScoreCalculator {
-        <<trait>>
-        calculateScore(personalBoard: PersonalBoard,cards: List[AnimalCard]) Score
-        calculateDetailedScore(board: PersonalBoard,cards: List[AnimalCard]) :  (Score, Map[String, Score])
-    }
-
-    class ScoreCalculatorImpl {
-    }
-
-
-class TerrainScoring {
-<<trait>>
-    computeScore(board: PersonalBoard) Score
-}
-
-class FieldsScoring {
-    <<object>>
-
-}
-
-class ForestsScoring {
-    <<object>>
-}
-
-class WaterScoring {
-    <<object>>
-}
-
-class BuildingsScoring { 
-    <<object>>
-}
-
-class MountainsScoring { 
-    <<object>> 
-    }
-    
-
-class PersonalBoard {
-<<trait>>
-}
-
-%% Relazioni
-ScoreCalculator <|.. ScoreCalculatorImpl : implements
-TerrainScoring <|.. FieldsScoring : implements
-TerrainScoring <|.. ForestsScoring : implements
-TerrainScoring <|.. WaterScoring : implements
-TerrainScoring <|.. BuildingsScoring: implements
-TerrainScoring <|.. MountainsScoring: implements
-
-ScoreCalculatorImpl ..> TerrainScoring : uses
-ScoreCalculatorImpl ..> PersonalBoard : analyzes
-
-```
-
+![UML Class Diagram of Score Calculator](resources/score_calculator_diagram.png)
 
 ## Filippo Ferretti
 
@@ -364,34 +249,7 @@ La plancia centrale, che ospita i 5 slot pubblici per i token e per le carte ani
 #### 1.3 Schema Strutturale
 Il seguente diagramma UML illustra la separazione delle responsabilità e l'information hiding tra i tipi opachi della plancia centrale (`CentralBoard`), il sacchetto (`Pouch`) e l'implementazione nascosta delle carte animale (`AnimalCard`):
 
-```mermaid
-classDiagram
-    class Pouch {
-        <<opaque_type>>
-        +draw(amount: Int): (List[TerrainToken], Pouch)
-    }
-    class CentralBoard {
-        <<opaque_type>>
-        +fill(pouch, deck): (CentralBoard, Pouch, List[AnimalCard])
-        +takeCard(slot: Int): Option[(AnimalCard, CentralBoard)]
-        +takeToken(slot: Int): Option[(List[TerrainToken], CentralBoard)]
-    }
-    class AnimalCard {
-        <<trait>>
-        +habitat: Habitat
-        +points: List[Int]
-        +placedCubes: Int
-        +placeCube(): Option[AnimalCard]
-    }
-    class AnimalCardImpl {
-        <<private_case_class>>
-        -cubesRemaining: Int 
-    }
-
-    CentralBoard ..> Pouch : draws tokens from
-    CentralBoard o-- AnimalCard : offers in cardSlots
-    AnimalCard <|.. AnimalCardImpl
-```
+![UML Class Diagram of Central Board](resources/central_board_diagram.png)
 
 ### 2. Pattern Companion Object e Information Hiding: Carte Animale (`AnimalCard`)
 
@@ -509,14 +367,7 @@ La verifica puntuale di un singolo orientamento rispetto a una coordinata di ori
 #### 3.4 Flusso Dichiarativo del Pattern Matching Spaziale
 Il seguente diagramma di flusso riassume la sequenza di valutazione dichiarativa che porta all'individuazione dei match validi per una carta sulla griglia del giocatore:
 
-```mermaid
-flowchart LR
-    A[Habitat] -->|allRotations / List.iterate| B(6 Rotazioni Isometriche)
-    C[PersonalBoard] -->|cells.keys| D(Coordinate Origine)
-    B --> E{HabitatMatcher.isMatch}
-    D --> E
-    E -->|exists & forall| F[HabitatMatch Immutabile]
-```
+![UML Flowchart Diagram of Pattern Matching](resources/pattern_matching_diagram.png)
 
 ### 4. Internal DSL per la Formalizzazione dei Mazzi (`HabitatDSL` e `AnimalDeckFactory`)
 
