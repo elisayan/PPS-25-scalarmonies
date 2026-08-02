@@ -209,26 +209,29 @@ Il controller amministra la grafica dell'intera applicazione, regolando la trans
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Configuration : start() / Init Stage
+    direction TB
 
-    Configuration --> Gameplay : onStartGame(names, side)
+    [*] --> Configuration : start()
+    Configuration --> WaitingForAction : onStartGame()
 
     state Gameplay {
-        [*] --> WaitingForAction
-        WaitingForAction --> ActionDone : takeTokens()/ placeToken()/ takeCard()/ placeAnimalCube()
-        ActionDone --> TurnComplete : [nessuna azione rimasta]
-        TurnComplete --> WaitingForAction : onEndTurn() [model.isGameOver == false]
+        WaitingForAction --> ActionDone : takeTokens(slot)
+
+        ActionDone --> WaitingForAction : onCancelTurn()
+        ActionDone --> TurnComplete : placeToken [tokens == 0]
+
+        TurnComplete --> WaitingForAction : onEndTurn [!isGameOver]
     }
 
-    Gameplay --> GameOver : onEndTurn() [model.isGameOver == true]
+    TurnComplete --> GameOver : onEndTurn [isGameOver]
 
-    state GameOver {
-        [*] --> ComputingScore : Scorable.computeScore()
-        ComputingScore --> ShowingResults : Visualizzazione per categoria
-    }
+    GameOver : entry / computeScore()
+    GameOver : ShowingResults
 
     GameOver --> [*]
 ```
+
+Le azioni takeAnimalCard(slot) e placeAnimalCube(coord) possono essere eseguite liberamente durante il proprio turno (rispettando i vincoli delle carte e degli habitat disponibili) senza provocare transizioni di stato.
 
 # View
 
