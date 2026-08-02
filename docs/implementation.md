@@ -5,13 +5,10 @@
 #### Cell
 La cella è l'elemento atomico della `PersonalBoard` e funge da contenitore per la pila di `TerrainToken` e l'eventuale cubo animale. Per preservare l'integrità del dominio, Cell è modellata come una case class immutabile: ogni modifica restituisce una nuova istanza aggiornata, coerentemente con il paradigma funzionale.
 ```scala
-case class Cell(
-                 private val tokens: List[TerrainToken] = List(),
-                 hasAnimal: Boolean = false
-               )
+case class Cell(private val tokens: List[TerrainToken] = List(), hasAnimal: Boolean = false)
 ```
 #### Coordinate
-La `PersonalBoard` si basa su una griglia a tassellatura esagonale. Il trait `Coordinate` definisce il contratto per le posizioni bidimensionali (x, y), fornendo le operazioni algebriche e le primitive spaziali per la navigazione sulla griglia.
+La PersonalBoard si basa su una griglia a tassellatura esagonale. Il trait `Coordinate` definisce il contratto per le posizioni bidimensionali (x, y), fornendo le operazioni algebriche e le primitive spaziali per la navigazione sulla griglia.
 ```scala
 trait Coordinate:
   def x: Int
@@ -21,7 +18,7 @@ trait Coordinate:
   def *(other: Coordinate): Coordinate
   def rotate60: Coordinate
 ```
-Per nascondere i dettagli di basso livello e separare l'interfaccia dall'implementazione, l'interfaccia pubblica è definita dal trait Coordinate, mentre la struttura concreta è racchiusa all'interno della case class privata CoordinateImpl.
+Per nascondere i dettagli di basso livello e separare l'interfaccia dall'implementazione, l'interfaccia pubblica è definita dal trait `Coordinate`, mentre la struttura concreta è racchiusa all'interno della case class privata `CoordinateImpl`.
 La creazione delle istanze è centralizzata nell'oggetto companion Coordinate tramite il factory method apply:
 ```scala
 object Coordinate:
@@ -38,7 +35,7 @@ def northWesternNeighbour: Coordinate = Coordinate(x - 2, y + 1)
 def southEasternNeighbour: Coordinate = Coordinate(x + 2, y - 1)
 def southWesternNeighbour: Coordinate = Coordinate(x - 2, y - 1)
 ```
-Il metodo `allNeighbours` aggrega le sei direzioni in un Set[`Coordinate`], consentendo di implementare il controllo di adiacenza isNeighbour in modo snello e dichiarativo:
+Il metodo allNeighbours aggrega le sei direzioni in un `Set[Coordinate]`, consentendo di implementare il controllo di adiacenza isNeighbour in modo snello e dichiarativo:
 ```scala
 override def allNeighbours: Set[Coordinate] =
   Set(
@@ -54,16 +51,16 @@ override def isNeighbour(other: Coordinate): Boolean =
   allNeighbours.contains(other)
 ```
 
-La `PersonalBoard` rappresenta la plancia di gioco individuale di ciascun giocatore.
+La PersonalBoard rappresenta la plancia di gioco individuale di ciascun giocatore.
 Essa è formata da una serie di celle esagonali, `Cell` con ognuna una propria coordinata, `Coordinate`.
-Il regolamento di gioco prevede due differenti configurazioni di plancia (`SideA` e `SideB`), caratterizzate da dimensioni e numero di celle differenti. 
+Il regolamento di gioco prevede due differenti configurazioni di plancia (SideA e SideB), caratterizzate da dimensioni e numero di celle differenti. 
 Questa variabilità è stata modellata tramite l'enumerazione BoardSide
 ```scala
 enum BoardSide:
   case SideA
   case SideB
 ```
-La creazione della plancia è incapsulata nel companion object `PersonalBoard`, che agisce da Factory. 
+La creazione della plancia è incapsulata nel companion object PersonalBoard, che agisce da Factory. 
 Durante l'istanziazione, invoca il metodo privato `generateHexGrid`, il quale determina le coordinate valide della tassellatura esagonale filtrando, tramite for-comprehension, unicamente le coppie cartesiane (x, y) che rispettano i vincoli di parità esagonali. 
 La struttura concreta della plancia è definita dalla case class privata PersonalBoardImpl.
 ```scala
@@ -86,14 +83,11 @@ def apply(side: BoardSide): PersonalBoard = side match
     PersonalBoardImpl(6, 3, 25, generateHexGrid(6, 3), side)
 
 ```
-Tutte le operazioni di interrogazione e modifica dello stato applicano la gestione difensiva tramite il tipo Option
+Tutte le operazioni di interrogazione e modifica dello stato applicano la gestione difensiva tramite il tipo Option.
 I metodi come `placeToken` e `placeAnimalOnCell` effettuano le mutazioni senza alterare la plancia corrente,
-ma restituendo un Option[`PersonalBoard`] contenente la copia aggiornata
+ma restituendo un `Option[PersonalBoard]` contenente la copia aggiornata
 ```scala
-override def placeToken(
-                         token: TerrainToken,
-                         c: Coordinate
-                       ): Option[PersonalBoard] =
+override def placeToken(token: TerrainToken, c: Coordinate): Option[PersonalBoard] =
   if isValid(c) then
     cells.get(c) match
       case Some(currentCell) =>
@@ -128,7 +122,7 @@ value
 
 val zero: Score = 0
 ```
-Tramite gli extension method, il tipo `Score` espone operazioni algebriche sicure:
+Tramite gli extension method, il `type Score `espone operazioni algebriche sicure:
 ```scala
 extension (s: Score)
 
@@ -145,7 +139,7 @@ L'astrazione per tutte le entità o regole in grado di calcolare un punteggio è
 trait Scorable:
   def computeScore(board: PersonalBoard): Score
 ```
-Per la valutazione delle diverse tipologie di terreno, il trait `TerrainScoring` fa da ponte tra il contratto generale Scorable e la valutazione concreta della plancia. Grazie all'uso del pattern mixin, la logica di calcolo del punteggio viene 'miscelata' direttamente nelle classi interessate, garantendo modularità ed evitando vincoli di ereditarietà rigida.
+Per la valutazione delle diverse tipologie di terreno, il trait `TerrainScoring` fa da ponte tra il contratto generale `Scorable` e la valutazione concreta della plancia. Grazie all'uso del pattern mixin, la logica di calcolo del punteggio viene 'miscelata' direttamente nelle classi interessate, garantendo modularità ed evitando vincoli di ereditarietà rigida.
 ```scala
 trait TerrainScoring extends Scorable:
 
@@ -157,8 +151,7 @@ def compute(board: PersonalBoard): Score
 Ciascuna tipologia di terreno adotta logiche di calcolo del punteggio specifiche e indipendenti. Per gestire questa variabilità è stato applicato lo Strategy Pattern: ogni tipo di terreno implementa l'interfaccia `TerrainScoring` all'interno di un oggetto dedicato, garantendo un'elevata modularità e la semplice estensibilità con nuove regole.
 Di seguito alcuni esempi di calcolo: 
 
-- `Fields` (campi) in cui ogni gruppo composto da almeno due token attribuisce 5 punti:
-
+- Fields(campi) in cui ogni gruppo composto da almeno due token attribuisce 5 punti:
 ```scala
 object FieldsScoring extends TerrainScoring:
 
@@ -169,8 +162,7 @@ object FieldsScoring extends TerrainScoring:
 Score(validGroupsCount * 5)
 ```
 
-- `Building`(edificio) in cui ogni edificio affiancato da almeno 3 token di colore diverso vale 5 punti:
-
+- Building(edificio) in cui ogni edificio affiancato da almeno 3 token di colore diverso vale 5 punti:
 ```scala
 object BuildingsScoring extends TerrainScoring:
 
@@ -185,6 +177,7 @@ object BuildingsScoring extends TerrainScoring:
 
     val validBuildingsCount = allBuildings.count(isValidBuilding)
     Score(validBuildingsCount * 5)
+
 ```
 
 
@@ -207,7 +200,6 @@ Il sacchetto di gioco, responsabile dell'estrazione dei segnalini terreno, è st
 
 #### 1.2 Offerta Centrale Immutabile (`CentralBoards`)
 La plancia centrale, che ospita i 5 slot pubblici per i token e per le carte animale (`SlotIds = List(1, 2, 3, 4, 5)`), è stata analoga rappresentata con un opaque type:
-
   ```scala
   private case class OfferState(
     tokenSlots: Map[Int, List[TerrainToken]],
@@ -215,9 +207,7 @@ La plancia centrale, che ospita i 5 slot pubblici per i token e per le carte ani
   )
   opaque type CentralBoard = OfferState
   ```
-
 * **Ripristino funzionale (`fill`):** Il riempimento degli slot vuoti avviene senza mutazione di stato attraverso combinatori `foldLeft`. A ogni passo, se uno slot risulta vuoto, viene generata una mappa aggiornata insieme al nuovo stato del sacchetto e del mazzo, restituendo la tupla `(CentralBoard, Pouch, List[AnimalCard])`:
-
 ```scala
   def fill(pouch: Pouch, deck: List[AnimalCard]): (CentralBoard, Pouch, List[AnimalCard]) =
         val (nextTokens, nextPouch) = SlotIds.foldLeft((b.tokenSlots, pouch)):
@@ -239,7 +229,6 @@ La plancia centrale, che ospita i 5 slot pubblici per i token e per le carte ani
 ```
 
 * **Prelievo monadico `(takeCard e takeTokens)`:** Il prelievo di una carta o di un set di token da uno slot sfrutta le for-comprehension su `Option` per validare contestualmente l'esistenza dello slot e la presenza del contenuto:
-
 ```scala
   extension (b: CentralBoard)
     def takeCard(slot: Int): Option[(AnimalCard, CentralBoard)] =
@@ -276,7 +265,6 @@ trait AnimalCard extends Card with Scorable:
 ```
 
 L'implementazione concreta è confinata all'interno di una private case class AnimalCardImpl all'interno del Companion Object AnimalCard:
-
 ```scala
     object AnimalCard:
       def apply(
@@ -302,8 +290,7 @@ Questo approccio offre due vantaggi fondamentali:
 
 #### 2.2 Evoluzione Immutabile dello Stato e Trasparenza Referenziale
 Il progresso di popolamento della carta è gestito in modo trasparente calcolando le proprietà derivate (`maxCubes`, `placedCubes` e `currentPoints`) a partire dalla riserva di cubi rimanenti (`cubesRemaining`).
-L'azione di piazzamento di un cubo (`placeCube`) trasforma lo stato della carta senza side-effect, restituendo una nuova istanza immutabile tramite il meccanismo di copy della case class, oppure None se la riserva è esaurita:
-
+L'azione di piazzamento di un cubo (placeCube) trasforma lo stato della carta senza side-effect, restituendo una nuova istanza immutabile tramite il meccanismo di copy della case class, oppure None se la riserva è esaurita:
 ```scala
   override def placeCube: Option[AnimalCard] =
     if cubesRemaining > 0 then Some(copy(cubesRemaining = cubesRemaining - 1))
@@ -334,7 +321,6 @@ case class Habitat(requirements: List[CellRequirement]):
 ```
 
 L'insieme completo delle 6 rotazioni esagonali è calcolato in modo puramente dichiarativo avvalendosi del combinatore della libreria standard `List.iterate`:
-
 ```scala
   def allRotations: Set[Habitat] =
     List.iterate(this, 6)(_.rotate60).toSet
@@ -344,7 +330,6 @@ L'insieme completo delle 6 rotazioni esagonali è calcolato in modo puramente di
 
 #### 3.2 Esplorazione Spaziale via For-Comprehension Monadica (findMatches)
 La ricerca delle corrispondenze sulla plancia è isolata all'interno del modulo HabitatMatcher, che estende le funzionalità di PersonalBoard tramite un extension method:
-
 ```scala
   object HabitatMatcher:
     extension (board: PersonalBoard)
@@ -358,12 +343,10 @@ La ricerca delle corrispondenze sulla plancia è isolata all'interno del modulo 
             .toSet
         yield HabitatMatch(origin, involvedCells)
 ```
-
 Questo metodo si occupa di individuare nella `PersonalBoard` tutti i match di un relativo habitat, ricercando tutte le rotazioni possibili e valutando le varie celle di gioco come origine dell'habitat.
 
 #### 3.3 Validazione Sicura dei Sottografi (`isMatch`)
 La verifica puntuale di un singolo orientamento rispetto a una coordinata di origine (`isMatch`) evita controlli di nullità o asserzioni imperative avvalendosi dell'algebra di `Option` e dei quantificatori delle collezioni Scala (forall ed exists):
-
 ```scala
     def isMatch(origin: Coordinate, habitat: Habitat): Boolean =
       val isTargetFree = board.cells.get(origin).exists(!_.hasAnimal)
@@ -401,7 +384,6 @@ La combinazione di extension methods, notazione infissa senza punti o parentesi 
 
 #### 4.2 Formalizzazione Dichiarativa e Determinismo nel Mazzo (`AnimalDeckFactory`)
 L'oggetto `AnimalDeckFactory` modella le 32 carte di gioco all'interno di una collezione immutabile (allCards) che si legge letteralmente come la specifica testuale delle regole:
-
 ```scala
   AnimalCard(
       name = "Salmone",
@@ -515,7 +497,6 @@ La Figura seguente mostra la macchina a stati finiti che descrive le transizioni
 ![UML State Machine Diagram of the turn lifecycle](resources/turn_state_diagram.png)
 
 Nel `GameModel` le operazioni verificano preventivamente che lo stato corrente sia compatibile con l’azione richiesta mediante il metodo ausiliario `requireState`:
-
 ```scala
 private def requireState(
     expected: TurnState,
@@ -526,7 +507,6 @@ private def requireState(
   else
     action
 ```
-
 In questo modo la logica di validazione viene centralizzata, evitando la duplicazione dei controlli all’interno dei singoli metodi.
 
 L’intero `GameModel` è inoltre immutabile: ogni operazione produce una nuova istanza aggiornata mediante il metodo `copy`, preservando lo stato precedente.
