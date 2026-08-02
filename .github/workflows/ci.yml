@@ -2,9 +2,9 @@ name: Scala CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   test-and-quality:
@@ -31,4 +31,4 @@ jobs:
         run: sbt "scalafix --check"
 
       - name: 3. Esecuzione Test e Generazione Report Copertura (Scoverage)
-        run: sbt clean coverage test coverageReport
+        run: xvfb-run sbt clean coverage test coverageReport
