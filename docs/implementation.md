@@ -622,7 +622,7 @@ TokenValidator.validPositions(token)
 ```
 
 ### Turn Management
-La gestione del turno è modellata attraverso l'enumerazione `TurnState`, che sfrutta gli _Algebraic Data Types_ per rappresentare l'insieme finito degli stati che un turno può assumere.
+La gestione del turno è modellata attraverso l'enumerazione `TurnState`, che sfrutta gli _Algebraic Data Types_ (ADT) per rappresentare l'insieme finito degli stati che un turno può assumere.
 In particolare, il turno può trovarsi in uno dei tre stati `WaitingForAction`, `ActionDone` oppure `TurnComplete`. 
 Questa rappresentazione rende esplicite le possibili fasi del turno e impedisce la presenza di stati non validi.
 ```scala
@@ -635,20 +635,44 @@ Le transizioni tra gli stati sono gestite direttamente dal `GameModel`, che rapp
 Prima di eseguire un'operazione, il model verifica che essa sia consentita nello stato corrente; in caso contrario viene lanciata un'eccezione.
 Ogni operazione valida restituisce una nuova istanza aggiornata del model attraverso il metodo `copy`, preservando l'immutabilità dello stato di gioco.
 
-Lo stato `WaitingForAction` rappresenta l’inizio del turno. In questa fase il giocatore può prendere una carta animale, 
-purché non ne abbia già presa una durante lo stesso turno e non abbia raggiunto il numero massimo di carte attive. 
-Può inoltre scegliere uno degli slot di `TerrainToken` disponibili sulla plancia centrale.
-Il prelievo dei token viene eseguito tramite il metodo `takeTokens` ed è consentito esclusivamente nello stato `WaitingForAction`:
-
-Nello stato `ActionDone` il giocatore può selezionare e posizionare i token appena ottenuti sulla propria `PersonalBoard`. 
-Se non ha ancora preso una carta animale durante il turno corrente, può ancora effettuare tale operazione. 
-Dopo ogni piazzamento il model aggiorna il numero di token rimanenti nella mano del giocatore; quando tutti i token sono stati collocati, il turno passa automaticamente allo stato `TurnComplete`.
-
-Infine, nello stato `TurnComplete`, il giocatore non può più eseguire ulteriori azioni e può solamente terminare il turno. 
-L’operazione di fine turno aggiorna la plancia centrale, passa il controllo al giocatore successivo e riporta il `TurnState` a `WaitingForAction`, avviando un nuovo ciclo.
-
 La Figura seguente mostra la macchina a stati finiti che descrive le transizioni del turno.
 ![UML State Machine Diagram of the turn lifecycle](resources/turn_state_diagram.png)
+
+Nel `GameModel` le operazioni verificano preventivamente che lo stato corrente sia compatibile con l’azione richiesta mediante il metodo ausiliario `requireState`:
+```scala
+private def requireState(
+    expected: TurnState,
+    errorMessage: String
+)(action: => GameModel): GameModel =
+  if turnState != expected then
+    throw IllegalStateException(errorMessage)
+  else
+    action
+```
+In questo modo la logica di validazione viene centralizzata, evitando la duplicazione dei controlli all’interno dei singoli metodi.
+
+L’intero `GameModel` è inoltre immutabile: ogni operazione produce una nuova istanza aggiornata mediante il metodo `copy`, preservando lo stato precedente.
+
+```scala
+this.copy(
+  players = updatedPlayers,
+  tokensInHand = remainingTokens,
+  selectedToken = None,
+  turnState = newState
+)
+```
+
+#### Annullamento turno
+Per supportare l’annullamento del turno (`cancelTurn`), il model mantiene uno snapshot opzionale dello stato precedente (`turnSnapshot`). 
+Lo snapshot viene creato solamente alla prima modifica effettuata durante il turno (`turnSnapshot.orElse(Some(this))`), evitando copie ridondanti. 
+L’annullamento consiste semplicemente nel ripristinare tale istanza immutabile, senza dover implementare logiche di rollback delle singole operazioni.
+
+```scala
+turnSnapshot: Option[GameModelImpl]
+
+override def cancelTurn(): GameModel =
+  turnSnapshot.map(_.copy(turnSnapshot = None)).getOrElse(this)
+```
 
 ### Player
 Il giocatore è rappresentato dalla `case class Player`, che raccoglie tutte le informazioni necessarie per descrivere lo stato di un partecipante durante la partita.
