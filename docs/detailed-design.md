@@ -21,14 +21,14 @@ La gestione dello spazio e dei contenitori fisici della plancia è affidata alla
 
 `Coordinate` costituisce l'astrazione per la rappresentazione delle posizioni bidimensionali _(x, y)_ su griglia esagonale. È modellata come un `trait` astratto con implementazione privata `CoordinateImpl`. Il trait incapsula l'aritmetica vettoriale (`+`, `-`, `*`), la rotazione a _60°_ (`rotate60`) e la navigazione verso i sei vicini adiacenti (`northNeighbour`, `southEasternNeighbour`, ecc.), isolando la plancia da qualsiasi calcolo geometrico di basso livello.
 
-`Cell` rappresenta la singola posizione esagonale sulla plancia e funge da contenitore sia per la pila di tasselli terreno (`TerrainToken`), sia per l'eventuale cubo animale. La classe è modellata come una `case class` immutabile in cui i terreni sovrapposti sono gestiti come una lista LIFO (*Last-In, First-Out*). L'accesso al terreno affiorante (`topToken`) e il posizionamento degli animali (`occupyWithAnimal`) sfruttano il tipo `Option` per validare lo stato ed evitare mosse non consentite (es. piazzare animali su celle vuote o già occupate).
+`Cell` rappresenta la singola posizione esagonale sulla plancia e funge da contenitore sia per la pila di `TerrainToken`, sia per l'eventuale cubo animale. La classe è modellata come una `case class` immutabile in cui i token sovrapposti sono gestiti come una lista LIFO (*Last-In, First-Out*). L'accesso al token affiorante (`topToken`) e il posizionamento dei cubi animale (`occupyWithAnimal`) sfruttano il tipo `Option` per validare lo stato ed evitare mosse non consentite (es. piazzare un cubo animale su celle vuote o già occupate).
 
 ## GameModel e TurnState
 `GameModel` rappresenta la facciata e il punto di coordinamento centrale dell'intero modello di dominio. Espone le operazioni pubbliche per guidare l'evoluzione della partita: il prelievo dei tasselli, la scelta e il posizionamento delle carte animale, il piazzamento dei token terreno e dei cubi animale, fino alla conclusione del turno o dell'intero gioco.
 
-Sul piano architetturale, `GameModel` è definito come un `trait` pubblico, mentre la sua implementazione concreta `GameModelImpl` è mantenuta `private` all'interno del companion object. Esso funge da *Factory* mettendo a disposizione metodi `apply` sia per la creazione del gioco standard sia per scenari di test (es. forzando il sacchetto vuoto). Per garantire la flessibilità dell'esperienza utente, `GameModelImpl` implementa un meccanismo di ripristino del turno ispirato al pattern *Memento/Snapshot*: salvando una copia immutabile dello stato all'inizio del turno (`turnSnapshot`), la funzione `cancelTurn` consente al giocatore di annullare le azioni correnti e ripristinare lo stato iniziale.
+Sul piano architetturale, `GameModel` è definito come un `trait` pubblico, mentre la sua implementazione concreta `GameModelImpl` è mantenuta `private` all'interno del companion object. Esso funge da *Factory* mettendo a disposizione metodi `apply` sia per la creazione del gioco standard sia per scenari di test (es. forzando il sacchetto vuoto). Per garantire la flessibilità dell'esperienza utente, `GameModelImpl` implementa un meccanismo di ripristino del turno: salvando una copia immutabile dello stato all'inizio del turno (`turnSnapshot`), la funzione `cancelTurn` consente al giocatore di annullare le azioni correnti e ripristinare lo stato iniziale.
 
-La gestione delle fasi del turno è formalizzata tramite l'enumerazione `TurnState`, che sfrutta la modellazione ad *Algebraic Data Types* (ADT) per rappresentare l'insieme finito degli stati che un turno può assumere (`WaitingForAction`, `ActionDone`, `TurnComplete`). Il ciclo di vita del turno è gestito come una macchina a stati finiti: prima di eseguire un'operazione, il model verifica che essa sia consentita nello stato corrente lsciando il compito di rifiutare mosse illegali a eccezioni di stato (`IllegalStateException`), garantendo che il sistema non transiti mai verso configurazioni non valide.
+La gestione delle fasi del turno è formalizzata tramite l'enumerazione `TurnState`, che rappresenta l'insieme finito degli stati che un turno può assumere (`WaitingForAction`, `ActionDone`, `TurnComplete`). Il ciclo di vita del turno è gestito come una macchina a stati finiti: prima di eseguire un'operazione, il model verifica che essa sia consentita nello stato corrente lasciando il compito di rifiutare mosse illegali a eccezioni di stato (`IllegalStateException`), garantendo che il sistema non transiti mai verso configurazioni non valide.
 
 
 ## CentralBoard e Pouch
@@ -86,11 +86,11 @@ private def executeAction(action: GameModel => GameModel)(onSuccess: GameModel =
   catch case e: IllegalStateException => handleError(e)
 ```
 
-Mentre il dominio del gioco è un puro sistema di funzioni senza effetti collaterali, l'istanza privata private var model: GameModel del controller rappresenta l'unico punto di mutabilità controllata dell'intera applicazione.
-L'assegnamento model = newModel avviene solo all'interno di executeAction, garantendo che lo stato dell'applicazione non possa mai disallinearsi o subire modifiche concorrenti non tracciate.
+Mentre il dominio del gioco è un puro sistema di funzioni senza effetti collaterali, l'istanza privata `private var model: GameModel` del controller rappresenta l'unico punto di mutabilità controllata dell'intera applicazione.
+L'assegnamento `model = newModel` avviene solo all'interno di executeAction, garantendo che lo stato dell'applicazione non possa mai disallinearsi o subire modifiche concorrenti non tracciate.
 
 Questo approccio offre tre vantaggi progettuali:
-* **Isolamento delle mutazioni:** La funzione di transizione di stato (action: GameModel => GameModel) viene applicata in un unico punto controllato.
+* **Isolamento delle mutazioni:** La funzione di transizione di stato `(action: GameModel => GameModel)` viene applicata in un unico punto controllato.
 * **Boundary di gestione errori:** Eventuali mosse illegali vengono catturate uniformemente senza far crashare l'applicazione o lasciare la GUI in uno stato inconsistente. Il fallimento viene intercettato da handleError, che notifica la vista per mostrare un feedback temporaneo all'utente (`showTemporaryError`).  
 * **Aggiornamento reattivo mirato:** La callback `onSuccess` viene invocata solo a transizione avvenuta con successo, sincronizzando il rendering del nuovo stato nella vista (`view.updateState`) e aggiornando il log di gioco (`refreshView`). 
 
