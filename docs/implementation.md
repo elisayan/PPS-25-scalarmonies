@@ -384,6 +384,7 @@ Sfruttando la flessibilità sintattica di Scala, il modulo `HabitatDSL` arricchi
       def req(terrain: TerrainToken, height: Int): CellRequirement =
         CellRequirement(coord, terrain, height)
 ```
+
 La combinazione di extension methods, notazione infissa senza punti o parentesi ridondanti e tuple ha permesso di sostituire istanziazioni prolisse di `CellRequirement(Coordinate(x, y), TerrainToken.X, height)` con un costrutto autodescrittivo ed espressivo del tipo:
 `Coordinate(x, y) req (TerrainToken, height)`
 
@@ -411,6 +412,7 @@ I `TerrainToken` costituiscono gli elementi principali utilizzati dai giocatori 
 La loro modellazione è stata realizzata tramite due `enum`:
 - `TokenColor`, che rappresenta i colori disponibili;
 - `TerrainToken`, che definisce le differenti tipologie di terreno
+
 ```scala
 enum TokenColor:
   case Grey, Brown, Green, Yellow, Blue, Red
@@ -418,9 +420,11 @@ enum TokenColor:
 enum TerrainToken:
   case Water, Field, Mountain, Ground, Forest, Building
 ```
+
 L’utilizzo di un’enumerazione permette di rappresentare un insieme chiuso di valori, evitando la creazione di tipologie di terreno non previste dal dominio.
 
 L’oggetto `TerrainToken` contiene inoltre il metodo `colorOf`, che associa ogni terreno al colore utilizzato per la sua rappresentazione grafica:
+
 ```scala
 def colorOf(token: TerrainToken): TokenColor = token match
   case TerrainToken.Water    => TokenColor.Blue
@@ -430,6 +434,7 @@ def colorOf(token: TerrainToken): TokenColor = token match
   case TerrainToken.Building => TokenColor.Red
   case TerrainToken.Ground   => TokenColor.Brown
 ```
+
 La corrispondenza viene definita tramite pattern matching, rendendo esplicita e type-safe l’associazione tra ogni token e il relativo colore.
 
 ### Terrain Token Placement
