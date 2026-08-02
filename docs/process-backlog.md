@@ -1,4 +1,4 @@
-# Processo di sviluppo
+# Process Backlog
 
 La documentazione del processo di sviluppo è organizzata nelle seguenti sezioni:
 
