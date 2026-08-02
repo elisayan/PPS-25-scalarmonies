@@ -180,7 +180,9 @@ object GameController:
         else
           refreshView(s"HEADER:${updatedModel.currentPlayer.name}")
           view.updateState(updatedModel)
-          updatedModel.lastRoundMessage.foreach(msg => view.showTemporaryInfoMessage(msg))
+          updatedModel.lastRoundMessage.foreach(msg =>
+            view.showTemporaryInfoMessage(msg)
+          )
 
     override def onTakeAnimalCard(slot: Int): Unit =
       val playerName = model.currentPlayer.name
